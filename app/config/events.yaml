@@ -1,0 +1,494 @@
+# Event catalog — mirrors VedAstro EventDataList.xml
+# Each entry maps to a MuhurthaRule via rule_key.
+# nature: good | bad | neutral
+
+# ──────────────────────────────────────────
+# TRAVEL
+# ──────────────────────────────────────────
+
+- name: GoodLunarDayForTravel
+  rule_key: good_lunar_day_for_travel
+  nature: good
+  description: >
+    Best lunar days for travel are the 2nd, 3rd, 5th, 7th, 10th, 11th, and 13th.
+  tags: [travel]
+
+- name: BadLunarDayForTravel
+  rule_key: bad_lunar_day_for_travel
+  nature: bad
+  description: >
+    Lunar days 1, 8, 9, 14, and 15 are unfavourable for travel.
+  tags: [travel]
+
+- name: GoodConstellationForTravel
+  rule_key: good_constellation_for_travel
+  nature: good
+  description: >
+    Ashwini, Mrigashira, Punarvasu, Pushya, Hasta, Anuradha, Shravana,
+    Dhanishta, and Revati are auspicious nakshatras for travel.
+  tags: [travel]
+
+- name: BadConstellationForTravel
+  rule_key: bad_constellation_for_travel
+  nature: bad
+  description: >
+    Bharani, Krittika, Ardra, Ashlesha, Magha, Jyeshtha, Mula, and
+    Purva Ashadha are inauspicious for travel.
+  tags: [travel]
+
+- name: GoodLagnaForTravel
+  rule_key: good_lagna_for_travel
+  nature: good
+  description: >
+    Aries, Taurus, Cancer, Leo, Libra, and Sagittarius rising are
+    auspicious lagnas for beginning a journey.
+  tags: [travel]
+
+- name: BestLagnaForTravel
+  rule_key: best_lagna_for_travel
+  nature: good
+  description: >
+    When the rising sign matches the person's natal Moon sign, it is
+    the most personally auspicious lagna for travel.
+  tags: [travel]
+
+- name: GoodWeekdayForTravel
+  rule_key: good_weekday_for_travel
+  nature: good
+  description: >
+    Wednesday, Thursday, and Friday are auspicious weekdays for travel.
+  tags: [travel]
+
+- name: BadWeekdayForTravel
+  rule_key: bad_weekday_for_travel
+  nature: bad
+  description: >
+    Saturday and Tuesday are generally inauspicious for starting a journey.
+  tags: [travel]
+
+# ──────────────────────────────────────────
+# GENERAL
+# ──────────────────────────────────────────
+
+- name: GoodMoonSignGeneral
+  rule_key: good_moon_sign_general
+  nature: good
+  description: >
+    Moon transiting Taurus, Cancer, Virgo, Libra, Sagittarius, or Pisces
+    is generally auspicious for all activities.
+  tags: [general]
+
+- name: BadMoonSignGeneral
+  rule_key: bad_moon_sign_general
+  nature: bad
+  description: >
+    Moon transiting Aries, Scorpio, Capricorn, or Aquarius is generally
+    unfavourable for new beginnings.
+  tags: [general]
+
+- name: JupiterInGoodHouse
+  rule_key: jupiter_in_good_house
+  nature: good
+  description: >
+    Jupiter placed in the 1st, 4th, 5th, 7th, 9th, 10th, or 11th house
+    from the lagna is auspicious.
+  tags: [general]
+
+- name: SaturnInBadHouse
+  rule_key: saturn_in_bad_house
+  nature: bad
+  description: >
+    Saturn in the 1st, 4th, 7th, 8th, or 12th house from the lagna
+    is unfavourable.
+  tags: [general]
+
+# ──────────────────────────────────────────
+# MARRIAGE
+# ──────────────────────────────────────────
+
+- name: GoodLunarDayForMarriage
+  rule_key: good_lunar_day_for_marriage
+  nature: good
+  description: >
+    The 2nd, 3rd, 5th, 7th, 10th, 11th, and 13th lunar days are
+    auspicious for marriage ceremonies.
+  tags: [marriage]
+
+- name: GoodNakshatraForMarriage
+  rule_key: good_nakshatra_for_marriage
+  nature: good
+  description: >
+    Rohini, Mrigashira, Magha, Uttara Phalguni, Hasta, Swati, Anuradha,
+    Uttara Ashadha, Uttara Bhadrapada, and Revati are auspicious nakshatras
+    for marriage.
+  tags: [marriage]
+
+- name: GoodWeekdayForMarriage
+  rule_key: good_weekday_for_marriage
+  nature: good
+  description: >
+    Monday, Wednesday, Thursday, and Friday are auspicious weekdays
+    for marriage.
+  tags: [marriage]
+
+# ──────────────────────────────────────────
+# CAREER
+# ──────────────────────────────────────────
+
+- name: GoodLunarDayForCareer
+  rule_key: good_lunar_day_for_career
+  nature: good
+  description: Lunar days 1, 2, 3, 5, 7, 10, 11, 13 are auspicious for career activities.
+  tags: [career]
+
+- name: BadLunarDayForCareer
+  rule_key: bad_lunar_day_for_career
+  nature: bad
+  description: Lunar days 4, 6, 8, 9, 12, 14, 15 are unfavourable for career decisions.
+  tags: [career]
+
+- name: GoodWeekdayForCareer
+  rule_key: good_weekday_for_career
+  nature: good
+  description: Sunday, Monday, and Thursday are auspicious for career activities.
+  tags: [career]
+
+- name: BadWeekdayForCareer
+  rule_key: bad_weekday_for_career
+  nature: bad
+  description: Saturday is inauspicious for starting new career endeavours.
+  tags: [career]
+
+- name: GoodLagnaForCareer
+  rule_key: good_lagna_for_career
+  nature: good
+  description: Aries, Taurus, Gemini, Leo, Virgo, Sagittarius, Capricorn are good for career.
+  tags: [career]
+
+- name: GoodNakshatraForCareer
+  rule_key: good_nakshatra_for_career
+  nature: good
+  description: Auspicious nakshatras for career — Ashwini, Rohini, Mrigashira, Punarvasu, Pushya, Uttara Phalguni, Hasta, Chitra, Swati, Anuradha, Uttara Ashadha, Shravana, Dhanishta, Revati.
+  tags: [career]
+
+- name: BadNakshatraForCareer
+  rule_key: bad_nakshatra_for_career
+  nature: bad
+  description: Bharani, Krittika, Ardra, Ashlesha, Jyeshtha, Mula are inauspicious for career.
+  tags: [career]
+
+- name: StrongSunForCareer
+  rule_key: strong_sun_for_career
+  nature: good
+  description: Sun in 1st or 10th house is excellent for career authority and recognition.
+  tags: [career]
+
+- name: StrongJupiterForCareer
+  rule_key: strong_jupiter_for_career
+  nature: good
+  description: Jupiter in 1st, 9th, or 10th house favours career growth and promotions.
+  tags: [career]
+
+# ──────────────────────────────────────────
+# FINANCE
+# ──────────────────────────────────────────
+
+- name: GoodLunarDayForFinance
+  rule_key: good_lunar_day_for_finance
+  nature: good
+  description: Lunar days 2, 3, 5, 7, 10, 11, 13 are auspicious for financial activities.
+  tags: [finance]
+
+- name: BadLunarDayForFinance
+  rule_key: bad_lunar_day_for_finance
+  nature: bad
+  description: Lunar days 4, 8, 9, 14, 15 are inauspicious for financial decisions.
+  tags: [finance]
+
+- name: GoodWeekdayForFinance
+  rule_key: good_weekday_for_finance
+  nature: good
+  description: Wednesday, Thursday, Friday are auspicious for investments and finance.
+  tags: [finance]
+
+- name: GoodNakshatraForFinance
+  rule_key: good_nakshatra_for_finance
+  nature: good
+  description: Rohini, Mrigashira, Pushya, Uttara Phalguni, Hasta, Anuradha, Shravana, Revati are good for finance.
+  tags: [finance]
+
+- name: GoodLagnaForFinance
+  rule_key: good_lagna_for_finance
+  nature: good
+  description: Taurus, Cancer, Virgo, Libra, Sagittarius, Pisces lagnas are auspicious for financial activity.
+  tags: [finance]
+
+- name: JupiterInWealthHouse
+  rule_key: jupiter_in_wealth_house
+  nature: good
+  description: Jupiter in 2nd, 5th, 9th, or 11th house strongly favours wealth accumulation.
+  tags: [finance]
+
+- name: VenusInGoodHouseForFinance
+  rule_key: venus_in_good_house_finance
+  nature: good
+  description: Venus in 1st, 2nd, 5th, 9th, or 11th house brings material comfort and wealth.
+  tags: [finance]
+
+# ──────────────────────────────────────────
+# HEALTH
+# ──────────────────────────────────────────
+
+- name: GoodLunarDayForHealth
+  rule_key: good_lunar_day_for_health
+  nature: good
+  description: Lunar days 1–3, 5–7, 10–13 are generally auspicious for health treatments.
+  tags: [health]
+
+- name: BadLunarDayForSurgery
+  rule_key: bad_lunar_day_for_surgery
+  nature: bad
+  description: Lunar days 8, 9, 14, 15 are inauspicious for surgery or invasive treatments.
+  tags: [health]
+
+- name: GoodWeekdayForHealth
+  rule_key: good_weekday_for_health
+  nature: good
+  description: Monday, Wednesday, Thursday are auspicious for health-related activities.
+  tags: [health]
+
+- name: BadWeekdayForSurgery
+  rule_key: bad_weekday_for_surgery
+  nature: bad
+  description: Saturday, Tuesday, Sunday are unfavourable for surgery.
+  tags: [health]
+
+- name: GoodNakshatraForHealth
+  rule_key: good_nakshatra_for_health
+  nature: good
+  description: Ashwini, Mrigashira, Punarvasu, Pushya, Hasta, Anuradha, Shravana, Revati are auspicious for medical treatments.
+  tags: [health]
+
+- name: BadNakshatraForSurgery
+  rule_key: bad_nakshatra_for_surgery
+  nature: bad
+  description: Bharani, Ardra, Ashlesha, Jyeshtha, Mula, Purva Ashadha are inauspicious for surgery.
+  tags: [health]
+
+- name: MoonNotInLagnaSignSurgery
+  rule_key: moon_not_in_lagna_sign_surgery
+  nature: bad
+  description: Avoid surgery when Moon is in the same sign as the rising sign — governs body part being operated.
+  tags: [health]
+
+- name: StrongMoonForHealth
+  rule_key: strong_moon_for_health
+  nature: good
+  description: Moon in Kendra (1st, 4th, 7th, 10th) is generally beneficial for health.
+  tags: [health]
+
+# ──────────────────────────────────────────
+# EDUCATION
+# ──────────────────────────────────────────
+
+- name: GoodLunarDayForEducation
+  rule_key: good_lunar_day_for_education
+  nature: good
+  description: Lunar days 2, 3, 5, 6, 7, 10, 11, 13 are auspicious for beginning studies.
+  tags: [education]
+
+- name: GoodWeekdayForEducation
+  rule_key: good_weekday_for_education
+  nature: good
+  description: Wednesday and Thursday are the most auspicious days for education.
+  tags: [education]
+
+- name: GoodNakshatraForEducation
+  rule_key: good_nakshatra_for_education
+  nature: good
+  description: Ashwini, Rohini, Mrigashira, Punarvasu, Pushya, Uttara Phalguni, Hasta, Swati, Anuradha, Shravana, Dhanishta, Uttara Bhadrapada, Revati are auspicious for education.
+  tags: [education]
+
+- name: GoodLagnaForEducation
+  rule_key: good_lagna_for_education
+  nature: good
+  description: Gemini, Virgo, Sagittarius, Aquarius are intellectual lagnas favourable for education.
+  tags: [education]
+
+- name: StrongMercuryForEducation
+  rule_key: strong_mercury_for_education
+  nature: good
+  description: Mercury in 1st, 4th, or 5th house boosts intellect and learning outcomes.
+  tags: [education]
+
+- name: StrongJupiterForEducation
+  rule_key: strong_jupiter_for_education
+  nature: good
+  description: Jupiter in 1st, 4th, 5th, or 9th house — karaka for wisdom and higher learning.
+  tags: [education]
+
+# ──────────────────────────────────────────
+# PROPERTY
+# ──────────────────────────────────────────
+
+- name: GoodLunarDayForProperty
+  rule_key: good_lunar_day_for_property
+  nature: good
+  description: Lunar days 2, 3, 5, 7, 10, 11, 13 are auspicious for property transactions.
+  tags: [property]
+
+- name: GoodWeekdayForProperty
+  rule_key: good_weekday_for_property
+  nature: good
+  description: Monday, Wednesday, Thursday are auspicious for property dealings.
+  tags: [property]
+
+- name: GoodNakshatraForProperty
+  rule_key: good_nakshatra_for_property
+  nature: good
+  description: Rohini, Mrigashira, Punarvasu, Pushya, Hasta, Anuradha, Shravana, Uttara Bhadrapada, Revati are good for property.
+  tags: [property]
+
+- name: GoodLagnaForProperty
+  rule_key: good_lagna_for_property
+  nature: good
+  description: Taurus, Cancer, Virgo, Scorpio, Capricorn are stable lagnas for property.
+  tags: [property]
+
+- name: MarsInGoodHouseForProperty
+  rule_key: mars_in_good_house_property
+  nature: good
+  description: Mars (karaka of property) in 4th, 10th, or 11th house is favourable.
+  tags: [property]
+
+- name: StrongMoonForProperty
+  rule_key: strong_moon_for_property
+  nature: good
+  description: Moon (karaka of 4th house/home) in Kendra is auspicious for property.
+  tags: [property]
+
+# ──────────────────────────────────────────
+# CHILDREN
+# ──────────────────────────────────────────
+
+- name: GoodLunarDayForChildren
+  rule_key: good_lunar_day_for_children
+  nature: good
+  description: Lunar days 1–3, 5, 7, 10–13 are auspicious for conception and childbirth.
+  tags: [children]
+
+- name: GoodWeekdayForChildren
+  rule_key: good_weekday_for_children
+  nature: good
+  description: Monday, Thursday, Friday are auspicious for children-related activities.
+  tags: [children]
+
+- name: GoodNakshatraForChildren
+  rule_key: good_nakshatra_for_children
+  nature: good
+  description: Rohini, Mrigashira, Punarvasu, Pushya, Uttara Phalguni, Hasta, Swati, Anuradha, Uttara Ashadha, Shravana, Uttara Bhadrapada, Revati are auspicious for children.
+  tags: [children]
+
+- name: JupiterInFifthHouse
+  rule_key: jupiter_in_fifth_house
+  nature: good
+  description: Jupiter in 5th, 9th, or 1st house — strongest indicator for blessed children.
+  tags: [children]
+
+- name: MoonInFertileSign
+  rule_key: moon_in_fertile_sign
+  nature: good
+  description: Moon in Cancer, Scorpio, or Pisces (fertile signs) is auspicious for conception.
+  tags: [children]
+
+# ──────────────────────────────────────────
+# SPIRITUALITY
+# ──────────────────────────────────────────
+
+- name: GoodLunarDayForSpirituality
+  rule_key: good_lunar_day_for_spirituality
+  nature: good
+  description: Ekadashi (11th), Purnima (15th/full moon), Amavasya (new moon), Panchami (5th), and other significant lunar days are auspicious for spiritual practice.
+  tags: [spirituality]
+
+- name: GoodWeekdayForSpirituality
+  rule_key: good_weekday_for_spirituality
+  nature: good
+  description: Monday (Moon), Thursday (Jupiter), Saturday (Saturn/Shani) are auspicious for spiritual practice.
+  tags: [spirituality]
+
+- name: GoodNakshatraForSpirituality
+  rule_key: good_nakshatra_for_spirituality
+  nature: good
+  description: Ashwini, Rohini, Punarvasu, Pushya, Uttara Phalguni, Hasta, Anuradha, Uttara Ashadha, Shravana, Uttara Bhadrapada, Revati are auspicious for spiritual initiation.
+  tags: [spirituality]
+
+- name: SpiritualLagna
+  rule_key: spiritual_lagna
+  nature: good
+  description: Cancer, Sagittarius, Pisces, Aquarius rising are spiritually inclined lagnas.
+  tags: [spirituality]
+
+- name: JupiterInSpiritualHouse
+  rule_key: jupiter_in_spiritual_house
+  nature: good
+  description: Jupiter in 1st, 9th, or 12th house strengthens spiritual inclination and practice.
+  tags: [spirituality]
+
+- name: KetuInSpiritualHouse
+  rule_key: ketu_in_spiritual_house
+  nature: good
+  description: Ketu in 9th or 12th house indicates deep spiritual potential and detachment.
+  tags: [spirituality]
+
+# ──────────────────────────────────────────
+# LEGAL
+# ──────────────────────────────────────────
+
+- name: GoodLunarDayForLegal
+  rule_key: good_lunar_day_for_legal
+  nature: good
+  description: Lunar days 2, 3, 5, 6, 7, 10, 11, 12, 13 are auspicious for legal proceedings.
+  tags: [legal]
+
+- name: BadLunarDayForLegal
+  rule_key: bad_lunar_day_for_legal
+  nature: bad
+  description: Lunar days 4, 8, 9, 14, 15 are unfavourable for legal matters.
+  tags: [legal]
+
+- name: GoodWeekdayForLegal
+  rule_key: good_weekday_for_legal
+  nature: good
+  description: Sunday, Monday, Wednesday, Thursday are favourable for legal proceedings.
+  tags: [legal]
+
+- name: BadWeekdayForLegal
+  rule_key: bad_weekday_for_legal
+  nature: bad
+  description: Saturday and Tuesday are unfavourable for legal filings or court appearances.
+  tags: [legal]
+
+- name: GoodNakshatraForLegal
+  rule_key: good_nakshatra_for_legal
+  nature: good
+  description: Ashwini, Rohini, Pushya, Uttara Phalguni, Hasta, Anuradha, Shravana, Revati are auspicious for legal matters.
+  tags: [legal]
+
+- name: GoodLagnaForLegal
+  rule_key: good_lagna_for_legal
+  nature: good
+  description: Aries, Leo, Sagittarius, Libra are strong lagnas for legal authority.
+  tags: [legal]
+
+- name: StrongSunForLegal
+  rule_key: strong_sun_for_legal
+  nature: good
+  description: Sun in 1st, 9th, or 10th house gives authority and justice in legal matters.
+  tags: [legal]
+
+- name: SaturnUpachayaLegal
+  rule_key: saturn_upachaya_legal
+  nature: good
+  description: Saturn in 6th or 11th (Upachaya) house is favourable for overcoming opposition in legal cases.
+  tags: [legal]
