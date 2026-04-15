@@ -44,7 +44,7 @@ from app.core.dasha_engine import DashaEngine
 from app.core.engine import GoodTimeEngine, evaluate_event_at_context
 from app.core.enums import EventTag, ZODIAC_SIGNS as _ZODIAC_SIGNS
 from app.core.models import EventDefinition, GeoLocation, Person, TimeRange, TimeWindow
-from app.core.ranking import compute_composite_score, get_weights, rank_window
+from app.core.ranking import compute_composite_score, batch_composite_scores, get_weights, rank_window
 from app.core.windows import merge_slices_to_windows
 from app.core.yoga_engine import YogaEngine
 from app.rules.registry import build_default_registry
@@ -337,6 +337,9 @@ class LifePredictorService:
 
         slot_scores: list[_SlotScore] = []
 
+        from app.astrology.calculations import moon_constellation
+        natal_nakshatra = moon_constellation(person.birth_datetime, person.birth_location)
+
         for dt in time_points:
             ctx = build_context(dt, location, person)
             current_p_signs = ctx.planet_signs
@@ -346,9 +349,7 @@ class LifePredictorService:
             retro_planets = {p for p, spd in transit_speeds.items() if spd < 0}
 
             # ── Tara Bala (Nakshatra transit strength) ──
-            from app.astrology.calculations import moon_constellation
             transit_nakshatra = moon_constellation(dt, location)
-            natal_nakshatra = moon_constellation(person.birth_datetime, person.birth_location)
             _, tara_score = compute_tara(natal_nakshatra, transit_nakshatra)
 
             # Chandra Bala — Moon's transit strength
@@ -411,9 +412,8 @@ class LifePredictorService:
                     slot_rule_total += hit.score
                     slot_events.append(event_def.name)
 
-            transit_longs = get_raw_longitudes(dt)
-            bhrigu_score = bhrigu_transit_score(bb_long, transit_longs)
-            dt_score = double_transit_score(category, transit_longs, natal_p_houses, n_lagna)
+            bhrigu_score = bhrigu_transit_score(bb_long, transit_longitudes)
+            dt_score = double_transit_score(category, transit_longitudes, natal_p_houses, n_lagna)
             
             slot_scores.append(_SlotScore(
                 dt=dt,
@@ -451,33 +451,18 @@ class LifePredictorService:
             panchang = build_panchang(mid_dt, mid_ctx.moon_constellation, mid_ctx.lunar_day, mid_ctx.weekday)
             panchang_score = panchang.yoga_score + panchang.karana_score
 
-        raw_composites: list[float] = []
+        feature_rows: list[list[float]] = []
         for s in slot_scores:
             effective_dasha = s.dasha_b + sade_sati_penalty + special.overall_penalty
-
-            composite = compute_composite_score(
-                category=category,
-                rule_score=s.rule_score,
-                shadbala_bonus=sha_centered,
-                gochara_score=s.gochara,
-                dasha_bonus=effective_dasha,
-                yoga_score=yoga_score,
-                ashtakavarga_bonus=s.avarga + s.panchang_s,
-                tara_score=s.tara_score,
-                chandra_bala_score=s.chandra_bala_score,
-                avastha_score=s.avastha_score,
-                pushkara_bonus_score=s.pushkara_bonus_score,
-                sudarshana_score=s.sudarshana_score,
-                jaimini_score=jaimini_score,
-                arudha_score=arudha_score,
-                gulika_penalty=gulika_pen,
-                badhaka_penalty=badhaka_pen,
-                bhrigu_bonus=s.bhrigu_bonus,
-                kp_score=s.kp_score,
-                kp_cuspal_score=s.kp_cuspal_score,
-                double_transit=s.double_transit,
-            )
-            raw_composites.append(composite)
+            feature_rows.append([
+                s.rule_score, sha_centered, s.gochara, effective_dasha,
+                yoga_score, s.avarga + s.panchang_s, s.tara_score,
+                s.chandra_bala_score, s.avastha_score, s.pushkara_bonus_score,
+                s.sudarshana_score, jaimini_score, arudha_score,
+                gulika_pen, badhaka_pen, s.bhrigu_bonus,
+                s.kp_score, s.kp_cuspal_score, s.double_transit,
+            ])
+        raw_composites = batch_composite_scores(category, feature_rows)
 
         import math
 

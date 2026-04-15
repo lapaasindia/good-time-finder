@@ -13,6 +13,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
+from functools import lru_cache
 
 import swisseph as swe
 
@@ -308,42 +309,72 @@ def get_speeds(dt: datetime) -> dict[str, float]:
     return _get_speeds(dt)
 
 
-def _get_raw_longitudes(dt: datetime) -> dict[str, float]:
-    swe.set_sid_mode(swe.SIDM_LAHIRI)
+_PLANET_IDS_LONGS = None
+
+def _ensure_planet_ids_longs():
+    global _PLANET_IDS_LONGS
+    if _PLANET_IDS_LONGS is None:
+        _PLANET_IDS_LONGS = {
+            "Sun": swe.SUN, "Moon": swe.MOON, "Mars": swe.MARS,
+            "Mercury": swe.MERCURY, "Jupiter": swe.JUPITER,
+            "Venus": swe.VENUS, "Saturn": swe.SATURN,
+            "Rahu": swe.MEAN_NODE,
+        }
+    return _PLANET_IDS_LONGS
+
+
+def _dt_to_jd(dt: datetime) -> float:
     utc = dt.astimezone(timezone.utc)
-    jd = swe.julday(utc.year, utc.month, utc.day,
-                    utc.hour + utc.minute / 60.0 + utc.second / 3600.0)
-    PLANET_IDS = {
-        "Sun": swe.SUN, "Moon": swe.MOON, "Mars": swe.MARS,
-        "Mercury": swe.MERCURY, "Jupiter": swe.JUPITER,
-        "Venus": swe.VENUS, "Saturn": swe.SATURN,
-        "Rahu": swe.MEAN_NODE,
-    }
+    return swe.julday(utc.year, utc.month, utc.day,
+                      utc.hour + utc.minute / 60.0 + utc.second / 3600.0)
+
+
+@lru_cache(maxsize=4096)
+def _get_raw_longitudes_cached(jd: float) -> tuple:
+    swe.set_sid_mode(swe.SIDM_LAHIRI)
+    planet_ids = _ensure_planet_ids_longs()
     longitudes: dict[str, float] = {}
-    for name, pid in PLANET_IDS.items():
-        flags = swe.FLG_SWIEPH | swe.FLG_SIDEREAL
+    flags = swe.FLG_SWIEPH | swe.FLG_SIDEREAL
+    for name, pid in planet_ids.items():
         result, _ = swe.calc_ut(jd, pid, flags)
         longitudes[name] = result[0] % 360
     longitudes["Ketu"] = (longitudes["Rahu"] + 180) % 360
-    return longitudes
+    return tuple(sorted(longitudes.items()))
+
+
+def _get_raw_longitudes(dt: datetime) -> dict[str, float]:
+    jd = _dt_to_jd(dt)
+    return dict(_get_raw_longitudes_cached(jd))
+
+
+_PLANET_IDS_SPEEDS = None
+
+def _ensure_planet_ids_speeds():
+    global _PLANET_IDS_SPEEDS
+    if _PLANET_IDS_SPEEDS is None:
+        _PLANET_IDS_SPEEDS = {
+            "Sun": swe.SUN, "Moon": swe.MOON, "Mars": swe.MARS,
+            "Mercury": swe.MERCURY, "Jupiter": swe.JUPITER,
+            "Venus": swe.VENUS, "Saturn": swe.SATURN,
+        }
+    return _PLANET_IDS_SPEEDS
+
+
+@lru_cache(maxsize=4096)
+def _get_speeds_cached(jd: float) -> tuple:
+    swe.set_sid_mode(swe.SIDM_LAHIRI)
+    planet_ids = _ensure_planet_ids_speeds()
+    speeds: dict[str, float] = {}
+    flags = swe.FLG_SWIEPH | swe.FLG_SIDEREAL | swe.FLG_SPEED
+    for name, pid in planet_ids.items():
+        result, _ = swe.calc_ut(jd, pid, flags)
+        speeds[name] = result[3]
+    return tuple(sorted(speeds.items()))
 
 
 def _get_speeds(dt: datetime) -> dict[str, float]:
-    swe.set_sid_mode(swe.SIDM_LAHIRI)
-    utc = dt.astimezone(timezone.utc)
-    jd = swe.julday(utc.year, utc.month, utc.day,
-                    utc.hour + utc.minute / 60.0 + utc.second / 3600.0)
-    PLANET_IDS = {
-        "Sun": swe.SUN, "Moon": swe.MOON, "Mars": swe.MARS,
-        "Mercury": swe.MERCURY, "Jupiter": swe.JUPITER,
-        "Venus": swe.VENUS, "Saturn": swe.SATURN,
-    }
-    speeds: dict[str, float] = {}
-    for name, pid in PLANET_IDS.items():
-        flags = swe.FLG_SWIEPH | swe.FLG_SIDEREAL | swe.FLG_SPEED
-        result, _ = swe.calc_ut(jd, pid, flags)
-        speeds[name] = result[3]
-    return speeds
+    jd = _dt_to_jd(dt)
+    return dict(_get_speeds_cached(jd))
 
 
 def _angular_diff(lon1: float, lon2: float) -> float:

@@ -43,6 +43,25 @@ def _planet_longitude(jd: float, planet_id: int) -> float:
     return result[0]
 
 
+@lru_cache(maxsize=4096)
+def _all_positions(jd: float, lat: float, lon: float) -> tuple:
+    """Compute all planet longitudes + ascendant in a single cached call."""
+    swe.set_sid_mode(swe.SIDM_LAHIRI)
+    flags = swe.FLG_SWIEPH | swe.FLG_SIDEREAL
+    longs = {}
+    for name, pid in PLANETS.items():
+        result, _ = swe.calc_ut(jd, pid, flags)
+        longs[name] = result[0]
+    houses, ascmc = swe.houses_ex(jd, lat, lon, b"P", swe.FLG_SIDEREAL)
+    asc_lon = ascmc[0]
+    return tuple(sorted(longs.items())), asc_lon
+
+
+def _get_all(jd: float, lat: float, lon: float) -> tuple[dict[str, float], float]:
+    items, asc = _all_positions(jd, lat, lon)
+    return dict(items), asc
+
+
 def _longitude_to_sign(longitude: float) -> str:
     index = int(longitude / 30) % 12
     return ZODIAC_SIGNS[index]
@@ -55,28 +74,23 @@ def _longitude_to_nakshatra(longitude: float) -> tuple[str, int]:
 
 
 def lunar_day(dt: datetime, loc: GeoLocation) -> int:
-    swe.set_sid_mode(swe.SIDM_LAHIRI)
     jd = _to_julian_day(dt)
-    sun_lon = _planet_longitude(jd, swe.SUN)
-    moon_lon = _planet_longitude(jd, swe.MOON)
-    diff = (moon_lon - sun_lon) % 360
-    tithi = int(diff / 12) + 1
-    return tithi
+    longs, _ = _get_all(jd, loc.latitude, loc.longitude)
+    diff = (longs["Moon"] - longs["Sun"]) % 360
+    return int(diff / 12) + 1
 
 
 def moon_constellation(dt: datetime, loc: GeoLocation) -> str:
-    swe.set_sid_mode(swe.SIDM_LAHIRI)
     jd = _to_julian_day(dt)
-    moon_lon = _planet_longitude(jd, swe.MOON)
-    nakshatra, _ = _longitude_to_nakshatra(moon_lon)
+    longs, _ = _get_all(jd, loc.latitude, loc.longitude)
+    nakshatra, _ = _longitude_to_nakshatra(longs["Moon"])
     return nakshatra
 
 
 def nakshatra_pada(dt: datetime, loc: GeoLocation) -> int:
-    swe.set_sid_mode(swe.SIDM_LAHIRI)
     jd = _to_julian_day(dt)
-    moon_lon = _planet_longitude(jd, swe.MOON)
-    _, pada = _longitude_to_nakshatra(moon_lon)
+    longs, _ = _get_all(jd, loc.latitude, loc.longitude)
+    _, pada = _longitude_to_nakshatra(longs["Moon"])
     return pada
 
 
@@ -85,31 +99,21 @@ def weekday(dt: datetime) -> str:
 
 
 def rising_sign(dt: datetime, loc: GeoLocation) -> str:
-    swe.set_sid_mode(swe.SIDM_LAHIRI)
     jd = _to_julian_day(dt)
-    houses, ascmc = swe.houses_ex(
-        jd,
-        loc.latitude,
-        loc.longitude,
-        b"P",
-        swe.FLG_SIDEREAL,
-    )
-    asc_lon = ascmc[0]
+    _, asc_lon = _get_all(jd, loc.latitude, loc.longitude)
     return _longitude_to_sign(asc_lon)
 
 
 def moon_sign(dt: datetime, loc: GeoLocation) -> str:
-    swe.set_sid_mode(swe.SIDM_LAHIRI)
     jd = _to_julian_day(dt)
-    moon_lon = _planet_longitude(jd, swe.MOON)
-    return _longitude_to_sign(moon_lon)
+    longs, _ = _get_all(jd, loc.latitude, loc.longitude)
+    return _longitude_to_sign(longs["Moon"])
 
 
 def sun_sign(dt: datetime, loc: GeoLocation) -> str:
-    swe.set_sid_mode(swe.SIDM_LAHIRI)
     jd = _to_julian_day(dt)
-    sun_lon = _planet_longitude(jd, swe.SUN)
-    return _longitude_to_sign(sun_lon)
+    longs, _ = _get_all(jd, loc.latitude, loc.longitude)
+    return _longitude_to_sign(longs["Sun"])
 
 
 def natal_moon_sign(person: Person) -> str:
@@ -121,38 +125,19 @@ def natal_lagna(person: Person) -> str:
 
 
 def planet_houses(dt: datetime, loc: GeoLocation) -> dict[str, int]:
-    swe.set_sid_mode(swe.SIDM_LAHIRI)
     jd = _to_julian_day(dt)
-    houses, ascmc = swe.houses_ex(
-        jd,
-        loc.latitude,
-        loc.longitude,
-        b"P",
-        swe.FLG_SIDEREAL,
-    )
-    asc_lon = ascmc[0]
-
+    longs, asc_lon = _get_all(jd, loc.latitude, loc.longitude)
     result = {}
-    for name, planet_id in PLANETS.items():
-        flags = swe.FLG_SWIEPH | swe.FLG_SIDEREAL
-        calc_result, _ = swe.calc_ut(jd, planet_id, flags)
-        p_lon = calc_result[0]
+    for name, p_lon in longs.items():
         rel = (p_lon - asc_lon) % 360
-        house_num = int(rel / 30) + 1
-        result[name] = house_num
-
+        result[name] = int(rel / 30) + 1
     return result
 
 
 def planet_signs(dt: datetime, loc: GeoLocation) -> dict[str, str]:
-    swe.set_sid_mode(swe.SIDM_LAHIRI)
     jd = _to_julian_day(dt)
-    result = {}
-    for name, planet_id in PLANETS.items():
-        flags = swe.FLG_SWIEPH | swe.FLG_SIDEREAL
-        calc_result, _ = swe.calc_ut(jd, planet_id, flags)
-        result[name] = _longitude_to_sign(calc_result[0])
-    return result
+    longs, _ = _get_all(jd, loc.latitude, loc.longitude)
+    return {name: _longitude_to_sign(lon) for name, lon in longs.items()}
 
 
 def build_context(dt: datetime, loc: GeoLocation, person: Person) -> AstroContext:

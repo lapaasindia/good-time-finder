@@ -154,6 +154,56 @@ def compute_composite_score(
     return round(score, 3)
 
 
+def batch_composite_scores(
+    category: str,
+    feature_rows: list[list[float]],
+) -> list[float]:
+    """Vectorised scoring — one RF call for all slots."""
+    if not feature_rows:
+        return []
+
+    offset = 1.0 if category in ("general", "accidents") else 0.0
+
+    if USE_ML_MODEL and _rf_model is not None:
+        X = np.array(feature_rows, dtype=np.float64)
+        probs = _rf_model.predict_proba(X)[:, 1]  # P(Good)
+        scores = (probs - 0.5) * 6.0 + offset
+        return [round(float(s), 3) for s in scores]
+
+    # Classical fallback
+    w = get_weights(category)
+    results: list[float] = []
+    for row in feature_rows:
+        (rule_score, shadbala_bonus, gochara_score, dasha_bonus, yoga_score,
+         ashtakavarga_bonus, tara_score, chandra_bala_score, avastha_score,
+         pushkara_bonus_score, sudarshana_score, jaimini_score, arudha_score,
+         gulika_penalty, badhaka_penalty, bhrigu_bonus, kp_score,
+         kp_cuspal_score, double_transit) = row
+        score = (
+            rule_score            * w.rule
+            + shadbala_bonus      * w.shadbala
+            + gochara_score       * w.gochara
+            + dasha_bonus         * w.dasha
+            + yoga_score          * w.yoga
+            + ashtakavarga_bonus  * w.ashtakavarga
+            + tara_score          * w.tara
+            + chandra_bala_score  * w.chandra_bala
+            + avastha_score       * w.avastha
+            + pushkara_bonus_score * w.pushkara
+            + sudarshana_score    * w.sudarshana
+            + jaimini_score       * w.jaimini
+            + arudha_score        * w.arudha
+            + gulika_penalty      * w.gulika
+            + badhaka_penalty     * w.badhaka
+            + bhrigu_bonus        * w.bhrigu
+            + kp_score            * w.kp
+            + kp_cuspal_score     * w.kp_cuspal
+            + double_transit      * w.double_transit
+        ) + offset
+        results.append(round(score, 3))
+    return results
+
+
 def rank_window(composite_score: float, duration_minutes: float) -> float:
     if duration_minutes <= 0:
         return 0.0
