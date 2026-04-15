@@ -5,7 +5,7 @@ from typing import Annotated
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse, HTMLResponse
 from pydantic import BaseModel, Field
 import os
 
@@ -27,7 +27,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-_UI_FILE = os.path.join(os.path.dirname(__file__), "..", "..", "..", "life_predictor_ui.html")
+_UI_FILE = os.path.join(os.path.dirname(__file__), "..", "..", "life_predictor_ui.html")
 
 @app.get("/", include_in_schema=False)
 def root():
@@ -36,7 +36,12 @@ def root():
 @app.get("/ui", include_in_schema=False)
 def serve_ui():
     path = os.path.abspath(_UI_FILE)
-    return FileResponse(path, media_type="text/html")
+    with open(path, "r", encoding="utf-8") as f:
+        content = f.read()
+    return HTMLResponse(
+        content=content,
+        headers={"Cache-Control": "no-cache, no-store, must-revalidate"},
+    )
 
 _service = GoodTimeFinderService()
 _predictor = LifePredictorService()
