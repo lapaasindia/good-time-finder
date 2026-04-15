@@ -64,6 +64,12 @@ class PredictionWindow:
     yoga_score: float = 0.0
     ashtakavarga_bonus: float = 0.0
     rule_score: float = 0.0
+    tara_score: float = 0.0
+    chandra_bala_score: float = 0.0
+    avastha_score: float = 0.0
+    pushkara_bonus_score: float = 0.0
+    sudarshana_score: float = 0.0
+    sandhi_penalty: float = 0.0
 
 
 @dataclass
@@ -85,6 +91,11 @@ class LifePrediction:
     top_windows: list[PredictionWindow]
     overall_period_score: float
     narrative: str
+    jaimini_score: float = 0.0
+    arudha_score: float = 0.0
+    gulika_penalty: float = 0.0
+    badhaka_penalty: float = 0.0
+    divisional_scores: dict[str, float] = field(default_factory=dict)
 
 
 # ── Yoga-Dasha Activation ──
@@ -478,6 +489,12 @@ class LifePredictorService:
             avg_dasha = sum(sl.dasha_b for sl in slots) / len(slots)
             avg_avarga = sum(sl.avarga for sl in slots) / len(slots)
             avg_rule = sum(sl.rule_score for sl in slots) / len(slots)
+            avg_tara = sum(sl.tara_score for sl in slots) / len(slots)
+            avg_chandra = sum(sl.chandra_bala_score for sl in slots) / len(slots)
+            avg_avastha = sum(sl.avastha_score for sl in slots) / len(slots)
+            avg_pushkara = sum(sl.pushkara_bonus_score for sl in slots) / len(slots)
+            avg_sudarshana = sum(sl.sudarshana_score for sl in slots) / len(slots)
+            avg_sandhi = sum(sl.sandhi_penalty for sl in slots) / len(slots)
 
             w_maha, w_antar, w_prat = dasha_engine.active_full_at(start)
             if w_maha and w_antar and w_prat:
@@ -506,6 +523,12 @@ class LifePredictorService:
                 yoga_score=round(yoga_score, 3),
                 ashtakavarga_bonus=round(avg_avarga, 3),
                 rule_score=round(avg_rule, 3),
+                tara_score=round(avg_tara, 3),
+                chandra_bala_score=round(avg_chandra, 3),
+                avastha_score=round(avg_avastha, 3),
+                pushkara_bonus_score=round(avg_pushkara, 3),
+                sudarshana_score=round(avg_sudarshana, 3),
+                sandhi_penalty=round(avg_sandhi, 3),
             )
 
         max_window_hours = 12
@@ -579,6 +602,11 @@ class LifePredictorService:
             top_windows=prediction_windows[:5],
             overall_period_score=overall_score,
             narrative=narrative,
+            jaimini_score=jaimini_score,
+            arudha_score=arudha_score,
+            gulika_penalty=gulika_pen,
+            badhaka_penalty=badhaka_pen,
+            divisional_scores={"d9": d9_score, "d10": d10_score, "d2": d2_score, "d7": d7_score, "vimsopaka": vimsopaka_score},
         )
 
 

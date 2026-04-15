@@ -1285,7 +1285,7 @@ def run_backtest():
     print("="*50)
     
     # Save results to JSON
-    with open('/Users/sahilkhanna/Downloads/Life predicter/good_time_finder/scripts/backtest_results.json', 'w') as f:
+    with open(os.path.join(os.path.dirname(__file__), 'backtest_results.json'), 'w') as f:
         json.dump({
             "summary": {
                 "total_personalities": len(PERSONALITIES),

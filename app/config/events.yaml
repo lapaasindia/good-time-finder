@@ -492,3 +492,193 @@
   nature: good
   description: Saturn in 6th or 11th (Upachaya) house is favourable for overcoming opposition in legal cases.
   tags: [legal]
+
+# ──────────────────────────────────────────
+# FAME
+# ──────────────────────────────────────────
+
+- name: GoodNakshatraForFame
+  rule_key: good_nakshatra_for_fame
+  nature: good
+  description: >
+    Ashwini, Rohini, Pushya, Magha, Uttara Phalguni, Hasta, Chitra, Swati,
+    Anuradha, Shravana, Dhanishta, Revati are auspicious for public recognition.
+  tags: [fame]
+
+- name: BadNakshatraForFame
+  rule_key: bad_nakshatra_for_fame
+  nature: bad
+  description: >
+    Bharani, Ardra, Ashlesha, Jyeshtha, Mula are inauspicious for public image.
+  tags: [fame]
+
+- name: GoodWeekdayForFame
+  rule_key: good_weekday_for_fame
+  nature: good
+  description: Sunday (Sun), Thursday (Jupiter), Monday (Moon) are auspicious for fame events.
+  tags: [fame]
+
+- name: BadWeekdayForFame
+  rule_key: bad_weekday_for_fame
+  nature: bad
+  description: Saturday is generally unfavourable for public recognition events.
+  tags: [fame]
+
+- name: GoodLagnaForFame
+  rule_key: good_lagna_for_fame
+  nature: good
+  description: Leo, Aries, Sagittarius, Taurus, Libra rising favour public recognition.
+  tags: [fame]
+
+- name: StrongSunForFame
+  rule_key: strong_sun_for_fame
+  nature: good
+  description: Sun in 1st, 10th, or 11th house — strong public authority and recognition.
+  tags: [fame]
+
+- name: JupiterInFameHouse
+  rule_key: jupiter_in_fame_house
+  nature: good
+  description: Jupiter in 1st, 5th, 9th, or 10th — honour, awards, public acclaim.
+  tags: [fame]
+
+# ──────────────────────────────────────────
+# RELATIONSHIPS
+# ──────────────────────────────────────────
+
+- name: GoodNakshatraForRelationships
+  rule_key: good_nakshatra_for_relationships
+  nature: good
+  description: >
+    Rohini, Mrigashira, Punarvasu, Pushya, Uttara Phalguni, Hasta, Swati,
+    Anuradha, Shravana, Uttara Bhadrapada, Revati favour social connections.
+  tags: [relationships]
+
+- name: BadNakshatraForRelationships
+  rule_key: bad_nakshatra_for_relationships
+  nature: bad
+  description: Bharani, Ardra, Ashlesha, Jyeshtha, Mula are inauspicious for relationships.
+  tags: [relationships]
+
+- name: GoodWeekdayForRelationships
+  rule_key: good_weekday_for_relationships
+  nature: good
+  description: Monday, Wednesday, Thursday, Friday are auspicious for social and romantic connections.
+  tags: [relationships]
+
+- name: GoodLagnaForRelationships
+  rule_key: good_lagna_for_relationships
+  nature: good
+  description: Taurus, Cancer, Libra, Sagittarius, Pisces rising favour partnerships.
+  tags: [relationships]
+
+- name: VenusInGoodHouseForRelationships
+  rule_key: venus_in_good_house_relationships
+  nature: good
+  description: Venus in 1st, 5th, 7th, or 11th house brings social and romantic magnetism.
+  tags: [relationships]
+
+- name: MoonInGoodHouseForRelationships
+  rule_key: moon_in_good_house_relationships
+  nature: good
+  description: Moon in Kendra (1st, 4th, 7th, 10th) indicates emotional receptivity and bonding.
+  tags: [relationships]
+
+# ──────────────────────────────────────────
+# BUSINESS
+# ──────────────────────────────────────────
+
+- name: GoodLunarDayForBusiness
+  rule_key: good_lunar_day_for_business
+  nature: good
+  description: Lunar days 1, 2, 3, 5, 7, 10, 11, 13 are auspicious for business ventures.
+  tags: [business]
+
+- name: BadLunarDayForBusiness
+  rule_key: bad_lunar_day_for_business
+  nature: bad
+  description: Lunar days 4, 8, 9, 14, 15 are unfavourable for business decisions.
+  tags: [business]
+
+- name: GoodNakshatraForBusiness
+  rule_key: good_nakshatra_for_business
+  nature: good
+  description: >
+    Ashwini, Rohini, Mrigashira, Punarvasu, Pushya, Uttara Phalguni, Hasta,
+    Chitra, Swati, Anuradha, Uttara Ashadha, Shravana, Dhanishta, Revati
+    are auspicious for business.
+  tags: [business]
+
+- name: BadNakshatraForBusiness
+  rule_key: bad_nakshatra_for_business
+  nature: bad
+  description: Bharani, Ardra, Ashlesha, Jyeshtha, Mula are inauspicious for business.
+  tags: [business]
+
+- name: GoodWeekdayForBusiness
+  rule_key: good_weekday_for_business
+  nature: good
+  description: Monday, Wednesday, Thursday, Friday favour business activities.
+  tags: [business]
+
+- name: BadWeekdayForBusiness
+  rule_key: bad_weekday_for_business
+  nature: bad
+  description: Saturday and Tuesday are unfavourable for starting new business ventures.
+  tags: [business]
+
+- name: GoodLagnaForBusiness
+  rule_key: good_lagna_for_business
+  nature: good
+  description: Taurus, Gemini, Leo, Virgo, Libra, Sagittarius, Capricorn are strong for business.
+  tags: [business]
+
+- name: StrongMercuryForBusiness
+  rule_key: strong_mercury_for_business
+  nature: good
+  description: Mercury in 1st, 2nd, 7th, 10th, or 11th — commercial acumen and deal-making.
+  tags: [business]
+
+# ──────────────────────────────────────────
+# ACCIDENTS
+# ──────────────────────────────────────────
+
+- name: DangerousNakshatra
+  rule_key: dangerous_nakshatra_accidents
+  nature: bad
+  description: >
+    Bharani, Ardra, Ashlesha, Magha, Jyeshtha, Mula, Purva Ashadha
+    are nakshatras associated with danger and sudden events.
+  tags: [accidents]
+
+- name: SafeNakshatra
+  rule_key: safe_nakshatra_accidents
+  nature: good
+  description: >
+    Ashwini, Rohini, Pushya, Hasta, Anuradha, Shravana, Revati
+    indicate relative safety and protection.
+  tags: [accidents]
+
+- name: DangerousWeekday
+  rule_key: dangerous_weekday_accidents
+  nature: bad
+  description: Tuesday (Mars) and Saturday (Saturn) carry higher accident risk.
+  tags: [accidents]
+
+- name: SafeWeekday
+  rule_key: safe_weekday_accidents
+  nature: good
+  description: Thursday (Jupiter) and Friday (Venus) offer protection from mishaps.
+  tags: [accidents]
+
+- name: MarsInDangerHouse
+  rule_key: mars_in_danger_house
+  nature: bad
+  description: Mars in 1st, 6th, 8th, or 12th house — heightened injury risk.
+  tags: [accidents]
+
+- name: SaturnInDangerHouse
+  rule_key: saturn_in_danger_house
+  nature: bad
+  description: Saturn in 1st, 4th, 8th, or 12th — risk of falls, chronic issues, or danger.
+  tags: [accidents]

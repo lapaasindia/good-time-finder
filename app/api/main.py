@@ -356,6 +356,12 @@ class PredictionWindowResponse(BaseModel):
     dasha_bonus: float
     yoga_score: float
     rule_score: float
+    tara_score: float
+    chandra_bala_score: float
+    avastha_score: float
+    pushkara_bonus_score: float
+    sudarshana_score: float
+    sandhi_penalty: float
 
 
 class PredictResponse(BaseModel):
@@ -375,6 +381,11 @@ class PredictResponse(BaseModel):
     top_windows: list[PredictionWindowResponse]
     all_windows: list[PredictionWindowResponse]
     total_windows: int
+    jaimini_score: float
+    arudha_score: float
+    gulika_penalty: float
+    badhaka_penalty: float
+    divisional_scores: dict[str, float]
 
 
 @app.post("/predict", response_model=PredictResponse)
@@ -444,6 +455,12 @@ def predict(req: PredictRequest) -> PredictResponse:
                 dasha_bonus=w.dasha_bonus,
                 yoga_score=w.yoga_score,
                 rule_score=w.rule_score,
+                tara_score=w.tara_score,
+                chandra_bala_score=w.chandra_bala_score,
+                avastha_score=w.avastha_score,
+                pushkara_bonus_score=w.pushkara_bonus_score,
+                sudarshana_score=w.sudarshana_score,
+                sandhi_penalty=w.sandhi_penalty,
             )
             for w in result.top_windows
         ],
@@ -463,10 +480,21 @@ def predict(req: PredictRequest) -> PredictResponse:
                 dasha_bonus=w.dasha_bonus,
                 yoga_score=w.yoga_score,
                 rule_score=w.rule_score,
+                tara_score=w.tara_score,
+                chandra_bala_score=w.chandra_bala_score,
+                avastha_score=w.avastha_score,
+                pushkara_bonus_score=w.pushkara_bonus_score,
+                sudarshana_score=w.sudarshana_score,
+                sandhi_penalty=w.sandhi_penalty,
             )
             for w in result.windows
         ],
         total_windows=len(result.windows),
+        jaimini_score=result.jaimini_score,
+        arudha_score=result.arudha_score,
+        gulika_penalty=result.gulika_penalty,
+        badhaka_penalty=result.badhaka_penalty,
+        divisional_scores=result.divisional_scores,
     )
 
 
