@@ -880,7 +880,7 @@
     .wrap { max-width: 100%; padding: 0 20px; }
   }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5f9dGxnQeCJxPF7HT0w1LqGK7G2Nl7aL2xj7v+89l2vJYbE2yqB0kPc4V7i8tE9u/0L5q+xUQ==" crossorigin="anonymous" referrerpolicy="no-referrer" onerror="console.error('html2pdf.js failed to load from CDN')"></script>
 </head>
 <body>
 
@@ -2371,6 +2371,16 @@ async function exportToPDF() {
     return;
   }
   
+  // Check if html2pdf library loaded
+  if (typeof html2pdf === 'undefined') {
+    console.error('html2pdf.js library not loaded');
+    const usePrint = confirm('PDF library failed to load. Use browser print instead?\n\nThis will open the print dialog where you can "Save as PDF".');
+    if (usePrint) {
+      window.print();
+    }
+    return;
+  }
+  
   // Show loading state
   btn.disabled = true;
   btn.classList.add('spin');
@@ -2413,7 +2423,7 @@ async function exportToPDF() {
           <div><strong>Name:</strong> ${document.getElementById('f-name').value || '—'}</div>
           <div><strong>Date:</strong> ${document.getElementById('f-dob').value || '—'}</div>
           <div><strong>Time:</strong> ${document.getElementById('f-tob').value || '—'}</div>
-          <div><strong>Location:</strong> ${document.getElementById('f-place').value || '—'}</div>
+          <div><strong>Location:</strong> ${document.getElementById('f-city-search').value || '—'}</div>
           <div><strong>Timezone:</strong> ${document.getElementById('f-tz').selectedOptions[0]?.text || '—'}</div>
         </div>
       </div>
@@ -2536,7 +2546,15 @@ async function exportToPDF() {
     
   } catch (err) {
     console.error('PDF export failed:', err);
-    alert('PDF export failed. Please try again or use browser print (Ctrl+P / Cmd+P).');
+    // Clean up on error
+    try {
+      if (pdfContent.parentNode) document.body.removeChild(pdfContent);
+    } catch(e) {}
+    
+    const usePrint = confirm('PDF generation failed. Use browser print instead?\n\nThis will open the print dialog where you can "Save as PDF".\n\nError: ' + (err.message || 'Unknown error'));
+    if (usePrint) {
+      window.print();
+    }
   } finally {
     // Reset button
     btn.disabled = false;
