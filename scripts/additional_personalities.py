@@ -91,11 +91,11 @@ ADDITIONAL_PERSONALITIES = [
         'events': []
     },
     {
-        'name': 'Oprah Winfrey',
+'name': 'Oprah Winfrey',
         'birth': {
             'dt': '1954-01-29',
-            'lat': 34.0522,
-            'lon': -118.2437,
+            'lat': 33.0567,
+            'lon': -89.5901,
             'tz': 'America/Chicago'
         },
         'events': []
@@ -271,12 +271,12 @@ ADDITIONAL_PERSONALITIES = [
         'events': []
     },
     {
-        'name': 'Abraham Lincoln',
+'name': 'Abraham Lincoln',
         'birth': {
             'dt': '1809-02-12',
-            'lat': 40.4168,
-            'lon': -82.9071,
-            'tz': 'America/Chicago'
+            'lat': 37.5314,
+            'lon': -85.7340,
+            'tz': 'America/Kentucky/Louisville'
         },
         'events': []
     },
@@ -1202,6 +1202,16 @@ ADDITIONAL_PERSONALITIES = [
         'events': []
     },
     {
+        'name': 'Michael Jordan',
+        'birth': {
+            'dt': '1963-02-17',
+            'lat': 40.7128,
+            'lon': -74.0060,
+            'tz': 'America/New_York'
+        },
+        'events': []
+    },
+    {
         'name': 'Pablo Picasso',
         'birth': {
             'dt': '1881-10-25',
@@ -1228,6 +1238,386 @@ ADDITIONAL_PERSONALITIES = [
             'lat': 50.8467,
             'lon': 4.3525,
             'tz': 'Europe/Amsterdam'
+        },
+        'events': []
+    },
+    {
+        'name': 'Salvador Dalí',
+        'birth': {
+            'dt': '1904-05-11',
+            'lat': 42.2667,
+            'lon': 2.9667,
+            'tz': 'Europe/Madrid'
+        },
+        'events': []
+    },
+    {
+        'name': 'Georgia O\'Keeffe',
+        'birth': {
+            'dt': '1887-11-15',
+            'lat': 32.0000,
+            'lon': -97.0000,
+            'tz': 'America/Chicago'
+        },
+        'events': []
+    },
+    {
+        'name': 'Jackson Pollock',
+        'birth': {
+            'dt': '1912-01-28',
+            'lat': 43.1610,
+            'lon': -70.6483,
+            'tz': 'America/New_York'
+        },
+        'events': []
+    },
+    {
+        'name': 'Andy Warhol',
+        'birth': {
+            'dt': '1928-08-06',
+            'lat': 40.4406,
+            'lon': -79.9959,
+            'tz': 'America/New_York'
+        },
+        'events': []
+    },
+    {
+        'name': 'Claude Monet',
+        'birth': {
+            'dt': '1840-11-14',
+            'lat': 48.8566,
+            'lon': 2.3522,
+            'tz': 'Europe/Paris'
+        },
+        'events': []
+    },
+    {
+        'name': 'Rembrandt van Rijn',
+        'birth': {
+            'dt': '1606-07-15',
+            'lat': 52.3676,
+            'lon': 4.9041,
+            'tz': 'Europe/Amsterdam'
+        },
+        'events': []
+    },
+    {
+        'name': 'Michelangelo',
+        'birth': {
+            'dt': '1475-03-06',
+            'lat': 43.7696,
+            'lon': 11.2558,
+            'tz': 'Europe/Rome'
+        },
+        'events': []
+    },
+    {
+        'name': 'Raphael',
+        'birth': {
+            'dt': '1483-03-28',
+            'lat': 43.7696,
+            'lon': 11.2558,
+            'tz': 'Europe/Rome'
+        },
+        'events': []
+    },
+    {
+        'name': 'Donatello',
+        'birth': {
+            'dt': '1386-01-01',
+            'lat': 43.7696,
+            'lon': 11.2558,
+            'tz': 'Europe/Rome'
+        },
+        'events': []
+    },
+    {
+        'name': 'Botticelli',
+        'birth': {
+            'dt': '1445-03-01',
+            'lat': 43.7696,
+            'lon': 11.2558,
+            'tz': 'Europe/Rome'
+        },
+        'events': []
+    },
+    {
+        'name': 'Caravaggio',
+        'birth': {
+            'dt': '1571-09-29',
+            'lat': 45.4642,
+            'lon': 9.1900,
+            'tz': 'Europe/Rome'
+        },
+        'events': []
+    },
+    {
+        'name': 'Hieronymus Bosch',
+        'birth': {
+            'dt': '1450-01-01',
+            'lat': 51.2208,
+            'lon': 4.4017,
+            'tz': 'Europe/Amsterdam'
+        },
+        'events': []
+    },
+    {
+        'name': 'Gustav Klimt',
+        'birth': {
+            'dt': '1862-07-14',
+            'lat': 48.2082,
+            'lon': 16.3738,
+            'tz': 'Europe/Vienna'
+        },
+        'events': []
+    },
+    {
+        'name': 'Egon Schiele',
+        'birth': {
+            'dt': '1890-06-12',
+            'lat': 48.2082,
+            'lon': 16.3738,
+            'tz': 'Europe/Vienna'
+        },
+        'events': []
+    },
+    {
+        'name': 'Hokusai',
+        'birth': {
+            'dt': '1760-10-23',
+            'lat': 35.6762,
+            'lon': 139.6503,
+            'tz': 'Asia/Tokyo'
+        },
+        'events': []
+    },
+    {
+        'name': 'Utamaro',
+        'birth': {
+            'dt': '1753-01-01',
+            'lat': 35.6762,
+            'lon': 139.6503,
+            'tz': 'Asia/Tokyo'
+        },
+        'events': []
+    },
+    {
+        'name': 'Hiroshige',
+        'birth': {
+            'dt': '1797-01-01',
+            'lat': 35.6762,
+            'lon': 139.6503,
+            'tz': 'Asia/Tokyo'
+        },
+        'events': []
+    },
+    {
+        'name': 'Paul Gauguin',
+        'birth': {
+            'dt': '1848-06-07',
+            'lat': 48.8566,
+            'lon': 2.3522,
+            'tz': 'Europe/Paris'
+        },
+        'events': []
+    },
+    {
+        'name': 'Toulouse-Lautrec',
+        'birth': {
+            'dt': '1864-11-24',
+            'lat': 43.6045,
+            'lon': 1.4442,
+            'tz': 'Europe/Paris'
+        },
+        'events': []
+    },
+    {
+        'name': 'Christopher Columbus',
+        'birth': {
+            'dt': '1451-10-31',
+            'lat': 44.4949,
+            'lon': 11.3426,
+            'tz': 'Europe/Rome'
+        },
+        'events': []
+    },
+    {
+        'name': 'Marco Polo',
+        'birth': {
+            'dt': '1254-01-01',
+            'lat': 45.4642,
+            'lon': 9.1900,
+            'tz': 'Europe/Rome'
+        },
+        'events': []
+    },
+    {
+        'name': 'Ferdinand Magellan',
+        'birth': {
+            'dt': '1480-01-01',
+            'lat': 42.6000,
+            'lon': -8.7667,
+            'tz': 'Europe/Madrid'
+        },
+        'events': []
+    },
+    {
+        'name': 'James Cook',
+        'birth': {
+            'dt': '1728-11-07',
+            'lat': 54.5973,
+            'lon': -5.9301,
+            'tz': 'Europe/London'
+        },
+        'events': []
+    },
+    {
+        'name': 'Amelia Earhart',
+        'birth': {
+            'dt': '1897-07-24',
+            'lat': 38.9072,
+            'lon': -77.0369,
+            'tz': 'America/New_York'
+        },
+        'events': []
+    },
+    {
+        'name': 'Charles Lindbergh',
+        'birth': {
+            'dt': '1902-02-04',
+            'lat': 44.9778,
+            'lon': -93.2650,
+            'tz': 'America/Chicago'
+        },
+        'events': []
+    },
+    {
+        'name': 'Wright Brothers',
+        'birth': {
+            'dt': '1871-08-19',
+            'lat': 39.9612,
+            'lon': -82.9988,
+            'tz': 'America/New_York'
+        },
+        'events': []
+    },
+    {
+        'name': 'Henry Ford',
+        'birth': {
+            'dt': '1863-07-30',
+            'lat': 42.3314,
+            'lon': -83.0458,
+            'tz': 'America/New_York'
+        },
+        'events': []
+    },
+    {
+        'name': 'Karl Benz',
+        'birth': {
+            'dt': '1844-11-25',
+            'lat': 49.3988,
+            'lon': 8.6724,
+            'tz': 'Europe/Berlin'
+        },
+        'events': []
+    },
+    {
+        'name': 'Gottlieb Daimler',
+        'birth': {
+            'dt': '1834-03-17',
+            'lat': 48.7758,
+            'lon': 9.1770,
+            'tz': 'Europe/Berlin'
+        },
+        'events': []
+    },
+    {
+        'name': 'Rudolf Diesel',
+        'birth': {
+            'dt': '1858-03-18',
+            'lat': 48.1374,
+            'lon': 11.5755,
+            'tz': 'Europe/Berlin'
+        },
+        'events': []
+    },
+    {
+        'name': 'Alexander Graham Bell',
+        'birth': {
+            'dt': '1847-03-03',
+            'lat': 55.8642,
+            'lon': -4.2518,
+            'tz': 'Europe/London'
+        },
+        'events': []
+    },
+    {
+        'name': 'Thomas Edison',
+        'birth': {
+            'dt': '1847-02-11',
+            'lat': 40.7128,
+            'lon': -74.0060,
+            'tz': 'America/New_York'
+        },
+        'events': []
+    },
+    {
+        'name': 'Nikola Tesla',
+        'birth': {
+            'dt': '1856-07-10',
+            'lat': 45.8150,
+            'lon': 15.9819,
+            'tz': 'Europe/Belgrade'
+        },
+        'events': []
+    },
+    {
+        'name': 'George Westinghouse',
+        'birth': {
+            'dt': '1846-10-06',
+            'lat': 40.4406,
+            'lon': -79.9959,
+            'tz': 'America/New_York'
+        },
+        'events': []
+    },
+    {
+        'name': 'Samuel Morse',
+        'birth': {
+            'dt': '1791-04-27',
+            'lat': 42.3601,
+            'lon': -71.0589,
+            'tz': 'America/New_York'
+        },
+        'events': []
+    },
+    {
+        'name': 'Guglielmo Marconi',
+        'birth': {
+            'dt': '1874-04-25',
+            'lat': 44.4949,
+            'lon': 11.3426,
+            'tz': 'Europe/Rome'
+        },
+        'events': []
+    },
+    {
+        'name': 'Tim Berners-Lee',
+        'birth': {
+            'dt': '1955-06-08',
+            'lat': 51.5074,
+            'lon': -0.1278,
+            'tz': 'Europe/London'
+        },
+        'events': []
+    },
+    {
+        'name': 'Steve Jobs',
+        'birth': {
+            'dt': '1955-02-24',
+            'lat': 37.7749,
+            'lon': -122.4194,
+            'tz': 'America/Los_Angeles'
         },
         'events': []
     }
