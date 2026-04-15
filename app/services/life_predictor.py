@@ -29,6 +29,8 @@ from app.astrology.shadbala import benefic_strength_score, lagna_lord_strength, 
 from app.astrology.dasha import CATEGORY_PLANETS
 from app.astrology.sade_sati import compute_sade_sati
 from app.astrology.special_conditions import compute_special_conditions, apply_combustion_to_shadbala, get_raw_longitudes, get_speeds
+from app.astrology.bhrigu import calculate_bhrigu_bindu, bhrigu_transit_score
+from app.astrology.kp import kp_score
 from app.astrology.divisional_charts import navamsa_score_for_category, dasamsa_score_for_category, hora_score_for_category, saptamsa_score_for_category, vimsopaka_for_category
 from app.astrology.panchang import build_panchang
 from app.astrology.tara_bala import compute_tara, chandra_bala
@@ -70,6 +72,8 @@ class PredictionWindow:
     pushkara_bonus_score: float = 0.0
     sudarshana_score: float = 0.0
     sandhi_penalty: float = 0.0
+    bhrigu_bonus: float = 0.0
+    kp_score: float = 0.0
 
 
 @dataclass
@@ -306,8 +310,17 @@ class LifePredictorService:
             pushkara_bonus_score: float
             sudarshana_score: float
             sandhi_penalty: float
+            bhrigu_bonus: float
+            kp_score: float
             active_events: list[str]
             nature: str
+
+        # Bhrigu and KP
+        natal_longs = get_raw_longitudes(person.birth_datetime)
+        moon_long = natal_longs.get("Moon", 0.0)
+        rahu_long = natal_longs.get("Rahu", 0.0)
+        bb_long = calculate_bhrigu_bindu(moon_long, rahu_long)
+        natal_kp_score = kp_score(natal_longs, n_lagna, category)
 
         slot_scores: list[_SlotScore] = []
 
@@ -385,6 +398,9 @@ class LifePredictorService:
                     slot_rule_total += hit.score
                     slot_events.append(event_def.name)
 
+            transit_longs = get_raw_longitudes(dt)
+            bhrigu_score = bhrigu_transit_score(bb_long, transit_longs)
+            
             slot_scores.append(_SlotScore(
                 dt=dt,
                 rule_score=slot_rule_total,
@@ -398,6 +414,8 @@ class LifePredictorService:
                 pushkara_bonus_score=pushkara_bonus_score,
                 sudarshana_score=sudarshana_score,
                 sandhi_penalty=sandhi_penalty,
+                bhrigu_bonus=bhrigu_score,
+                kp_score=natal_kp_score,
                 active_events=slot_events,
                 nature="",
             ))
@@ -438,6 +456,8 @@ class LifePredictorService:
                 arudha_score=arudha_score,
                 gulika_penalty=gulika_pen,
                 badhaka_penalty=badhaka_pen,
+                bhrigu_bonus=s.bhrigu_bonus,
+                kp_score=s.kp_score,
             )
             raw_composites.append(composite)
 

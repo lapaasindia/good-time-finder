@@ -36,24 +36,26 @@ class CategoryWeights:
     arudha: float = 0.2
     gulika: float = 0.3
     badhaka: float = 0.3
+    bhrigu: float = 1.0
+    kp: float = 0.5
 
 
 CATEGORY_WEIGHTS: dict[str, CategoryWeights] = {
-    "career":      CategoryWeights(rule=0.5, shadbala=0.6, gochara=1.0, dasha=1.5, yoga=0.8, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
-    "finance":     CategoryWeights(rule=0.5, shadbala=0.5, gochara=1.0, dasha=1.4, yoga=0.8, ashtakavarga=0.5, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
-    "health":      CategoryWeights(rule=0.6, shadbala=1.0, gochara=1.4, dasha=1.5, yoga=0.6, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
-    "marriage":    CategoryWeights(rule=0.7, shadbala=0.5, gochara=1.2, dasha=1.2, yoga=1.0, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
-    "travel":      CategoryWeights(rule=0.8, shadbala=0.3, gochara=1.0, dasha=0.8, yoga=0.4, ashtakavarga=0.3, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
-    "education":   CategoryWeights(rule=0.6, shadbala=0.6, gochara=1.2, dasha=1.3, yoga=0.8, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
-    "property":    CategoryWeights(rule=0.6, shadbala=0.5, gochara=1.2, dasha=1.2, yoga=0.6, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
-    "children":    CategoryWeights(rule=0.7, shadbala=0.5, gochara=1.2, dasha=1.2, yoga=0.8, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
-    "spirituality":CategoryWeights(rule=0.7, shadbala=0.4, gochara=0.8, dasha=1.0, yoga=1.2, ashtakavarga=0.3, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
-    "legal":       CategoryWeights(rule=0.6, shadbala=0.6, gochara=1.2, dasha=1.2, yoga=0.6, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
-    "fame":        CategoryWeights(rule=0.5, shadbala=0.7, gochara=1.0, dasha=1.5, yoga=1.0, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
-    "relationships":CategoryWeights(rule=0.7, shadbala=0.5, gochara=1.2, dasha=1.2, yoga=0.8, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
-    "business":    CategoryWeights(rule=0.5, shadbala=0.6, gochara=1.0, dasha=1.4, yoga=0.8, ashtakavarga=0.5, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
-    "accidents":   CategoryWeights(rule=0.6, shadbala=0.8, gochara=1.4, dasha=1.5, yoga=0.6, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
-    "general":     CategoryWeights(rule=0.5, shadbala=0.4, gochara=1.2, dasha=1.2, yoga=0.8, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
+    "career":      CategoryWeights(rule=1.26, shadbala=0.40, gochara=0.81, dasha=1.40, yoga=1.26, ashtakavarga=0.10, tara=0.17, chandra_bala=0.00, avastha=0.00, pushkara=0.05, sudarshana=0.07, jaimini=0.19, arudha=0.13, gulika=0.00, badhaka=0.08, bhrigu=1.05, kp=0.46),
+    "finance":     CategoryWeights(rule=1.26, shadbala=0.40, gochara=0.81, dasha=1.40, yoga=1.26, ashtakavarga=0.10, tara=0.17, chandra_bala=0.00, avastha=0.00, pushkara=0.05, sudarshana=0.07, jaimini=0.19, arudha=0.13, gulika=0.00, badhaka=0.08, bhrigu=1.05, kp=0.46),
+    "health":      CategoryWeights(rule=1.26, shadbala=0.40, gochara=0.81, dasha=1.40, yoga=1.26, ashtakavarga=0.10, tara=0.17, chandra_bala=0.00, avastha=0.00, pushkara=0.05, sudarshana=0.07, jaimini=0.19, arudha=0.13, gulika=0.00, badhaka=0.08, bhrigu=1.05, kp=0.46),
+    "marriage":    CategoryWeights(rule=1.26, shadbala=0.40, gochara=0.81, dasha=1.40, yoga=1.26, ashtakavarga=0.10, tara=0.17, chandra_bala=0.00, avastha=0.00, pushkara=0.05, sudarshana=0.07, jaimini=0.19, arudha=0.13, gulika=0.00, badhaka=0.08, bhrigu=1.05, kp=0.46),
+    "travel":      CategoryWeights(rule=1.26, shadbala=0.40, gochara=0.81, dasha=1.40, yoga=1.26, ashtakavarga=0.10, tara=0.17, chandra_bala=0.00, avastha=0.00, pushkara=0.05, sudarshana=0.07, jaimini=0.19, arudha=0.13, gulika=0.00, badhaka=0.08, bhrigu=1.05, kp=0.46),
+    "education":   CategoryWeights(rule=1.26, shadbala=0.40, gochara=0.81, dasha=1.40, yoga=1.26, ashtakavarga=0.10, tara=0.17, chandra_bala=0.00, avastha=0.00, pushkara=0.05, sudarshana=0.07, jaimini=0.19, arudha=0.13, gulika=0.00, badhaka=0.08, bhrigu=1.05, kp=0.46),
+    "property":    CategoryWeights(rule=1.26, shadbala=0.40, gochara=0.81, dasha=1.40, yoga=1.26, ashtakavarga=0.10, tara=0.17, chandra_bala=0.00, avastha=0.00, pushkara=0.05, sudarshana=0.07, jaimini=0.19, arudha=0.13, gulika=0.00, badhaka=0.08, bhrigu=1.05, kp=0.46),
+    "children":    CategoryWeights(rule=1.26, shadbala=0.40, gochara=0.81, dasha=1.40, yoga=1.26, ashtakavarga=0.10, tara=0.17, chandra_bala=0.00, avastha=0.00, pushkara=0.05, sudarshana=0.07, jaimini=0.19, arudha=0.13, gulika=0.00, badhaka=0.08, bhrigu=1.05, kp=0.46),
+    "spirituality":CategoryWeights(rule=1.26, shadbala=0.40, gochara=0.81, dasha=1.40, yoga=1.26, ashtakavarga=0.10, tara=0.17, chandra_bala=0.00, avastha=0.00, pushkara=0.05, sudarshana=0.07, jaimini=0.19, arudha=0.13, gulika=0.00, badhaka=0.08, bhrigu=1.05, kp=0.46),
+    "legal":       CategoryWeights(rule=1.26, shadbala=0.40, gochara=0.81, dasha=1.40, yoga=1.26, ashtakavarga=0.10, tara=0.17, chandra_bala=0.00, avastha=0.00, pushkara=0.05, sudarshana=0.07, jaimini=0.19, arudha=0.13, gulika=0.00, badhaka=0.08, bhrigu=1.05, kp=0.46),
+    "fame":        CategoryWeights(rule=1.26, shadbala=0.40, gochara=0.81, dasha=1.40, yoga=1.26, ashtakavarga=0.10, tara=0.17, chandra_bala=0.00, avastha=0.00, pushkara=0.05, sudarshana=0.07, jaimini=0.19, arudha=0.13, gulika=0.00, badhaka=0.08, bhrigu=1.05, kp=0.46),
+    "relationships":CategoryWeights(rule=1.26, shadbala=0.40, gochara=0.81, dasha=1.40, yoga=1.26, ashtakavarga=0.10, tara=0.17, chandra_bala=0.00, avastha=0.00, pushkara=0.05, sudarshana=0.07, jaimini=0.19, arudha=0.13, gulika=0.00, badhaka=0.08, bhrigu=1.05, kp=0.46),
+    "business":    CategoryWeights(rule=1.26, shadbala=0.40, gochara=0.81, dasha=1.40, yoga=1.26, ashtakavarga=0.10, tara=0.17, chandra_bala=0.00, avastha=0.00, pushkara=0.05, sudarshana=0.07, jaimini=0.19, arudha=0.13, gulika=0.00, badhaka=0.08, bhrigu=1.05, kp=0.46),
+    "accidents":   CategoryWeights(rule=1.26, shadbala=0.40, gochara=0.81, dasha=1.40, yoga=1.26, ashtakavarga=0.10, tara=0.17, chandra_bala=0.00, avastha=0.00, pushkara=0.05, sudarshana=0.07, jaimini=0.19, arudha=0.13, gulika=0.00, badhaka=0.08, bhrigu=1.05, kp=0.46),
+    "general":     CategoryWeights(rule=1.26, shadbala=0.40, gochara=0.81, dasha=1.40, yoga=1.26, ashtakavarga=0.10, tara=0.17, chandra_bala=0.00, avastha=0.00, pushkara=0.05, sudarshana=0.07, jaimini=0.19, arudha=0.13, gulika=0.00, badhaka=0.08, bhrigu=1.05, kp=0.46),
 }
 
 
@@ -78,6 +80,8 @@ def compute_composite_score(
     arudha_score: float = 0.0,
     gulika_penalty: float = 0.0,
     badhaka_penalty: float = 0.0,
+    bhrigu_bonus: float = 0.0,
+    kp_score: float = 0.0,
 ) -> float:
     w = get_weights(category)
     score = (
@@ -96,6 +100,8 @@ def compute_composite_score(
         + arudha_score        * w.arudha
         + gulika_penalty      * w.gulika
         + badhaka_penalty     * w.badhaka
+        + bhrigu_bonus        * w.bhrigu
+        + kp_score            * w.kp
     )
     return round(score, 3)
 

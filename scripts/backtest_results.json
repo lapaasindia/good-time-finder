@@ -2,15 +2,15 @@
   "summary": {
     "total_personalities": 130,
     "total_events": 391,
-    "correct_hits": 261,
-    "accuracy_pct": 66.75191815856778
+    "correct_hits": 266,
+    "accuracy_pct": 68.03069053708441
   },
   "details": [
     {
       "person": "Steve Jobs",
       "event": "Apple Inc. founded",
       "expected": "Good",
-      "predicted_score": 2.42,
+      "predicted_score": 2.27,
       "match": true
     },
     {
@@ -24,497 +24,497 @@
       "person": "Steve Jobs",
       "event": "Returned to Apple as advisor (NeXT acquisition)",
       "expected": "Good",
-      "predicted_score": 2.48,
+      "predicted_score": 2.4,
       "match": true
     },
     {
       "person": "Steve Jobs",
       "event": "Passed away (Health/Life overall)",
       "expected": "Bad",
-      "predicted_score": 1.45,
+      "predicted_score": 1.66,
       "match": false
     },
     {
       "person": "Bill Gates",
       "event": "Microsoft founded",
       "expected": "Good",
-      "predicted_score": 2.42,
+      "predicted_score": 2.55,
       "match": true
     },
     {
       "person": "Bill Gates",
       "event": "Marriage to Melinda French",
       "expected": "Good",
-      "predicted_score": 2.55,
+      "predicted_score": 2.54,
       "match": true
     },
     {
       "person": "Bill Gates",
       "event": "Announced divorce from Melinda",
       "expected": "Bad",
-      "predicted_score": 1.91,
+      "predicted_score": 2.35,
       "match": false
     },
     {
       "person": "Amitabh Bachchan",
       "event": "Coolie accident - nearly fatal",
       "expected": "Bad",
-      "predicted_score": -2.26,
+      "predicted_score": -1.11,
       "match": true
     },
     {
       "person": "Amitabh Bachchan",
       "event": "KBC launch - career revival",
       "expected": "Good",
-      "predicted_score": -2.34,
+      "predicted_score": -1.63,
       "match": false
     },
     {
       "person": "Amitabh Bachchan",
       "event": "Financial crisis (ABCL bankruptcy)",
       "expected": "Bad",
-      "predicted_score": 2.22,
+      "predicted_score": 2.41,
       "match": false
     },
     {
       "person": "Narendra Modi",
       "event": "Became CM of Gujarat",
       "expected": "Good",
-      "predicted_score": -1.79,
-      "match": false
+      "predicted_score": 0.22,
+      "match": true
     },
     {
       "person": "Narendra Modi",
       "event": "Became PM of India",
       "expected": "Good",
-      "predicted_score": -0.72,
-      "match": false
+      "predicted_score": 1.09,
+      "match": true
     },
     {
       "person": "Narendra Modi",
       "event": "Re-elected as PM with bigger mandate",
       "expected": "Good",
-      "predicted_score": -2.44,
+      "predicted_score": -0.35,
       "match": false
     },
     {
       "person": "Donald Trump",
       "event": "Won 2016 Presidential Election",
       "expected": "Good",
-      "predicted_score": -1.71,
-      "match": false
+      "predicted_score": 0.66,
+      "match": true
     },
     {
       "person": "Donald Trump",
       "event": "Capitol Hill insurrection (major legal/reputation hit)",
       "expected": "Bad",
-      "predicted_score": -1.04,
-      "match": true
+      "predicted_score": 0.31,
+      "match": false
     },
     {
       "person": "Donald Trump",
       "event": "Taj Mahal Casino bankruptcy",
       "expected": "Bad",
-      "predicted_score": 2.35,
+      "predicted_score": 2.48,
       "match": false
     },
     {
       "person": "Barack Obama",
       "event": "Won 2008 Presidential Election",
       "expected": "Good",
-      "predicted_score": 1.57,
+      "predicted_score": 1.98,
       "match": true
     },
     {
       "person": "Barack Obama",
       "event": "Re-elected President",
       "expected": "Good",
-      "predicted_score": 2.23,
+      "predicted_score": 2.37,
       "match": true
     },
     {
       "person": "Barack Obama",
       "event": "DNC Speech (national prominence)",
       "expected": "Good",
-      "predicted_score": 1.41,
+      "predicted_score": 1.76,
       "match": true
     },
     {
       "person": "Princess Diana",
       "event": "Marriage to Prince Charles",
       "expected": "Good",
-      "predicted_score": 1.94,
+      "predicted_score": 2.05,
       "match": true
     },
     {
       "person": "Princess Diana",
       "event": "Announced separation",
       "expected": "Bad",
-      "predicted_score": 2.02,
+      "predicted_score": 2.26,
       "match": false
     },
     {
       "person": "Princess Diana",
       "event": "Fatal car crash",
       "expected": "Bad",
-      "predicted_score": -1.29,
-      "match": true
+      "predicted_score": 0.32,
+      "match": false
     },
     {
       "person": "Sachin Tendulkar",
       "event": "International Debut vs Pakistan",
       "expected": "Good",
-      "predicted_score": 0.02,
+      "predicted_score": 0.3,
       "match": true
     },
     {
       "person": "Sachin Tendulkar",
       "event": "World Cup Victory",
       "expected": "Good",
-      "predicted_score": -0.4,
-      "match": false
+      "predicted_score": 1.65,
+      "match": true
     },
     {
       "person": "Sachin Tendulkar",
       "event": "Father passed away during World Cup",
       "expected": "Bad",
-      "predicted_score": 2.46,
+      "predicted_score": 2.42,
       "match": false
     },
     {
       "person": "Elon Musk",
       "event": "SpaceX founded",
       "expected": "Good",
-      "predicted_score": 2.58,
+      "predicted_score": 2.57,
       "match": true
     },
     {
       "person": "Elon Musk",
       "event": "NASA contract awarded (saved SpaceX/Tesla)",
       "expected": "Good",
-      "predicted_score": -2.19,
-      "match": false
+      "predicted_score": 0.82,
+      "match": true
     },
     {
       "person": "Elon Musk",
       "event": "Twitter acquisition completed (reputation/financial turmoil)",
       "expected": "Bad",
-      "predicted_score": 2.04,
+      "predicted_score": 2.1,
       "match": false
     },
     {
       "person": "Albert Einstein",
       "event": "Special Relativity published (Annus Mirabilis)",
       "expected": "Good",
-      "predicted_score": 2.44,
+      "predicted_score": 2.53,
       "match": true
     },
     {
       "person": "Albert Einstein",
       "event": "Awarded Nobel Prize for Physics",
       "expected": "Good",
-      "predicted_score": 0.73,
+      "predicted_score": 2.14,
       "match": true
     },
     {
       "person": "Albert Einstein",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -2.25,
+      "predicted_score": -0.66,
       "match": true
     },
     {
       "person": "Warren Buffett",
       "event": "Took control of Berkshire Hathaway",
       "expected": "Good",
-      "predicted_score": 2.33,
+      "predicted_score": 2.28,
       "match": true
     },
     {
       "person": "Warren Buffett",
       "event": "Pledged bulk of fortune to Gates Foundation",
       "expected": "Good",
-      "predicted_score": 0.24,
+      "predicted_score": 2.13,
       "match": true
     },
     {
       "person": "Warren Buffett",
       "event": "Lehman crash (market turmoil)",
       "expected": "Bad",
-      "predicted_score": 2.56,
+      "predicted_score": 2.36,
       "match": false
     },
     {
       "person": "Oprah Winfrey",
       "event": "The Oprah Winfrey Show went national",
       "expected": "Good",
-      "predicted_score": 0.6,
+      "predicted_score": 2.17,
       "match": true
     },
     {
       "person": "Oprah Winfrey",
       "event": "OWN Network launch",
       "expected": "Good",
-      "predicted_score": 2.53,
+      "predicted_score": 2.45,
       "match": true
     },
     {
       "person": "Oprah Winfrey",
       "event": "You get a car! episode",
       "expected": "Good",
-      "predicted_score": 2.52,
+      "predicted_score": 2.49,
       "match": true
     },
     {
       "person": "Indira Gandhi",
       "event": "Became first female PM of India",
       "expected": "Good",
-      "predicted_score": 2.48,
+      "predicted_score": 2.52,
       "match": true
     },
     {
       "person": "Indira Gandhi",
       "event": "Declared Emergency (political turmoil)",
       "expected": "Bad",
-      "predicted_score": -0.75,
+      "predicted_score": -0.37,
       "match": true
     },
     {
       "person": "Indira Gandhi",
       "event": "Assassination",
       "expected": "Bad",
-      "predicted_score": -2.52,
+      "predicted_score": -1.96,
       "match": true
     },
     {
       "person": "Shah Rukh Khan",
       "event": "Bollywood Debut (Deewana)",
       "expected": "Good",
-      "predicted_score": 1.86,
+      "predicted_score": 2.15,
       "match": true
     },
     {
       "person": "Shah Rukh Khan",
       "event": "Chak De India release",
       "expected": "Good",
-      "predicted_score": 2.42,
+      "predicted_score": 2.58,
       "match": true
     },
     {
       "person": "Shah Rukh Khan",
       "event": "Son's arrest (Aryan Khan case)",
       "expected": "Bad",
-      "predicted_score": -1.85,
-      "match": true
+      "predicted_score": 1.29,
+      "match": false
     },
     {
       "person": "Mahatma Gandhi",
       "event": "Salt March (Dandi March)",
       "expected": "Good",
-      "predicted_score": 2.38,
+      "predicted_score": 2.31,
       "match": true
     },
     {
       "person": "Mahatma Gandhi",
       "event": "India Independence",
       "expected": "Good",
-      "predicted_score": 0.68,
+      "predicted_score": 1.17,
       "match": true
     },
     {
       "person": "Mahatma Gandhi",
       "event": "Assassination",
       "expected": "Bad",
-      "predicted_score": -0.52,
-      "match": true
+      "predicted_score": 0.74,
+      "match": false
     },
     {
       "person": "Steve Wozniak",
       "event": "Apple founded",
       "expected": "Good",
-      "predicted_score": 2.07,
+      "predicted_score": 2.02,
       "match": true
     },
     {
       "person": "Steve Wozniak",
       "event": "Plane crash",
       "expected": "Bad",
-      "predicted_score": -2.14,
-      "match": true
+      "predicted_score": 0.22,
+      "match": false
     },
     {
       "person": "Steve Wozniak",
       "event": "Left Apple (career change)",
       "expected": "Bad",
-      "predicted_score": 2.36,
+      "predicted_score": 2.4,
       "match": false
     },
     {
       "person": "Angela Merkel",
       "event": "Became first female Chancellor of Germany",
       "expected": "Good",
-      "predicted_score": 2.52,
+      "predicted_score": 2.53,
       "match": true
     },
     {
       "person": "Angela Merkel",
       "event": "Refugee crisis (major political backlash)",
       "expected": "Bad",
-      "predicted_score": 1.65,
+      "predicted_score": 2.18,
       "match": false
     },
     {
       "person": "Angela Merkel",
       "event": "Retired with high approval ratings",
       "expected": "Good",
-      "predicted_score": 2.47,
+      "predicted_score": 2.4,
       "match": true
     },
     {
       "person": "MS Dhoni",
       "event": "T20 World Cup Victory",
       "expected": "Good",
-      "predicted_score": -1.99,
-      "match": false
+      "predicted_score": 0.25,
+      "match": true
     },
     {
       "person": "MS Dhoni",
       "event": "ODI World Cup Victory",
       "expected": "Good",
-      "predicted_score": 1.49,
+      "predicted_score": 2.21,
       "match": true
     },
     {
       "person": "MS Dhoni",
       "event": "International retirement (clean closure)",
       "expected": "Good",
-      "predicted_score": -1.99,
-      "match": false
+      "predicted_score": 0.47,
+      "match": true
     },
     {
       "person": "Virat Kohli",
       "event": "U-19 World Cup Win",
       "expected": "Good",
-      "predicted_score": 1.51,
+      "predicted_score": 1.89,
       "match": true
     },
     {
       "person": "Virat Kohli",
       "event": "Marriage to Anushka Sharma",
       "expected": "Good",
-      "predicted_score": 0.64,
+      "predicted_score": 0.68,
       "match": true
     },
     {
       "person": "Virat Kohli",
       "event": "Stepped down as T20/ODI Captain",
       "expected": "Bad",
-      "predicted_score": 1.8,
+      "predicted_score": 2.03,
       "match": false
     },
     {
       "person": "Ratan Tata",
       "event": "Took over as Chairman of Tata Group",
       "expected": "Good",
-      "predicted_score": -1.37,
-      "match": false
+      "predicted_score": 0.53,
+      "match": true
     },
     {
       "person": "Ratan Tata",
       "event": "Launch of Nano (dream project)",
       "expected": "Good",
-      "predicted_score": 1.79,
+      "predicted_score": 1.63,
       "match": true
     },
     {
       "person": "Ratan Tata",
       "event": "Cyrus Mistry dismissal controversy",
       "expected": "Bad",
-      "predicted_score": 2.05,
+      "predicted_score": 2.41,
       "match": false
     },
     {
       "person": "Mukesh Ambani",
       "event": "Father Dhirubhai passed away",
       "expected": "Bad",
-      "predicted_score": -2.32,
+      "predicted_score": -1.0,
       "match": true
     },
     {
       "person": "Mukesh Ambani",
       "event": "Jio Launch (market disruption)",
       "expected": "Good",
-      "predicted_score": -2.3,
+      "predicted_score": -1.16,
       "match": false
     },
     {
       "person": "Mukesh Ambani",
       "event": "Reliance split with brother Anil",
       "expected": "Bad",
-      "predicted_score": -2.56,
+      "predicted_score": -2.0,
       "match": true
     },
     {
       "person": "Roger Federer",
       "event": "First Wimbledon title",
       "expected": "Good",
-      "predicted_score": -1.36,
-      "match": false
+      "predicted_score": 1.08,
+      "match": true
     },
     {
       "person": "Roger Federer",
       "event": "Knee injury (ended season)",
       "expected": "Bad",
-      "predicted_score": 1.26,
+      "predicted_score": 1.24,
       "match": false
     },
     {
       "person": "Roger Federer",
       "event": "Australian Open comeback win",
       "expected": "Good",
-      "predicted_score": 1.35,
+      "predicted_score": 2.14,
       "match": true
     },
     {
       "person": "Cristiano Ronaldo",
       "event": "First Champions League Win",
       "expected": "Good",
-      "predicted_score": -1.76,
-      "match": false
+      "predicted_score": 0.2,
+      "match": true
     },
     {
       "person": "Cristiano Ronaldo",
       "event": "Contract terminated by Man Utd (unceremonious exit)",
       "expected": "Bad",
-      "predicted_score": 2.53,
+      "predicted_score": 2.58,
       "match": false
     },
     {
       "person": "Cristiano Ronaldo",
       "event": "Euro 2016 Victory",
       "expected": "Good",
-      "predicted_score": 2.2,
+      "predicted_score": 2.36,
       "match": true
     },
     {
       "person": "Lionel Messi",
       "event": "Red card in international debut",
       "expected": "Bad",
-      "predicted_score": 1.68,
+      "predicted_score": 2.07,
       "match": false
     },
     {
       "person": "Lionel Messi",
       "event": "Copa America win (first major intl trophy)",
       "expected": "Good",
-      "predicted_score": 1.3,
+      "predicted_score": 2.02,
       "match": true
     },
     {
       "person": "Lionel Messi",
       "event": "World Cup Victory",
       "expected": "Good",
-      "predicted_score": 2.26,
+      "predicted_score": 2.48,
       "match": true
     },
     {
@@ -528,126 +528,126 @@
       "person": "Tiger Woods",
       "event": "Car crash (infidelity scandal reveal)",
       "expected": "Bad",
-      "predicted_score": -0.99,
-      "match": true
+      "predicted_score": 1.6,
+      "match": false
     },
     {
       "person": "Tiger Woods",
       "event": "Masters comeback win",
       "expected": "Good",
-      "predicted_score": 0.79,
+      "predicted_score": 1.72,
       "match": true
     },
     {
       "person": "Michael Jordan",
       "event": "First NBA Championship",
       "expected": "Good",
-      "predicted_score": 0.95,
+      "predicted_score": 2.19,
       "match": true
     },
     {
       "person": "Michael Jordan",
       "event": "Father murdered",
       "expected": "Bad",
-      "predicted_score": -1.4,
+      "predicted_score": -0.06,
       "match": true
     },
     {
       "person": "Michael Jordan",
       "event": "I'm back announcement",
       "expected": "Good",
-      "predicted_score": 1.32,
+      "predicted_score": 2.34,
       "match": true
     },
     {
       "person": "Serena Williams",
       "event": "First US Open title",
       "expected": "Good",
-      "predicted_score": -0.54,
-      "match": false
+      "predicted_score": 1.79,
+      "match": true
     },
     {
       "person": "Serena Williams",
       "event": "Pulmonary embolism/Health scare",
       "expected": "Bad",
-      "predicted_score": -2.11,
+      "predicted_score": -0.4,
       "match": true
     },
     {
       "person": "Serena Williams",
       "event": "Australian Open win while pregnant",
       "expected": "Good",
-      "predicted_score": -0.76,
-      "match": false
+      "predicted_score": 1.53,
+      "match": true
     },
     {
       "person": "Stephen Hawking",
       "event": "Diagnosed with ALS",
       "expected": "Bad",
-      "predicted_score": 2.15,
+      "predicted_score": 2.27,
       "match": false
     },
     {
       "person": "Stephen Hawking",
       "event": "A Brief History of Time published",
       "expected": "Good",
-      "predicted_score": 2.42,
+      "predicted_score": 2.46,
       "match": true
     },
     {
       "person": "Stephen Hawking",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": 0.28,
+      "predicted_score": 1.42,
       "match": false
     },
     {
       "person": "Mark Zuckerberg",
       "event": "TheFacebook launch",
       "expected": "Good",
-      "predicted_score": 2.09,
+      "predicted_score": 2.17,
       "match": true
     },
     {
       "person": "Mark Zuckerberg",
       "event": "Facebook IPO",
       "expected": "Good",
-      "predicted_score": 0.51,
+      "predicted_score": 1.86,
       "match": true
     },
     {
       "person": "Mark Zuckerberg",
       "event": "Cambridge Analytica testimony",
       "expected": "Bad",
-      "predicted_score": 2.54,
+      "predicted_score": 2.58,
       "match": false
     },
     {
       "person": "Jeff Bezos",
       "event": "Amazon founded",
       "expected": "Good",
-      "predicted_score": 0.99,
+      "predicted_score": 2.09,
       "match": true
     },
     {
       "person": "Jeff Bezos",
       "event": "Announced divorce",
       "expected": "Bad",
-      "predicted_score": -1.31,
-      "match": true
+      "predicted_score": 0.62,
+      "match": false
     },
     {
       "person": "Jeff Bezos",
       "event": "First space flight",
       "expected": "Good",
-      "predicted_score": -1.29,
-      "match": false
+      "predicted_score": 0.34,
+      "match": true
     },
     {
       "person": "Taylor Swift",
       "event": "Debut album release",
       "expected": "Good",
-      "predicted_score": 0.58,
+      "predicted_score": 1.99,
       "match": true
     },
     {
@@ -661,1400 +661,1400 @@
       "person": "Taylor Swift",
       "event": "Eras Tour launch (massive success)",
       "expected": "Good",
-      "predicted_score": 2.4,
+      "predicted_score": 2.35,
       "match": true
     },
     {
       "person": "Beyonce",
       "event": "Dangerously in Love release (Solo debut)",
       "expected": "Good",
-      "predicted_score": 2.39,
+      "predicted_score": 2.51,
       "match": true
     },
     {
       "person": "Beyonce",
       "event": "Marriage to Jay-Z",
       "expected": "Good",
-      "predicted_score": -1.17,
-      "match": false
+      "predicted_score": 0.42,
+      "match": true
     },
     {
       "person": "Beyonce",
       "event": "Lemonade release",
       "expected": "Good",
-      "predicted_score": 2.49,
+      "predicted_score": 2.48,
       "match": true
     },
     {
       "person": "Tom Hanks",
       "event": "First Oscar for Philadelphia",
       "expected": "Good",
-      "predicted_score": 2.54,
+      "predicted_score": 2.51,
       "match": true
     },
     {
       "person": "Tom Hanks",
       "event": "Second Oscar for Forrest Gump",
       "expected": "Good",
-      "predicted_score": 2.61,
+      "predicted_score": 2.64,
       "match": true
     },
     {
       "person": "Tom Hanks",
       "event": "Contracted COVID-19 (first major celeb case)",
       "expected": "Bad",
-      "predicted_score": -1.51,
-      "match": true
+      "predicted_score": 0.7,
+      "match": false
     },
     {
       "person": "Meryl Streep",
       "event": "First Oscar (Kramer vs Kramer)",
       "expected": "Good",
-      "predicted_score": 2.42,
+      "predicted_score": 2.49,
       "match": true
     },
     {
       "person": "Meryl Streep",
       "event": "Third Oscar (The Iron Lady)",
       "expected": "Good",
-      "predicted_score": 1.2,
+      "predicted_score": 1.71,
       "match": true
     },
     {
       "person": "Meryl Streep",
       "event": "Partner John Cazale passed away",
       "expected": "Bad",
-      "predicted_score": 0.7,
+      "predicted_score": 1.94,
       "match": false
     },
     {
       "person": "Nelson Mandela",
       "event": "Sentenced to life imprisonment",
       "expected": "Bad",
-      "predicted_score": -1.17,
-      "match": true
+      "predicted_score": 0.91,
+      "match": false
     },
     {
       "person": "Nelson Mandela",
       "event": "Released from prison",
       "expected": "Good",
-      "predicted_score": 1.76,
+      "predicted_score": 2.1,
       "match": true
     },
     {
       "person": "Nelson Mandela",
       "event": "Inaugurated as President",
       "expected": "Good",
-      "predicted_score": 1.4,
+      "predicted_score": 2.03,
       "match": true
     },
     {
       "person": "Vladimir Putin",
       "event": "Became Acting President",
       "expected": "Good",
-      "predicted_score": -1.83,
-      "match": false
+      "predicted_score": 1.44,
+      "match": true
     },
     {
       "person": "Vladimir Putin",
       "event": "Invaded Ukraine (global isolation/turmoil)",
       "expected": "Bad",
-      "predicted_score": 0.25,
+      "predicted_score": 1.28,
       "match": false
     },
     {
       "person": "Vladimir Putin",
       "event": "Announced divorce",
       "expected": "Bad",
-      "predicted_score": 1.96,
+      "predicted_score": 2.34,
       "match": false
     },
     {
       "person": "Xi Jinping",
       "event": "Became General Secretary of CCP",
       "expected": "Good",
-      "predicted_score": 2.06,
+      "predicted_score": 2.13,
       "match": true
     },
     {
       "person": "Xi Jinping",
       "event": "Abolished term limits",
       "expected": "Good",
-      "predicted_score": 0.03,
+      "predicted_score": 1.38,
       "match": true
     },
     {
       "person": "Xi Jinping",
       "event": "Wuhan lockdown (COVID start)",
       "expected": "Bad",
-      "predicted_score": 0.94,
+      "predicted_score": 0.77,
       "match": false
     },
     {
       "person": "Elizabeth II",
       "event": "Accession to the throne",
       "expected": "Good",
-      "predicted_score": 2.05,
+      "predicted_score": 2.09,
       "match": true
     },
     {
       "person": "Elizabeth II",
       "event": "Annus Horribilis (Windsor fire/divorces)",
       "expected": "Bad",
-      "predicted_score": -2.26,
+      "predicted_score": -1.2,
       "match": true
     },
     {
       "person": "Elizabeth II",
       "event": "Prince Philip passed away",
       "expected": "Bad",
-      "predicted_score": -0.45,
-      "match": true
+      "predicted_score": 1.56,
+      "match": false
     },
     {
       "person": "Charles III",
       "event": "Marriage to Diana",
       "expected": "Good",
-      "predicted_score": 0.87,
+      "predicted_score": 1.66,
       "match": true
     },
     {
       "person": "Charles III",
       "event": "Divorce from Diana",
       "expected": "Bad",
-      "predicted_score": 1.62,
+      "predicted_score": 1.11,
       "match": false
     },
     {
       "person": "Charles III",
       "event": "Accession to the throne",
       "expected": "Good",
-      "predicted_score": 0.72,
+      "predicted_score": 1.0,
       "match": true
     },
     {
       "person": "Prince William",
       "event": "Marriage to Kate Middleton",
       "expected": "Good",
-      "predicted_score": 0.27,
+      "predicted_score": 1.49,
       "match": true
     },
     {
       "person": "Prince William",
       "event": "Mother's death",
       "expected": "Bad",
-      "predicted_score": -1.57,
-      "match": true
+      "predicted_score": 0.01,
+      "match": false
     },
     {
       "person": "Prince William",
       "event": "Became Prince of Wales",
       "expected": "Good",
-      "predicted_score": 2.34,
+      "predicted_score": 2.39,
       "match": true
     },
     {
       "person": "Prince Harry",
       "event": "Marriage to Meghan Markle",
       "expected": "Good",
-      "predicted_score": 2.13,
+      "predicted_score": 2.45,
       "match": true
     },
     {
       "person": "Prince Harry",
       "event": "Megxit announcement (separation from family)",
       "expected": "Bad",
-      "predicted_score": 1.98,
+      "predicted_score": 2.35,
       "match": false
     },
     {
       "person": "Prince Harry",
       "event": "Mother's death",
       "expected": "Bad",
-      "predicted_score": -2.07,
-      "match": true
+      "predicted_score": 0.22,
+      "match": false
     },
     {
       "person": "Muhammad Ali",
       "event": "First Heavyweight title (vs Liston)",
       "expected": "Good",
-      "predicted_score": -0.65,
-      "match": false
+      "predicted_score": 1.14,
+      "match": true
     },
     {
       "person": "Muhammad Ali",
       "event": "Stripped of title (Draft refusal)",
       "expected": "Bad",
-      "predicted_score": 2.18,
+      "predicted_score": 2.36,
       "match": false
     },
     {
       "person": "Muhammad Ali",
       "event": "Rumble in the Jungle win",
       "expected": "Good",
-      "predicted_score": 2.38,
+      "predicted_score": 2.47,
       "match": true
     },
     {
       "person": "Michael Jackson",
       "event": "Thriller release",
       "expected": "Good",
-      "predicted_score": 2.04,
+      "predicted_score": 2.07,
       "match": true
     },
     {
       "person": "Michael Jackson",
       "event": "Trial verdict (stress/turmoil)",
       "expected": "Bad",
-      "predicted_score": 0.45,
+      "predicted_score": 2.0,
       "match": false
     },
     {
       "person": "Michael Jackson",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -0.6,
-      "match": true
+      "predicted_score": 0.94,
+      "match": false
     },
     {
       "person": "John Lennon",
       "event": "Beatles land in USA",
       "expected": "Good",
-      "predicted_score": -2.09,
+      "predicted_score": -1.02,
       "match": false
     },
     {
       "person": "John Lennon",
       "event": "Beatles breakup",
       "expected": "Bad",
-      "predicted_score": -0.48,
-      "match": true
+      "predicted_score": 0.25,
+      "match": false
     },
     {
       "person": "John Lennon",
       "event": "Assassination",
       "expected": "Bad",
-      "predicted_score": 0.66,
+      "predicted_score": 1.5,
       "match": false
     },
     {
       "person": "Paul McCartney",
       "event": "Beatles USA arrival",
       "expected": "Good",
-      "predicted_score": 2.08,
+      "predicted_score": 1.84,
       "match": true
     },
     {
       "person": "Paul McCartney",
       "event": "Wife Linda passed away",
       "expected": "Bad",
-      "predicted_score": -1.64,
+      "predicted_score": -0.62,
       "match": true
     },
     {
       "person": "Paul McCartney",
       "event": "Olympic Opening Ceremony performance",
       "expected": "Good",
-      "predicted_score": 0.22,
-      "match": true
+      "predicted_score": -0.03,
+      "match": false
     },
     {
       "person": "Elvis Presley",
       "event": "Heartbreak Hotel release",
       "expected": "Good",
-      "predicted_score": 2.02,
+      "predicted_score": 1.81,
       "match": true
     },
     {
       "person": "Elvis Presley",
       "event": "Divorce from Priscilla",
       "expected": "Bad",
-      "predicted_score": -2.12,
+      "predicted_score": -0.64,
       "match": true
     },
     {
       "person": "Elvis Presley",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -1.77,
+      "predicted_score": -0.16,
       "match": true
     },
     {
       "person": "Marilyn Monroe",
       "event": "Gentlemen Prefer Blondes release (peak fame)",
       "expected": "Good",
-      "predicted_score": -1.01,
-      "match": false
+      "predicted_score": 1.47,
+      "match": true
     },
     {
       "person": "Marilyn Monroe",
       "event": "Divorce from Arthur Miller",
       "expected": "Bad",
-      "predicted_score": 2.21,
+      "predicted_score": 2.58,
       "match": false
     },
     {
       "person": "Marilyn Monroe",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -0.02,
-      "match": true
+      "predicted_score": 1.48,
+      "match": false
     },
     {
       "person": "Nikola Tesla",
       "event": "AC motor patent (Westinghouse deal)",
       "expected": "Good",
-      "predicted_score": 2.35,
+      "predicted_score": 2.25,
       "match": true
     },
     {
       "person": "Nikola Tesla",
       "event": "Lab fire (lost all research)",
       "expected": "Bad",
-      "predicted_score": 2.55,
+      "predicted_score": 2.44,
       "match": false
     },
     {
       "person": "Nikola Tesla",
       "event": "Passed away in poverty",
       "expected": "Bad",
-      "predicted_score": -2.34,
+      "predicted_score": -0.81,
       "match": true
     },
     {
       "person": "Leonardo da Vinci",
       "event": "Moved to Milan (artistic peak period)",
       "expected": "Good",
-      "predicted_score": -1.44,
+      "predicted_score": -0.02,
       "match": false
     },
     {
       "person": "Leonardo da Vinci",
       "event": "Started Mona Lisa",
       "expected": "Good",
-      "predicted_score": 2.47,
+      "predicted_score": 2.52,
       "match": true
     },
     {
       "person": "Leonardo da Vinci",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": 2.06,
+      "predicted_score": 1.81,
       "match": false
     },
     {
       "person": "Isaac Newton",
       "event": "Principia Mathematica published",
       "expected": "Good",
-      "predicted_score": -1.27,
-      "match": false
+      "predicted_score": 1.08,
+      "match": true
     },
     {
       "person": "Isaac Newton",
       "event": "Knighted by Queen Anne",
       "expected": "Good",
-      "predicted_score": 2.57,
+      "predicted_score": 2.61,
       "match": true
     },
     {
       "person": "Isaac Newton",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": 2.49,
+      "predicted_score": 2.33,
       "match": false
     },
     {
       "person": "Galileo Galilei",
       "event": "Discovered Jupiter moons",
       "expected": "Good",
-      "predicted_score": 1.53,
+      "predicted_score": 1.48,
       "match": true
     },
     {
       "person": "Galileo Galilei",
       "event": "Forced to recant by Inquisition",
       "expected": "Bad",
-      "predicted_score": -0.22,
-      "match": true
+      "predicted_score": 0.05,
+      "match": false
     },
     {
       "person": "Galileo Galilei",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -0.21,
-      "match": true
+      "predicted_score": 1.48,
+      "match": false
     },
     {
       "person": "Marie Curie",
       "event": "First Nobel Prize (Physics)",
       "expected": "Good",
-      "predicted_score": 2.57,
+      "predicted_score": 2.6,
       "match": true
     },
     {
       "person": "Marie Curie",
       "event": "Second Nobel Prize (Chemistry)",
       "expected": "Good",
-      "predicted_score": 2.5,
+      "predicted_score": 2.59,
       "match": true
     },
     {
       "person": "Marie Curie",
       "event": "Passed away from radiation",
       "expected": "Bad",
-      "predicted_score": -2.06,
+      "predicted_score": -0.07,
       "match": true
     },
     {
       "person": "Charles Darwin",
       "event": "Origin of Species published",
       "expected": "Good",
-      "predicted_score": 1.92,
+      "predicted_score": 2.35,
       "match": true
     },
     {
       "person": "Charles Darwin",
       "event": "Marriage to Emma Wedgwood",
       "expected": "Good",
-      "predicted_score": -2.13,
+      "predicted_score": -0.87,
       "match": false
     },
     {
       "person": "Charles Darwin",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -2.41,
+      "predicted_score": -0.73,
       "match": true
     },
     {
       "person": "Wolfgang Mozart",
       "event": "First public performance (child prodigy)",
       "expected": "Good",
-      "predicted_score": 2.13,
+      "predicted_score": 1.68,
       "match": true
     },
     {
       "person": "Wolfgang Mozart",
       "event": "Don Giovanni premiere",
       "expected": "Good",
-      "predicted_score": -1.13,
-      "match": false
+      "predicted_score": 0.99,
+      "match": true
     },
     {
       "person": "Wolfgang Mozart",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -0.56,
-      "match": true
+      "predicted_score": 0.79,
+      "match": false
     },
     {
       "person": "Ludwig van Beethoven",
       "event": "Eroica Symphony (artistic peak)",
       "expected": "Good",
-      "predicted_score": 2.03,
+      "predicted_score": 2.13,
       "match": true
     },
     {
       "person": "Ludwig van Beethoven",
       "event": "Became completely deaf",
       "expected": "Bad",
-      "predicted_score": 1.99,
+      "predicted_score": 2.35,
       "match": false
     },
     {
       "person": "Ludwig van Beethoven",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -2.5,
+      "predicted_score": -1.61,
       "match": true
     },
     {
       "person": "William Shakespeare",
       "event": "Married Anne Hathaway",
       "expected": "Good",
-      "predicted_score": 0.73,
+      "predicted_score": 1.63,
       "match": true
     },
     {
       "person": "William Shakespeare",
       "event": "Globe Theatre built (peak career)",
       "expected": "Good",
-      "predicted_score": 0.91,
+      "predicted_score": 0.66,
       "match": true
     },
     {
       "person": "William Shakespeare",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -1.27,
+      "predicted_score": -0.2,
       "match": true
     },
     {
       "person": "Vincent van Gogh",
       "event": "Cut off own ear",
       "expected": "Bad",
-      "predicted_score": -0.04,
-      "match": true
+      "predicted_score": 0.77,
+      "match": false
     },
     {
       "person": "Vincent van Gogh",
       "event": "Admitted to asylum",
       "expected": "Bad",
-      "predicted_score": -0.12,
-      "match": true
+      "predicted_score": 1.01,
+      "match": false
     },
     {
       "person": "Vincent van Gogh",
       "event": "Passed away (suicide)",
       "expected": "Bad",
-      "predicted_score": -1.78,
-      "match": true
+      "predicted_score": 0.08,
+      "match": false
     },
     {
       "person": "Pablo Picasso",
       "event": "Les Demoiselles d'Avignon (Cubism)",
       "expected": "Good",
-      "predicted_score": -2.2,
+      "predicted_score": -1.01,
       "match": false
     },
     {
       "person": "Pablo Picasso",
       "event": "Guernica completed",
       "expected": "Good",
-      "predicted_score": -1.95,
-      "match": false
+      "predicted_score": 0.26,
+      "match": true
     },
     {
       "person": "Pablo Picasso",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": 2.31,
+      "predicted_score": 2.48,
       "match": false
     },
     {
       "person": "Salvador Dali",
       "event": "The Persistence of Memory",
       "expected": "Good",
-      "predicted_score": 1.41,
+      "predicted_score": 1.66,
       "match": true
     },
     {
       "person": "Salvador Dali",
       "event": "Married Gala (muse)",
       "expected": "Good",
-      "predicted_score": 1.53,
+      "predicted_score": 2.42,
       "match": true
     },
     {
       "person": "Salvador Dali",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -1.6,
+      "predicted_score": -0.14,
       "match": true
     },
     {
       "person": "Sigmund Freud",
       "event": "Interpretation of Dreams published",
       "expected": "Good",
-      "predicted_score": 0.37,
+      "predicted_score": 1.87,
       "match": true
     },
     {
       "person": "Sigmund Freud",
       "event": "Forced to flee Vienna (Nazis)",
       "expected": "Bad",
-      "predicted_score": -1.48,
+      "predicted_score": -0.86,
       "match": true
     },
     {
       "person": "Sigmund Freud",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -2.3,
+      "predicted_score": -1.35,
       "match": true
     },
     {
       "person": "Winston Churchill",
       "event": "Became PM during WWII",
       "expected": "Good",
-      "predicted_score": 1.89,
+      "predicted_score": 2.11,
       "match": true
     },
     {
       "person": "Winston Churchill",
       "event": "Lost election after war",
       "expected": "Bad",
-      "predicted_score": 2.55,
+      "predicted_score": 2.61,
       "match": false
     },
     {
       "person": "Winston Churchill",
       "event": "Nobel Prize for Literature",
       "expected": "Good",
-      "predicted_score": 2.56,
+      "predicted_score": 2.57,
       "match": true
     },
     {
       "person": "Franklin D. Roosevelt",
       "event": "First inauguration (New Deal)",
       "expected": "Good",
-      "predicted_score": 0.86,
+      "predicted_score": 1.78,
       "match": true
     },
     {
       "person": "Franklin D. Roosevelt",
       "event": "Pearl Harbor / WWII entry",
       "expected": "Bad",
-      "predicted_score": -1.91,
+      "predicted_score": -0.65,
       "match": true
     },
     {
       "person": "Franklin D. Roosevelt",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": 0.62,
+      "predicted_score": 1.5,
       "match": false
     },
     {
       "person": "John F. Kennedy",
       "event": "Won Presidential Election",
       "expected": "Good",
-      "predicted_score": 1.95,
+      "predicted_score": 2.18,
       "match": true
     },
     {
       "person": "John F. Kennedy",
       "event": "Moon speech",
       "expected": "Good",
-      "predicted_score": 0.77,
+      "predicted_score": 1.4,
       "match": true
     },
     {
       "person": "John F. Kennedy",
       "event": "Assassination",
       "expected": "Bad",
-      "predicted_score": -0.65,
-      "match": true
+      "predicted_score": 0.61,
+      "match": false
     },
     {
       "person": "Martin Luther King Jr",
       "event": "Montgomery Bus Boycott",
       "expected": "Good",
-      "predicted_score": 2.6,
+      "predicted_score": 2.45,
       "match": true
     },
     {
       "person": "Martin Luther King Jr",
       "event": "I Have a Dream speech",
       "expected": "Good",
-      "predicted_score": 2.15,
+      "predicted_score": 2.08,
       "match": true
     },
     {
       "person": "Martin Luther King Jr",
       "event": "Assassination",
       "expected": "Bad",
-      "predicted_score": 2.44,
+      "predicted_score": 2.27,
       "match": false
     },
     {
       "person": "Mother Teresa",
       "event": "Missionaries of Charity founded",
       "expected": "Good",
-      "predicted_score": 2.2,
+      "predicted_score": 2.19,
       "match": true
     },
     {
       "person": "Mother Teresa",
       "event": "Nobel Peace Prize",
       "expected": "Good",
-      "predicted_score": 2.48,
+      "predicted_score": 2.55,
       "match": true
     },
     {
       "person": "Mother Teresa",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -1.52,
-      "match": true
+      "predicted_score": 0.85,
+      "match": false
     },
     {
       "person": "Pope Francis",
       "event": "Elected Pope",
       "expected": "Good",
-      "predicted_score": 1.39,
+      "predicted_score": 1.94,
       "match": true
     },
     {
       "person": "Pope Francis",
       "event": "Lung removed (health crisis)",
       "expected": "Bad",
-      "predicted_score": -2.54,
+      "predicted_score": -2.05,
       "match": true
     },
     {
       "person": "Pope Francis",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -2.18,
+      "predicted_score": -1.24,
       "match": true
     },
     {
       "person": "Dalai Lama",
       "event": "Enthroned as Dalai Lama",
       "expected": "Good",
-      "predicted_score": 0.45,
+      "predicted_score": 0.06,
       "match": true
     },
     {
       "person": "Dalai Lama",
       "event": "Nobel Peace Prize",
       "expected": "Good",
-      "predicted_score": -0.58,
-      "match": false
+      "predicted_score": 1.39,
+      "match": true
     },
     {
       "person": "Dalai Lama",
       "event": "Fled to India (Tibetan uprising)",
       "expected": "Bad",
-      "predicted_score": 2.35,
+      "predicted_score": 2.42,
       "match": false
     },
     {
       "person": "Maharishi Mahesh Yogi",
       "event": "TM movement launched globally",
       "expected": "Good",
-      "predicted_score": -0.75,
-      "match": false
+      "predicted_score": 1.61,
+      "match": true
     },
     {
       "person": "Maharishi Mahesh Yogi",
       "event": "Beatles visited Rishikesh",
       "expected": "Good",
-      "predicted_score": -1.48,
+      "predicted_score": -1.14,
       "match": false
     },
     {
       "person": "Maharishi Mahesh Yogi",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -2.33,
+      "predicted_score": -0.86,
       "match": true
     },
     {
       "person": "Sri Sri Ravi Shankar",
       "event": "Art of Living founded",
       "expected": "Good",
-      "predicted_score": 0.49,
+      "predicted_score": 2.11,
       "match": true
     },
     {
       "person": "Sri Sri Ravi Shankar",
       "event": "First World Peace Summit",
       "expected": "Good",
-      "predicted_score": 2.47,
+      "predicted_score": 2.43,
       "match": true
     },
     {
       "person": "Sri Sri Ravi Shankar",
       "event": "COVID lockdown impact on org",
       "expected": "Bad",
-      "predicted_score": 1.91,
+      "predicted_score": 1.85,
       "match": false
     },
     {
       "person": "Jawaharlal Nehru",
       "event": "Became first PM of India",
       "expected": "Good",
-      "predicted_score": 1.05,
+      "predicted_score": 1.83,
       "match": true
     },
     {
       "person": "Jawaharlal Nehru",
       "event": "China War defeat",
       "expected": "Bad",
-      "predicted_score": -1.76,
+      "predicted_score": -0.24,
       "match": true
     },
     {
       "person": "Jawaharlal Nehru",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -2.17,
+      "predicted_score": -1.45,
       "match": true
     },
     {
       "person": "Indira Gandhi",
       "event": "Became first female PM of India",
       "expected": "Good",
-      "predicted_score": 2.48,
+      "predicted_score": 2.52,
       "match": true
     },
     {
       "person": "Indira Gandhi",
       "event": "Declared Emergency",
       "expected": "Bad",
-      "predicted_score": -0.75,
+      "predicted_score": -0.37,
       "match": true
     },
     {
       "person": "Indira Gandhi",
       "event": "Assassination",
       "expected": "Bad",
-      "predicted_score": -2.52,
+      "predicted_score": -1.96,
       "match": true
     },
     {
       "person": "Rajiv Gandhi",
       "event": "Became PM after mother's death",
       "expected": "Good",
-      "predicted_score": -0.81,
-      "match": false
+      "predicted_score": 0.25,
+      "match": true
     },
     {
       "person": "Rajiv Gandhi",
       "event": "Assassination",
       "expected": "Bad",
-      "predicted_score": -2.17,
+      "predicted_score": -0.39,
       "match": true
     },
     {
       "person": "Rajiv Gandhi",
       "event": "Bofors scandal broke",
       "expected": "Bad",
-      "predicted_score": -0.01,
-      "match": true
+      "predicted_score": 0.31,
+      "match": false
     },
     {
       "person": "Sonia Gandhi",
       "event": "Married Rajiv Gandhi",
       "expected": "Good",
-      "predicted_score": 1.68,
+      "predicted_score": 2.27,
       "match": true
     },
     {
       "person": "Sonia Gandhi",
       "event": "Became Congress President",
       "expected": "Good",
-      "predicted_score": 2.6,
+      "predicted_score": 2.55,
       "match": true
     },
     {
       "person": "Sonia Gandhi",
       "event": "Husband Rajiv assassinated",
       "expected": "Bad",
-      "predicted_score": -2.04,
+      "predicted_score": -0.18,
       "match": true
     },
     {
       "person": "Atal Bihari Vajpayee",
       "event": "First term as PM (13 days)",
       "expected": "Good",
-      "predicted_score": 2.22,
+      "predicted_score": 2.41,
       "match": true
     },
     {
       "person": "Atal Bihari Vajpayee",
       "event": "Second term as PM (nuclear tests)",
       "expected": "Good",
-      "predicted_score": -2.35,
+      "predicted_score": -0.87,
       "match": false
     },
     {
       "person": "Atal Bihari Vajpayee",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -2.51,
+      "predicted_score": -1.26,
       "match": true
     },
     {
       "person": "Manmohan Singh",
       "event": "Economic reforms as FM",
       "expected": "Good",
-      "predicted_score": 2.0,
+      "predicted_score": 1.81,
       "match": true
     },
     {
       "person": "Manmohan Singh",
       "event": "Became PM",
       "expected": "Good",
-      "predicted_score": 1.09,
+      "predicted_score": 1.79,
       "match": true
     },
     {
       "person": "Manmohan Singh",
       "event": "Lost election / Stepped down",
       "expected": "Bad",
-      "predicted_score": -1.08,
-      "match": true
+      "predicted_score": 0.86,
+      "match": false
     },
     {
       "person": "PV Narasimha Rao",
       "event": "Became PM (economic liberalization)",
       "expected": "Good",
-      "predicted_score": 2.34,
+      "predicted_score": 2.47,
       "match": true
     },
     {
       "person": "PV Narasimha Rao",
       "event": "Babri Masjid demolition",
       "expected": "Bad",
-      "predicted_score": 1.69,
+      "predicted_score": 1.64,
       "match": false
     },
     {
       "person": "PV Narasimha Rao",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -0.99,
-      "match": true
+      "predicted_score": 0.6,
+      "match": false
     },
     {
       "person": "JRD Tata",
       "event": "Became Chairman of Tata Group",
       "expected": "Good",
-      "predicted_score": 2.53,
+      "predicted_score": 2.47,
       "match": true
     },
     {
       "person": "JRD Tata",
       "event": "Air India nationalization",
       "expected": "Good",
-      "predicted_score": -0.14,
-      "match": false
+      "predicted_score": 1.01,
+      "match": true
     },
     {
       "person": "JRD Tata",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -1.93,
+      "predicted_score": -0.62,
       "match": true
     },
     {
       "person": "Dhirubhai Ambani",
       "event": "Started Reliance trading",
       "expected": "Good",
-      "predicted_score": 2.04,
+      "predicted_score": 2.38,
       "match": true
     },
     {
       "person": "Dhirubhai Ambani",
       "event": "Reliance went public (IPO)",
       "expected": "Good",
-      "predicted_score": -1.74,
-      "match": false
+      "predicted_score": 0.74,
+      "match": true
     },
     {
       "person": "Dhirubhai Ambani",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -2.3,
+      "predicted_score": -0.65,
       "match": true
     },
     {
       "person": "Azim Premji",
       "event": "Took over Wipro",
       "expected": "Good",
-      "predicted_score": 2.54,
+      "predicted_score": 2.57,
       "match": true
     },
     {
       "person": "Azim Premji",
       "event": "Wipro IT pivot",
       "expected": "Good",
-      "predicted_score": 1.38,
+      "predicted_score": 1.74,
       "match": true
     },
     {
       "person": "Azim Premji",
       "event": "Stepped down as Chairman",
       "expected": "Good",
-      "predicted_score": -2.27,
-      "match": false
+      "predicted_score": 0.34,
+      "match": true
     },
     {
       "person": "Narayana Murthy",
       "event": "Infosys founded",
       "expected": "Good",
-      "predicted_score": 0.3,
+      "predicted_score": 1.45,
       "match": true
     },
     {
       "person": "Narayana Murthy",
       "event": "Infosys IPO (NASDAQ listing)",
       "expected": "Good",
-      "predicted_score": -1.83,
-      "match": false
+      "predicted_score": 0.29,
+      "match": true
     },
     {
       "person": "Narayana Murthy",
       "event": "Retired from active role",
       "expected": "Good",
-      "predicted_score": 2.53,
+      "predicted_score": 2.54,
       "match": true
     },
     {
       "person": "Satya Nadella",
       "event": "Became CEO of Microsoft",
       "expected": "Good",
-      "predicted_score": 2.43,
+      "predicted_score": 2.46,
       "match": true
     },
     {
       "person": "Satya Nadella",
       "event": "Joined Microsoft",
       "expected": "Good",
-      "predicted_score": -2.04,
-      "match": false
+      "predicted_score": 0.35,
+      "match": true
     },
     {
       "person": "Satya Nadella",
       "event": "Married Anupama",
       "expected": "Good",
-      "predicted_score": -1.09,
+      "predicted_score": -0.16,
       "match": false
     },
     {
       "person": "Sundar Pichai",
       "event": "Became CEO of Google",
       "expected": "Good",
-      "predicted_score": 2.1,
+      "predicted_score": 2.34,
       "match": true
     },
     {
       "person": "Sundar Pichai",
       "event": "Joined Google",
       "expected": "Good",
-      "predicted_score": 0.03,
+      "predicted_score": 1.8,
       "match": true
     },
     {
       "person": "Sundar Pichai",
       "event": "Became CEO of Alphabet",
       "expected": "Good",
-      "predicted_score": 2.02,
+      "predicted_score": 2.28,
       "match": true
     },
     {
       "person": "Tim Cook",
       "event": "Became CEO of Apple",
       "expected": "Good",
-      "predicted_score": 2.13,
+      "predicted_score": 2.43,
       "match": true
     },
     {
       "person": "Tim Cook",
       "event": "Joined Apple",
       "expected": "Good",
-      "predicted_score": 0.23,
+      "predicted_score": 1.56,
       "match": true
     },
     {
       "person": "Tim Cook",
       "event": "Came out publicly as gay",
       "expected": "Good",
-      "predicted_score": 1.84,
+      "predicted_score": 1.54,
       "match": true
     },
     {
       "person": "Jack Ma",
       "event": "Alibaba founded",
       "expected": "Good",
-      "predicted_score": 2.5,
+      "predicted_score": 2.53,
       "match": true
     },
     {
       "person": "Jack Ma",
       "event": "Alibaba IPO (largest ever)",
       "expected": "Good",
-      "predicted_score": 2.11,
+      "predicted_score": 2.2,
       "match": true
     },
     {
       "person": "Jack Ma",
       "event": "Ant Group IPO blocked by China",
       "expected": "Bad",
-      "predicted_score": 1.35,
+      "predicted_score": 1.93,
       "match": false
     },
     {
       "person": "Masayoshi Son",
       "event": "SoftBank founded",
       "expected": "Good",
-      "predicted_score": 2.45,
+      "predicted_score": 2.46,
       "match": true
     },
     {
       "person": "Masayoshi Son",
       "event": "Vision Fund era began",
       "expected": "Good",
-      "predicted_score": -1.58,
+      "predicted_score": -0.13,
       "match": false
     },
     {
       "person": "Masayoshi Son",
       "event": "WeWork IPO collapse",
       "expected": "Bad",
-      "predicted_score": 2.21,
+      "predicted_score": 2.47,
       "match": false
     },
     {
       "person": "Richard Branson",
       "event": "Virgin Records founded",
       "expected": "Good",
-      "predicted_score": 2.29,
+      "predicted_score": 2.47,
       "match": true
     },
     {
       "person": "Richard Branson",
       "event": "Virgin Atlantic launch",
       "expected": "Good",
-      "predicted_score": 2.46,
+      "predicted_score": 2.3,
       "match": true
     },
     {
       "person": "Richard Branson",
       "event": "Space flight (Virgin Galactic)",
       "expected": "Good",
-      "predicted_score": 2.49,
+      "predicted_score": 2.44,
       "match": true
     },
     {
       "person": "Larry Page",
       "event": "Google founded",
       "expected": "Good",
-      "predicted_score": 2.57,
+      "predicted_score": 2.54,
       "match": true
     },
     {
       "person": "Larry Page",
       "event": "Google IPO",
       "expected": "Good",
-      "predicted_score": 2.29,
+      "predicted_score": 2.51,
       "match": true
     },
     {
       "person": "Larry Page",
       "event": "Alphabet restructure",
       "expected": "Good",
-      "predicted_score": -2.48,
+      "predicted_score": -2.27,
       "match": false
     },
     {
       "person": "Sergey Brin",
       "event": "Google founded",
       "expected": "Good",
-      "predicted_score": 0.39,
+      "predicted_score": 1.81,
       "match": true
     },
     {
       "person": "Sergey Brin",
       "event": "Google IPO",
       "expected": "Good",
-      "predicted_score": -1.28,
-      "match": false
+      "predicted_score": 1.63,
+      "match": true
     },
     {
       "person": "Sergey Brin",
       "event": "Married Anne Wojcicki",
       "expected": "Good",
-      "predicted_score": 2.04,
+      "predicted_score": 2.25,
       "match": true
     },
     {
       "person": "Pierre Omidyar",
       "event": "eBay founded",
       "expected": "Good",
-      "predicted_score": 2.17,
+      "predicted_score": 2.26,
       "match": true
     },
     {
       "person": "Pierre Omidyar",
       "event": "eBay IPO",
       "expected": "Good",
-      "predicted_score": 2.52,
+      "predicted_score": 2.5,
       "match": true
     },
     {
       "person": "Pierre Omidyar",
       "event": "Stepped down from eBay",
       "expected": "Good",
-      "predicted_score": 1.92,
+      "predicted_score": 2.5,
       "match": true
     },
     {
       "person": "Brian Chesky",
       "event": "Airbnb founded",
       "expected": "Good",
-      "predicted_score": 2.42,
+      "predicted_score": 2.45,
       "match": true
     },
     {
       "person": "Brian Chesky",
       "event": "Airbnb IPO",
       "expected": "Good",
-      "predicted_score": 0.57,
+      "predicted_score": 1.99,
       "match": true
     },
     {
       "person": "Brian Chesky",
       "event": "COVID crisis (massive layoffs)",
       "expected": "Bad",
-      "predicted_score": 2.48,
+      "predicted_score": 2.51,
       "match": false
     },
     {
       "person": "Travis Kalanick",
       "event": "Uber founded",
       "expected": "Good",
-      "predicted_score": 1.33,
+      "predicted_score": 1.9,
       "match": true
     },
     {
       "person": "Travis Kalanick",
       "event": "Resigned as CEO (scandals)",
       "expected": "Bad",
-      "predicted_score": -0.86,
-      "match": true
+      "predicted_score": 1.31,
+      "match": false
     },
     {
       "person": "Travis Kalanick",
       "event": "Uber IPO",
       "expected": "Good",
-      "predicted_score": 0.11,
+      "predicted_score": 1.74,
       "match": true
     },
     {
       "person": "Pete Sampras",
       "event": "First Grand Slam win",
       "expected": "Good",
-      "predicted_score": 0.76,
+      "predicted_score": 1.37,
       "match": true
     },
     {
       "person": "Pete Sampras",
       "event": "Final US Open win (14th major)",
       "expected": "Good",
-      "predicted_score": 2.48,
+      "predicted_score": 2.57,
       "match": true
     },
     {
       "person": "Pete Sampras",
       "event": "Retired from tennis",
       "expected": "Good",
-      "predicted_score": 2.52,
+      "predicted_score": 2.5,
       "match": true
     },
     {
       "person": "Andre Agassi",
       "event": "First Wimbledon win",
       "expected": "Good",
-      "predicted_score": -1.27,
-      "match": false
+      "predicted_score": 1.07,
+      "match": true
     },
     {
       "person": "Andre Agassi",
       "event": "Rank dropped to 141 (drugs/divorce)",
       "expected": "Bad",
-      "predicted_score": 1.57,
+      "predicted_score": 2.08,
       "match": false
     },
     {
       "person": "Andre Agassi",
       "event": "US Open win (career Grand Slam)",
       "expected": "Good",
-      "predicted_score": 1.99,
+      "predicted_score": 2.17,
       "match": true
     },
     {
       "person": "Bjorn Borg",
       "event": "First French Open win",
       "expected": "Good",
-      "predicted_score": 2.16,
+      "predicted_score": 2.31,
       "match": true
     },
     {
       "person": "Bjorn Borg",
       "event": "Fifth Wimbledon win",
       "expected": "Good",
-      "predicted_score": 2.51,
+      "predicted_score": 2.54,
       "match": true
     },
     {
       "person": "Bjorn Borg",
       "event": "Retired suddenly at 26",
       "expected": "Bad",
-      "predicted_score": 1.83,
+      "predicted_score": 2.19,
       "match": false
     },
     {
       "person": "John McEnroe",
       "event": "Reached Wimbledon semifinals",
       "expected": "Good",
-      "predicted_score": -2.51,
+      "predicted_score": -1.27,
       "match": false
     },
     {
       "person": "John McEnroe",
       "event": "Best season ever (82-3 record)",
       "expected": "Good",
-      "predicted_score": 1.01,
+      "predicted_score": 1.76,
       "match": true
     },
     {
       "person": "John McEnroe",
       "event": "Retired from singles",
       "expected": "Bad",
-      "predicted_score": -2.28,
-      "match": true
+      "predicted_score": 0.1,
+      "match": false
     },
     {
       "person": "Rod Laver",
       "event": "First Grand Slam (amateur)",
       "expected": "Good",
-      "predicted_score": -2.43,
+      "predicted_score": -1.45,
       "match": false
     },
     {
       "person": "Rod Laver",
       "event": "Second Grand Slam (Open era)",
       "expected": "Good",
-      "predicted_score": 1.67,
+      "predicted_score": 1.36,
       "match": true
     },
     {
       "person": "Rod Laver",
       "event": "Entered Hall of Fame",
       "expected": "Good",
-      "predicted_score": 2.27,
+      "predicted_score": 2.33,
       "match": true
     },
     {
       "person": "Usain Bolt",
       "event": "100m world record Beijing",
       "expected": "Good",
-      "predicted_score": 2.11,
+      "predicted_score": 2.22,
       "match": true
     },
     {
       "person": "Usain Bolt",
       "event": "London Olympics 100m gold",
       "expected": "Good",
-      "predicted_score": -0.39,
-      "match": false
+      "predicted_score": 1.58,
+      "match": true
     },
     {
       "person": "Usain Bolt",
       "event": "Final race (injured/loss)",
       "expected": "Bad",
-      "predicted_score": 2.24,
+      "predicted_score": 2.19,
       "match": false
     },
     {
       "person": "Carl Lewis",
       "event": "LA Olympics 4 gold medals",
       "expected": "Good",
-      "predicted_score": 0.13,
+      "predicted_score": 1.09,
       "match": true
     },
     {
@@ -2068,259 +2068,259 @@
       "person": "Carl Lewis",
       "event": "Atlanta long jump gold (9th medal)",
       "expected": "Good",
-      "predicted_score": 1.79,
+      "predicted_score": 1.7,
       "match": true
     },
     {
       "person": "Jesse Owens",
       "event": "Berlin Olympics 4 gold medals",
       "expected": "Good",
-      "predicted_score": -1.4,
-      "match": false
+      "predicted_score": 0.48,
+      "match": true
     },
     {
       "person": "Jesse Owens",
       "event": "Set 4 world records in one hour",
       "expected": "Good",
-      "predicted_score": 0.12,
+      "predicted_score": 1.41,
       "match": true
     },
     {
       "person": "Jesse Owens",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": 0.63,
+      "predicted_score": 1.4,
       "match": false
     },
     {
       "person": "Michael Phelps",
       "event": "Beijing 8 gold medals",
       "expected": "Good",
-      "predicted_score": 1.31,
+      "predicted_score": 0.89,
       "match": true
     },
     {
       "person": "Michael Phelps",
       "event": "London became most decorated",
       "expected": "Good",
-      "predicted_score": 2.53,
+      "predicted_score": 2.56,
       "match": true
     },
     {
       "person": "Michael Phelps",
       "event": "Athens 6 gold medals",
       "expected": "Good",
-      "predicted_score": 0.69,
+      "predicted_score": 1.93,
       "match": true
     },
     {
       "person": "Nadia Comaneci",
       "event": "First perfect 10 in Olympics",
       "expected": "Good",
-      "predicted_score": -0.69,
-      "match": false
+      "predicted_score": 1.25,
+      "match": true
     },
     {
       "person": "Nadia Comaneci",
       "event": "Montreal 3 gold medals",
       "expected": "Good",
-      "predicted_score": -2.39,
+      "predicted_score": -0.91,
       "match": false
     },
     {
       "person": "Nadia Comaneci",
       "event": "Defected to USA",
       "expected": "Bad",
-      "predicted_score": 1.63,
+      "predicted_score": 2.32,
       "match": false
     },
     {
       "person": "Simone Biles",
       "event": "Rio 4 gold medals",
       "expected": "Good",
-      "predicted_score": -1.46,
+      "predicted_score": -0.47,
       "match": false
     },
     {
       "person": "Simone Biles",
       "event": "Withdrew from Tokyo (twisties)",
       "expected": "Bad",
-      "predicted_score": -1.66,
+      "predicted_score": -1.0,
       "match": true
     },
     {
       "person": "Simone Biles",
       "event": "Paris comeback gold",
       "expected": "Good",
-      "predicted_score": 0.14,
+      "predicted_score": 1.55,
       "match": true
     },
     {
       "person": "Muhammad Ali",
       "event": "First Heavyweight title",
       "expected": "Good",
-      "predicted_score": -0.65,
-      "match": false
+      "predicted_score": 1.14,
+      "match": true
     },
     {
       "person": "Muhammad Ali",
       "event": "Stripped of title (draft refusal)",
       "expected": "Bad",
-      "predicted_score": 2.18,
+      "predicted_score": 2.36,
       "match": false
     },
     {
       "person": "Muhammad Ali",
       "event": "Rumble in the Jungle win",
       "expected": "Good",
-      "predicted_score": 2.38,
+      "predicted_score": 2.47,
       "match": true
     },
     {
       "person": "Mike Tyson",
       "event": "Youngest Heavyweight champ",
       "expected": "Good",
-      "predicted_score": -2.55,
+      "predicted_score": -2.14,
       "match": false
     },
     {
       "person": "Mike Tyson",
       "event": "Lost to Buster Douglas",
       "expected": "Bad",
-      "predicted_score": -1.51,
+      "predicted_score": -0.34,
       "match": true
     },
     {
       "person": "Mike Tyson",
       "event": "Convicted of rape (prison)",
       "expected": "Bad",
-      "predicted_score": 0.03,
+      "predicted_score": 1.82,
       "match": false
     },
     {
       "person": "Evander Holyfield",
       "event": "Unified Heavyweight titles",
       "expected": "Good",
-      "predicted_score": 1.0,
+      "predicted_score": 1.79,
       "match": true
     },
     {
       "person": "Evander Holyfield",
       "event": "Ear bitten by Tyson",
       "expected": "Bad",
-      "predicted_score": -2.26,
+      "predicted_score": -0.62,
       "match": true
     },
     {
       "person": "Evander Holyfield",
       "event": "Lost to Lennox Lewis",
       "expected": "Bad",
-      "predicted_score": 0.65,
+      "predicted_score": 0.5,
       "match": false
     },
     {
       "person": "Lennox Lewis",
       "event": "Olympic Gold (Barcelona)",
       "expected": "Good",
-      "predicted_score": 2.14,
+      "predicted_score": 1.63,
       "match": true
     },
     {
       "person": "Lennox Lewis",
       "event": "Unified all belts vs Holyfield",
       "expected": "Good",
-      "predicted_score": 2.32,
+      "predicted_score": 2.39,
       "match": true
     },
     {
       "person": "Lennox Lewis",
       "event": "Retired as champion",
       "expected": "Good",
-      "predicted_score": 1.7,
+      "predicted_score": 2.26,
       "match": true
     },
     {
       "person": "Manny Pacquiao",
       "event": "Professional debut",
       "expected": "Good",
-      "predicted_score": 1.87,
+      "predicted_score": 2.19,
       "match": true
     },
     {
       "person": "Manny Pacquiao",
       "event": "8th division world title",
       "expected": "Good",
-      "predicted_score": 0.05,
+      "predicted_score": 1.76,
       "match": true
     },
     {
       "person": "Manny Pacquiao",
       "event": "Lost to Mayweather",
       "expected": "Bad",
-      "predicted_score": 1.02,
+      "predicted_score": 1.69,
       "match": false
     },
     {
       "person": "Floyd Mayweather Jr",
       "event": "Olympic Bronze",
       "expected": "Good",
-      "predicted_score": 2.5,
+      "predicted_score": 2.44,
       "match": true
     },
     {
       "person": "Floyd Mayweather Jr",
       "event": "Beat Pacquiao (unbeaten record)",
       "expected": "Good",
-      "predicted_score": 1.36,
+      "predicted_score": 2.26,
       "match": true
     },
     {
       "person": "Floyd Mayweather Jr",
       "event": "Beat McGregor (50-0)",
       "expected": "Good",
-      "predicted_score": -1.44,
+      "predicted_score": -0.11,
       "match": false
     },
     {
       "person": "LeBron James",
       "event": "NBA Draft #1 overall",
       "expected": "Good",
-      "predicted_score": 1.1,
+      "predicted_score": 1.04,
       "match": true
     },
     {
       "person": "LeBron James",
       "event": "The Decision (public backlash)",
       "expected": "Bad",
-      "predicted_score": 1.28,
+      "predicted_score": 2.06,
       "match": false
     },
     {
       "person": "LeBron James",
       "event": "Cavs Championship (3-1 comeback)",
       "expected": "Good",
-      "predicted_score": -1.73,
-      "match": false
+      "predicted_score": 0.5,
+      "match": true
     },
     {
       "person": "Kobe Bryant",
       "event": "Drafted by Lakers",
       "expected": "Good",
-      "predicted_score": 2.31,
+      "predicted_score": 1.96,
       "match": true
     },
     {
       "person": "Kobe Bryant",
       "event": "Colorado assault case",
       "expected": "Bad",
-      "predicted_score": 1.89,
+      "predicted_score": 2.22,
       "match": false
     },
     {
       "person": "Kobe Bryant",
       "event": "Passed away in helicopter crash",
       "expected": "Bad",
-      "predicted_score": 2.26,
+      "predicted_score": 2.02,
       "match": false
     },
     {
@@ -2334,413 +2334,413 @@
       "person": "Kareem Abdul-Jabbar",
       "event": "Finals MVP (Showtime Lakers)",
       "expected": "Good",
-      "predicted_score": -2.37,
+      "predicted_score": -0.68,
       "match": false
     },
     {
       "person": "Kareem Abdul-Jabbar",
       "event": "Retired as all-time scoring leader",
       "expected": "Good",
-      "predicted_score": 1.87,
+      "predicted_score": 2.39,
       "match": true
     },
     {
       "person": "Magic Johnson",
       "event": "Drafted by Lakers",
       "expected": "Good",
-      "predicted_score": 2.44,
+      "predicted_score": 2.41,
       "match": true
     },
     {
       "person": "Magic Johnson",
       "event": "Rookie Finals MVP",
       "expected": "Good",
-      "predicted_score": 1.82,
+      "predicted_score": 1.88,
       "match": true
     },
     {
       "person": "Magic Johnson",
       "event": "HIV announcement (career shock)",
       "expected": "Bad",
-      "predicted_score": 1.85,
+      "predicted_score": 1.44,
       "match": false
     },
     {
       "person": "Larry Bird",
       "event": "Drafted by Celtics",
       "expected": "Good",
-      "predicted_score": -1.63,
-      "match": false
+      "predicted_score": 0.26,
+      "match": true
     },
     {
       "person": "Larry Bird",
       "event": "First NBA title",
       "expected": "Good",
-      "predicted_score": 2.26,
+      "predicted_score": 2.43,
       "match": true
     },
     {
       "person": "Larry Bird",
       "event": "Olympic Dream Team gold",
       "expected": "Good",
-      "predicted_score": -0.5,
-      "match": false
+      "predicted_score": 1.0,
+      "match": true
     },
     {
       "person": "Michael Jordan",
       "event": "First NBA Championship",
       "expected": "Good",
-      "predicted_score": 0.95,
+      "predicted_score": 2.19,
       "match": true
     },
     {
       "person": "Michael Jordan",
       "event": "Father murdered",
       "expected": "Bad",
-      "predicted_score": -1.4,
+      "predicted_score": -0.06,
       "match": true
     },
     {
       "person": "Michael Jordan",
       "event": "I'm back announcement",
       "expected": "Good",
-      "predicted_score": 1.32,
+      "predicted_score": 2.34,
       "match": true
     },
     {
       "person": "Diego Maradona",
       "event": "World Cup win (Hand of God)",
       "expected": "Good",
-      "predicted_score": 2.41,
+      "predicted_score": 2.45,
       "match": true
     },
     {
       "person": "Diego Maradona",
       "event": "Banned for cocaine (15 months)",
       "expected": "Bad",
-      "predicted_score": -1.22,
-      "match": true
+      "predicted_score": 0.97,
+      "match": false
     },
     {
       "person": "Diego Maradona",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -1.25,
-      "match": true
+      "predicted_score": 0.88,
+      "match": false
     },
     {
       "person": "Pele",
       "event": "First World Cup at 17",
       "expected": "Good",
-      "predicted_score": -0.3,
-      "match": false
+      "predicted_score": 0.91,
+      "match": true
     },
     {
       "person": "Pele",
       "event": "Third World Cup (Brazil legend)",
       "expected": "Good",
-      "predicted_score": 1.12,
+      "predicted_score": 1.71,
       "match": true
     },
     {
       "person": "Pele",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -2.24,
+      "predicted_score": -0.15,
       "match": true
     },
     {
       "person": "Johann Sebastian Bach",
       "event": "Became Thomaskantor Leipzig",
       "expected": "Good",
-      "predicted_score": 2.51,
+      "predicted_score": 2.47,
       "match": true
     },
     {
       "person": "Johann Sebastian Bach",
       "event": "Completed Mass in B Minor",
       "expected": "Good",
-      "predicted_score": 2.19,
+      "predicted_score": 2.12,
       "match": true
     },
     {
       "person": "Johann Sebastian Bach",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": 1.68,
+      "predicted_score": 1.46,
       "match": false
     },
     {
       "person": "Rembrandt",
       "event": "Married Saskia (peak period)",
       "expected": "Good",
-      "predicted_score": 1.98,
+      "predicted_score": 2.33,
       "match": true
     },
     {
       "person": "Rembrandt",
       "event": "The Night Watch completed",
       "expected": "Good",
-      "predicted_score": 1.67,
+      "predicted_score": 2.13,
       "match": true
     },
     {
       "person": "Rembrandt",
       "event": "Declared bankrupt",
       "expected": "Bad",
-      "predicted_score": 2.41,
+      "predicted_score": 2.52,
       "match": false
     },
     {
       "person": "Michelangelo",
       "event": "David completed",
       "expected": "Good",
-      "predicted_score": 1.78,
+      "predicted_score": 2.26,
       "match": true
     },
     {
       "person": "Michelangelo",
       "event": "Sistine Chapel ceiling done",
       "expected": "Good",
-      "predicted_score": -1.92,
+      "predicted_score": -1.48,
       "match": false
     },
     {
       "person": "Michelangelo",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -2.03,
+      "predicted_score": -0.21,
       "match": true
     },
     {
       "person": "Raphael",
       "event": "Called to Rome by Pope",
       "expected": "Good",
-      "predicted_score": -2.02,
+      "predicted_score": 0.0,
       "match": false
     },
     {
       "person": "Raphael",
       "event": "School of Athens fresco",
       "expected": "Good",
-      "predicted_score": 0.76,
+      "predicted_score": 0.72,
       "match": true
     },
     {
       "person": "Raphael",
       "event": "Passed away (his birthday)",
       "expected": "Bad",
-      "predicted_score": -1.44,
-      "match": true
+      "predicted_score": 0.04,
+      "match": false
     },
     {
       "person": "Neil Armstrong",
       "event": "First man on Moon",
       "expected": "Good",
-      "predicted_score": 1.73,
+      "predicted_score": 2.06,
       "match": true
     },
     {
       "person": "Neil Armstrong",
       "event": "Gemini 8 mission",
       "expected": "Good",
-      "predicted_score": 1.28,
+      "predicted_score": 0.93,
       "match": true
     },
     {
       "person": "Neil Armstrong",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": 0.04,
+      "predicted_score": 0.62,
       "match": false
     },
     {
       "person": "Buzz Aldrin",
       "event": "Second man on Moon",
       "expected": "Good",
-      "predicted_score": 2.02,
+      "predicted_score": 2.3,
       "match": true
     },
     {
       "person": "Buzz Aldrin",
       "event": "Depression/alcohol struggles",
       "expected": "Bad",
-      "predicted_score": -1.43,
+      "predicted_score": -0.57,
       "match": true
     },
     {
       "person": "Buzz Aldrin",
       "event": "Continued advocacy work",
       "expected": "Good",
-      "predicted_score": -1.7,
+      "predicted_score": -0.67,
       "match": false
     },
     {
       "person": "Yuri Gagarin",
       "event": "First human in space",
       "expected": "Good",
-      "predicted_score": -1.46,
+      "predicted_score": -0.78,
       "match": false
     },
     {
       "person": "Yuri Gagarin",
       "event": "Banned from space flight (too valuable)",
       "expected": "Bad",
-      "predicted_score": -2.23,
+      "predicted_score": -1.43,
       "match": true
     },
     {
       "person": "Yuri Gagarin",
       "event": "Death in jet crash",
       "expected": "Bad",
-      "predicted_score": -1.7,
-      "match": true
+      "predicted_score": 0.43,
+      "match": false
     },
     {
       "person": "Amelia Earhart",
       "event": "First woman Atlantic crossing",
       "expected": "Good",
-      "predicted_score": -1.28,
+      "predicted_score": -0.25,
       "match": false
     },
     {
       "person": "Amelia Earhart",
       "event": "Solo Atlantic flight",
       "expected": "Good",
-      "predicted_score": 0.77,
+      "predicted_score": 1.45,
       "match": true
     },
     {
       "person": "Amelia Earhart",
       "event": "Disappeared over Pacific",
       "expected": "Bad",
-      "predicted_score": 0.92,
+      "predicted_score": 0.96,
       "match": false
     },
     {
       "person": "Marco Polo",
       "event": "Journey to China began",
       "expected": "Good",
-      "predicted_score": 2.13,
+      "predicted_score": 1.86,
       "match": true
     },
     {
       "person": "Marco Polo",
       "event": "Returned to Venice",
       "expected": "Good",
-      "predicted_score": 2.51,
+      "predicted_score": 2.39,
       "match": true
     },
     {
       "person": "Marco Polo",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -0.53,
-      "match": true
+      "predicted_score": 1.5,
+      "match": false
     },
     {
       "person": "Christopher Columbus",
       "event": "Discovered Americas",
       "expected": "Good",
-      "predicted_score": -0.73,
+      "predicted_score": -0.7,
       "match": false
     },
     {
       "person": "Christopher Columbus",
       "event": "Arrested and sent back to Spain",
       "expected": "Bad",
-      "predicted_score": -0.35,
-      "match": true
+      "predicted_score": 1.27,
+      "match": false
     },
     {
       "person": "Christopher Columbus",
       "event": "Passed away",
       "expected": "Bad",
-      "predicted_score": -2.5,
+      "predicted_score": -1.95,
       "match": true
     },
     {
       "person": "Marie Antoinette",
       "event": "Married Louis XVI",
       "expected": "Good",
-      "predicted_score": -0.16,
-      "match": false
+      "predicted_score": 0.91,
+      "match": true
     },
     {
       "person": "Marie Antoinette",
       "event": "Became Queen of France",
       "expected": "Good",
-      "predicted_score": -1.69,
-      "match": false
+      "predicted_score": 0.97,
+      "match": true
     },
     {
       "person": "Marie Antoinette",
       "event": "Executed by guillotine",
       "expected": "Bad",
-      "predicted_score": -2.19,
-      "match": true
+      "predicted_score": 0.31,
+      "match": false
     },
     {
       "person": "Napoleon Bonaparte",
       "event": "Crowned Emperor",
       "expected": "Good",
-      "predicted_score": -0.84,
-      "match": false
+      "predicted_score": 0.27,
+      "match": true
     },
     {
       "person": "Napoleon Bonaparte",
       "event": "Retreat from Moscow",
       "expected": "Bad",
-      "predicted_score": 1.35,
+      "predicted_score": 1.42,
       "match": false
     },
     {
       "person": "Napoleon Bonaparte",
       "event": "Died in exile",
       "expected": "Bad",
-      "predicted_score": 0.58,
+      "predicted_score": 1.76,
       "match": false
     },
     {
       "person": "Tom Cruise",
       "event": "Top Gun release (breakout role)",
       "expected": "Good",
-      "predicted_score": 2.53,
+      "predicted_score": 2.54,
       "match": true
     },
     {
       "person": "Tom Cruise",
       "event": "Days of Thunder premiere",
       "expected": "Good",
-      "predicted_score": 2.46,
+      "predicted_score": 2.49,
       "match": true
     },
     {
       "person": "Tom Cruise",
       "event": "Mission Impossible franchise",
       "expected": "Good",
-      "predicted_score": -1.32,
+      "predicted_score": -0.73,
       "match": false
     },
     {
       "person": "Julia Roberts",
       "event": "Pretty Woman release (star)",
       "expected": "Good",
-      "predicted_score": 2.16,
+      "predicted_score": 2.47,
       "match": true
     },
     {
       "person": "Julia Roberts",
       "event": "Oscar win for Erin Brockovich",
       "expected": "Good",
-      "predicted_score": 2.34,
+      "predicted_score": 2.41,
       "match": true
     },
     {
       "person": "Julia Roberts",
       "event": "Married Daniel Moder",
       "expected": "Good",
-      "predicted_score": 1.47,
+      "predicted_score": 2.21,
       "match": true
     }
   ]

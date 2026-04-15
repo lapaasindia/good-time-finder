@@ -1095,8 +1095,8 @@ ADDITIONAL_PERSONALITIES = [
         'name': 'Ernest Hemingway',
         'birth': {
             'dt': '1899-07-21',
-            'lat': 41.8781,
-            'lon': -87.6298,
+            'lat': 41.8850,
+            'lon': -87.7845,
             'tz': 'America/Chicago'
         },
         'events': []
@@ -1199,7 +1199,12 @@ ADDITIONAL_PERSONALITIES = [
             'lon': -81.6944,
             'tz': 'America/New_York'
         },
-        'events': []
+        'events': [
+            {'date': '2003-06-26', 'nature': 'Good', 'desc': 'Selected as #1 overall in NBA Draft'},
+            {'date': '2010-06-17', 'nature': 'Good', 'desc': 'Won first NBA championship with Miami Heat'},
+            {'date': '2016-06-19', 'nature': 'Good', 'desc': 'Won second NBA championship with Cleveland Cavaliers'},
+            {'date': '2018-06-08', 'nature': 'Good', 'desc': 'Won third NBA championship with Los Angeles Lakers'}
+        ]
     },
     {
         'name': 'Michael Jordan',
@@ -1209,7 +1214,69 @@ ADDITIONAL_PERSONALITIES = [
             'lon': -74.0060,
             'tz': 'America/New_York'
         },
-        'events': []
+        'events': [
+            {'date': '1984-06-19', 'nature': 'Good', 'desc': 'Selected as #3 overall in NBA Draft'},
+            {'date': '1991-06-12', 'nature': 'Good', 'desc': 'Won first NBA championship with Chicago Bulls'},
+            {'date': '1998-01-21', 'nature': 'Good', 'desc': 'Comeback game from retirement'},
+            {'date': '2009-09-11', 'nature': 'Good', 'desc': 'Inducted into Basketball Hall of Fame'}
+        ]
+    },
+    {
+        'name': 'Tiger Woods',
+        'birth': {
+            'dt': '1975-12-30',
+            'lat': 33.8361,
+            'lon': -117.9143,
+            'tz': 'America/Los_Angeles'
+        },
+        'events': [
+            {'date': '1997-04-13', 'nature': 'Good', 'desc': 'Won first Masters Tournament'},
+            {'date': '2000-06-19', 'nature': 'Good', 'desc': 'Completed career Grand Slam with U.S. Open'},
+            {'date': '2009-11-27', 'nature': 'Bad', 'desc': 'Car accident and personal scandal'},
+            {'date': '2019-10-27', 'nature': 'Good', 'desc': 'Won Masters Tournament comeback win'}
+        ]
+    },
+    {
+        'name': 'Roger Federer',
+        'birth': {
+            'dt': '1981-08-08',
+            'lat': 47.5596,
+            'lon': 7.5886,
+            'tz': 'Europe/Zurich'
+        },
+        'events': [
+            {'date': '2003-07-06', 'nature': 'Good', 'desc': 'Won first Grand Slam (Wimbledon)'},
+            {'date': '2008-07-06', 'nature': 'Good', 'desc': 'Won Olympic gold in doubles'},
+            {'date': '2018-01-29', 'nature': 'Bad', 'desc': 'Knee injury led to surgeries'}
+        ]
+    },
+    {
+        'name': 'Cristiano Ronaldo',
+        'birth': {
+            'dt': '1985-02-05',
+            'lat': 32.6667,
+            'lon': -16.9167,
+            'tz': 'Atlantic/Madeira'
+        },
+        'events': [
+            {'date': '2003-08-25', 'nature': 'Good', 'desc': 'Professional debut with Manchester United'},
+            {'date': '2016-05-28', 'nature': 'Good', 'desc': 'Won UEFA Champions League with Real Madrid'},
+            {'date': '2021-05-29', 'nature': 'Good', 'desc': 'Won UEFA Champions League with Manchester United'}
+        ]
+    },
+    {
+        'name': 'Lionel Messi',
+        'birth': {
+            'dt': '1987-06-24',
+            'lat': -32.9442,
+            'lon': -60.6505,
+            'tz': 'America/Argentina/Rosario'
+        },
+        'events': [
+            {'date': '2004-10-16', 'nature': 'Good', 'desc': 'Professional debut with Barcelona'},
+            {'date': '2011-04-27', 'nature': 'Good', 'desc': 'Won first Champions League with Barcelona'},
+            {'date': '2022-12-18', 'nature': 'Good', 'desc': 'Won World Cup with Argentina'}
+        ]
     },
     {
         'name': 'Pablo Picasso',
@@ -1259,7 +1326,11 @@ ADDITIONAL_PERSONALITIES = [
             'lon': -97.0000,
             'tz': 'America/Chicago'
         },
-        'events': []
+        'events': [
+            {'date': '1916-01-01', 'nature': 'Good', 'desc': 'First solo exhibition in New York'},
+            {'date': '1946-01-01', 'nature': 'Good', 'desc': 'Settled in New Mexico, inspired by landscape'},
+            {'date': '1986-03-06', 'nature': 'Bad', 'desc': 'Passed away'}
+        ]
     },
     {
         'name': 'Jackson Pollock',
@@ -1618,6 +1689,356 @@ ADDITIONAL_PERSONALITIES = [
             'lat': 37.7749,
             'lon': -122.4194,
             'tz': 'America/Los_Angeles'
+        },
+        'events': []
+    },
+    {
+        'name': 'Albert Einstein',
+        'birth': {
+            'dt': '1879-03-14',
+            'lat': 48.3974,
+            'lon': 9.9934,
+            'tz': 'Europe/Berlin'
+        },
+        'events': []
+    },
+    {
+        'name': 'Mahatma Gandhi',
+        'birth': {
+            'dt': '1869-10-02',
+            'lat': 21.6417,
+            'lon': 69.6293,
+            'tz': 'Asia/Kolkata'
+        },
+        'events': []
+    },
+    {
+        'name': 'Martin Luther King Jr.',
+        'birth': {
+            'dt': '1929-01-15',
+            'lat': 33.7490,
+            'lon': -84.3880,
+            'tz': 'America/New_York'
+        },
+        'events': []
+    },
+    {
+        'name': 'Nelson Mandela',
+        'birth': {
+            'dt': '1918-07-18',
+            'lat': -31.8903,
+            'lon': 28.4487,
+            'tz': 'Africa/Johannesburg'
+        },
+        'events': []
+    },
+    {
+        'name': 'Marie Curie',
+        'birth': {
+            'dt': '1867-11-07',
+            'lat': 52.2297,
+            'lon': 21.0122,
+            'tz': 'Europe/Warsaw'
+        },
+        'events': []
+    },
+    {
+        'name': 'Nikola Tesla',
+        'birth': {
+            'dt': '1856-07-10',
+            'lat': 45.1603,
+            'lon': 15.5084,
+            'tz': 'Europe/Zagreb'
+        },
+        'events': []
+    },
+    {
+        'name': 'Thomas Edison',
+        'birth': {
+            'dt': '1847-02-11',
+            'lat': 40.7128,
+            'lon': -74.0060,
+            'tz': 'America/New_York'
+        },
+        'events': []
+    },
+    {
+        'name': 'Henry Ford',
+        'birth': {
+            'dt': '1863-07-30',
+            'lat': 42.3314,
+            'lon': -83.0458,
+            'tz': 'America/Detroit'
+        },
+        'events': []
+    },
+    {
+        'name': 'Amelia Earhart',
+        'birth': {
+            'dt': '1897-07-24',
+            'lat': 40.7128,
+            'lon': -74.0060,
+            'tz': 'America/New_York'
+        },
+        'events': []
+    },
+    {
+        'name': 'Charles Darwin',
+        'birth': {
+            'dt': '1809-02-12',
+            'lat': 51.5074,
+            'lon': -0.1278,
+            'tz': 'Europe/London'
+        },
+        'events': []
+    },
+    {
+        'name': 'Oprah Winfrey',
+        'birth': {
+            'dt': '1954-01-29',
+            'lat': 33.0576,
+            'lon': -89.5895,
+            'tz': 'America/Chicago'
+        },
+        'events': []
+    },
+    {
+        'name': 'J.K. Rowling',
+        'birth': {
+            'dt': '1965-07-31',
+            'lat': 51.5407,
+            'lon': -2.4062,
+            'tz': 'Europe/London'
+        },
+        'events': []
+    },
+    {
+        'name': 'Stephen King',
+        'birth': {
+            'dt': '1947-09-21',
+            'lat': 43.6591,
+            'lon': -70.2568,
+            'tz': 'America/New_York'
+        },
+        'events': []
+    },
+    {
+        'name': 'George Orwell',
+        'birth': {
+            'dt': '1903-06-25',
+            'lat': 26.6467,
+            'lon': 84.9167,
+            'tz': 'Asia/Kolkata'
+        },
+        'events': []
+    },
+    {
+        'name': 'Agatha Christie',
+        'birth': {
+            'dt': '1890-09-15',
+            'lat': 50.4638,
+            'lon': -3.5143,
+            'tz': 'Europe/London'
+        },
+        'events': []
+    },
+    {
+        'name': 'Charles Dickens',
+        'birth': {
+            'dt': '1812-02-07',
+            'lat': 50.8198,
+            'lon': -1.0880,
+            'tz': 'Europe/London'
+        },
+        'events': []
+    },
+    {
+        'name': 'Mark Zuckerberg',
+        'birth': {
+            'dt': '1984-05-14',
+            'lat': 41.0330,
+            'lon': -73.7629,
+            'tz': 'America/New_York'
+        },
+        'events': []
+    },
+    {
+        'name': 'Elon Musk',
+        'birth': {
+            'dt': '1971-06-28',
+            'lat': -25.7479,
+            'lon': 28.2293,
+            'tz': 'Africa/Johannesburg'
+        },
+        'events': []
+    },
+    {
+        'name': 'Jeff Bezos',
+        'birth': {
+            'dt': '1964-01-12',
+            'lat': 35.0844,
+            'lon': -106.6504,
+            'tz': 'America/Denver'
+        },
+        'events': []
+    },
+    {
+        'name': 'Bill Gates',
+        'birth': {
+            'dt': '1955-10-28',
+            'lat': 47.6062,
+            'lon': -122.3321,
+            'tz': 'America/Los_Angeles'
+        },
+        'events': []
+    },
+    {
+        'name': 'Warren Buffett',
+        'birth': {
+            'dt': '1930-08-30',
+            'lat': 41.2565,
+            'lon': -95.9345,
+            'tz': 'America/Chicago'
+        },
+        'events': []
+    },
+    {
+        'name': 'Richard Branson',
+        'birth': {
+            'dt': '1950-07-18',
+            'lat': 51.4659,
+            'lon': -0.0065,
+            'tz': 'Europe/London'
+        },
+        'events': []
+    },
+    {
+        'name': 'Albert Schweitzer',
+        'birth': {
+            'dt': '1875-01-14',
+            'lat': 48.0697,
+            'lon': 7.3506,
+            'tz': 'Europe/Paris'
+        },
+        'events': []
+    },
+    {
+        'name': 'Mother Teresa',
+        'birth': {
+            'dt': '1910-08-26',
+            'lat': 41.3275,
+            'lon': 19.8187,
+            'tz': 'Europe/Tirane'
+        },
+        'events': []
+    },
+    {
+        'name': 'Dalai Lama',
+        'birth': {
+            'dt': '1935-07-06',
+            'lat': 36.1667,
+            'lon': 100.2667,
+            'tz': 'Asia/Shanghai'
+        },
+        'events': []
+    },
+    {
+        'name': 'Pope Francis',
+        'birth': {
+            'dt': '1936-12-17',
+            'lat': -34.6037,
+            'lon': -58.3816,
+            'tz': 'America/Argentina/Buenos_Aires'
+        },
+        'events': []
+    },
+    {
+        'name': 'Desmond Tutu',
+        'birth': {
+            'dt': '1931-10-07',
+            'lat': -33.9249,
+            'lon': 18.4241,
+            'tz': 'Africa/Johannesburg'
+        },
+        'events': []
+    },
+    {
+        'name': 'Angela Merkel',
+        'birth': {
+            'dt': '1954-07-17',
+            'lat': 54.1523,
+            'lon': 12.0491,
+            'tz': 'Europe/Berlin'
+        },
+        'events': []
+    },
+    {
+        'name': 'Rosa Parks',
+        'birth': {
+            'dt': '1913-02-04',
+            'lat': 32.4302,
+            'lon': -85.7093,
+            'tz': 'America/Chicago'
+        },
+        'events': []
+    },
+    {
+        'name': 'Malala Yousafzai',
+        'birth': {
+            'dt': '1997-07-12',
+            'lat': 34.7794,
+            'lon': 72.3522,
+            'tz': 'Asia/Karachi'
+        },
+        'events': []
+    },
+    {
+        'name': 'Hillary Clinton',
+        'birth': {
+            'dt': '1947-10-26',
+            'lat': 41.8781,
+            'lon': -87.6298,
+            'tz': 'America/Chicago'
+        },
+        'events': []
+    },
+    {
+        'name': 'Michelle Obama',
+        'birth': {
+            'dt': '1964-01-17',
+            'lat': 41.8781,
+            'lon': -87.6298,
+            'tz': 'America/Chicago'
+        },
+        'events': []
+    },
+    {
+        'name': 'Cleopatra',
+        'birth': {
+            'dt': '-0069-08-12',
+            'lat': 31.2001,
+            'lon': 29.9187,
+            'tz': 'Africa/Cairo'
+        },
+        'events': []
+    },
+    {
+        'name': 'Joan of Arc',
+        'birth': {
+            'dt': '1412-01-06',
+            'lat': 48.2933,
+            'lon': 5.1408,
+            'tz': 'Europe/Paris'
+        },
+        'events': []
+    },
+    {
+        'name': 'Marie Antoinette',
+        'birth': {
+            'dt': '1755-11-02',
+            'lat': 48.2082,
+            'lon': 16.3738,
+            'tz': 'Europe/Vienna'
         },
         'events': []
     }
