@@ -14,7 +14,7 @@ global_features = []
 
 original_compute = lp.compute_composite_score
 
-def mocked_compute(category, rule_score, shadbala_bonus=0, gochara_score=0, dasha_bonus=0, yoga_score=0, ashtakavarga_bonus=0, tara_score=0, chandra_bala_score=0, avastha_score=0, pushkara_bonus_score=0, sudarshana_score=0, jaimini_score=0, arudha_score=0, gulika_penalty=0, badhaka_penalty=0, bhrigu_bonus=0, kp_score=0):
+def mocked_compute(category, rule_score, shadbala_bonus=0, gochara_score=0, dasha_bonus=0, yoga_score=0, ashtakavarga_bonus=0, tara_score=0, chandra_bala_score=0, avastha_score=0, pushkara_bonus_score=0, sudarshana_score=0, jaimini_score=0, arudha_score=0, gulika_penalty=0, badhaka_penalty=0, bhrigu_bonus=0, kp_score=0, kp_cuspal_score=0, double_transit=0):
     feats = {
         "rule": rule_score,
         "shadbala": shadbala_bonus,
@@ -32,10 +32,12 @@ def mocked_compute(category, rule_score, shadbala_bonus=0, gochara_score=0, dash
         "gulika": gulika_penalty,
         "badhaka": badhaka_penalty,
         "bhrigu": bhrigu_bonus,
-        "kp": kp_score
+        "kp": kp_score,
+        "kp_cuspal": kp_cuspal_score,
+        "double_transit": double_transit
     }
     global_features.append(feats)
-    return original_compute(category, rule_score, shadbala_bonus, gochara_score, dasha_bonus, yoga_score, ashtakavarga_bonus, tara_score, chandra_bala_score, avastha_score, pushkara_bonus_score, sudarshana_score, jaimini_score, arudha_score, gulika_penalty, badhaka_penalty, bhrigu_bonus, kp_score)
+    return original_compute(category, rule_score, shadbala_bonus, gochara_score, dasha_bonus, yoga_score, ashtakavarga_bonus, tara_score, chandra_bala_score, avastha_score, pushkara_bonus_score, sudarshana_score, jaimini_score, arudha_score, gulika_penalty, badhaka_penalty, bhrigu_bonus, kp_score, kp_cuspal_score, double_transit)
 
 lp.compute_composite_score = mocked_compute
 

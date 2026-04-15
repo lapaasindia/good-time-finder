@@ -30,7 +30,8 @@ from app.astrology.dasha import CATEGORY_PLANETS
 from app.astrology.sade_sati import compute_sade_sati
 from app.astrology.special_conditions import compute_special_conditions, apply_combustion_to_shadbala, get_raw_longitudes, get_speeds
 from app.astrology.bhrigu import calculate_bhrigu_bindu, bhrigu_transit_score
-from app.astrology.kp import kp_score
+from app.astrology.kp import kp_score, true_kp_cuspal_score
+from app.astrology.double_transit import double_transit_score
 from app.astrology.divisional_charts import navamsa_score_for_category, dasamsa_score_for_category, hora_score_for_category, saptamsa_score_for_category, vimsopaka_for_category
 from app.astrology.panchang import build_panchang
 from app.astrology.tara_bala import compute_tara, chandra_bala
@@ -74,6 +75,8 @@ class PredictionWindow:
     sandhi_penalty: float = 0.0
     bhrigu_bonus: float = 0.0
     kp_score: float = 0.0
+    kp_cuspal_score: float = 0.0
+    double_transit: float = 0.0
 
 
 @dataclass
@@ -312,6 +315,8 @@ class LifePredictorService:
             sandhi_penalty: float
             bhrigu_bonus: float
             kp_score: float
+            kp_cuspal_score: float
+            double_transit: float
             active_events: list[str]
             nature: str
 
@@ -321,6 +326,14 @@ class LifePredictorService:
         rahu_long = natal_longs.get("Rahu", 0.0)
         bb_long = calculate_bhrigu_bindu(moon_long, rahu_long)
         natal_kp_score = kp_score(natal_longs, n_lagna, category)
+        natal_kp_cuspal = true_kp_cuspal_score(
+            category=category,
+            birth_dt=person.birth_datetime,
+            lat=person.birth_location.latitude,
+            lon=person.birth_location.longitude,
+            natal_longs=natal_longs,
+            natal_houses=natal_p_houses
+        )
 
         slot_scores: list[_SlotScore] = []
 
@@ -400,6 +413,7 @@ class LifePredictorService:
 
             transit_longs = get_raw_longitudes(dt)
             bhrigu_score = bhrigu_transit_score(bb_long, transit_longs)
+            dt_score = double_transit_score(category, transit_longs, natal_p_houses, n_lagna)
             
             slot_scores.append(_SlotScore(
                 dt=dt,
@@ -416,6 +430,8 @@ class LifePredictorService:
                 sandhi_penalty=sandhi_penalty,
                 bhrigu_bonus=bhrigu_score,
                 kp_score=natal_kp_score,
+                kp_cuspal_score=natal_kp_cuspal,
+                double_transit=dt_score,
                 active_events=slot_events,
                 nature="",
             ))
@@ -458,6 +474,8 @@ class LifePredictorService:
                 badhaka_penalty=badhaka_pen,
                 bhrigu_bonus=s.bhrigu_bonus,
                 kp_score=s.kp_score,
+                kp_cuspal_score=s.kp_cuspal_score,
+                double_transit=s.double_transit,
             )
             raw_composites.append(composite)
 

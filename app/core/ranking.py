@@ -38,6 +38,8 @@ class CategoryWeights:
     badhaka: float = 0.3
     bhrigu: float = 1.0
     kp: float = 0.5
+    kp_cuspal: float = 1.0
+    double_transit: float = 1.0
 
 
 CATEGORY_WEIGHTS: dict[str, CategoryWeights] = {
@@ -82,6 +84,8 @@ def compute_composite_score(
     badhaka_penalty: float = 0.0,
     bhrigu_bonus: float = 0.0,
     kp_score: float = 0.0,
+    kp_cuspal_score: float = 0.0,
+    double_transit: float = 0.0,
 ) -> float:
     w = get_weights(category)
     score = (
@@ -102,6 +106,8 @@ def compute_composite_score(
         + badhaka_penalty     * w.badhaka
         + bhrigu_bonus        * w.bhrigu
         + kp_score            * w.kp
+        + kp_cuspal_score     * w.kp_cuspal
+        + double_transit      * w.double_transit
     )
     return round(score, 3)
 
