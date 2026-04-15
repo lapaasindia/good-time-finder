@@ -39,21 +39,21 @@ class CategoryWeights:
 
 
 CATEGORY_WEIGHTS: dict[str, CategoryWeights] = {
-    "career":      CategoryWeights(rule=0.5, shadbala=0.6, gochara=1.0, dasha=1.5, yoga=0.8, ashtakavarga=0.4, tara=0.5, chandra_bala=0.3, avastha=0.3, pushkara=0.2, sudarshana=0.4, jaimini=0.4, arudha=0.3, gulika=0.3, badhaka=0.3),
-    "finance":     CategoryWeights(rule=0.5, shadbala=0.5, gochara=1.0, dasha=1.4, yoga=0.8, ashtakavarga=0.5, tara=0.4, chandra_bala=0.3, avastha=0.3, pushkara=0.3, sudarshana=0.3, jaimini=0.3, arudha=0.2, gulika=0.3, badhaka=0.4),
-    "health":      CategoryWeights(rule=0.6, shadbala=1.0, gochara=1.4, dasha=1.5, yoga=0.6, ashtakavarga=0.4, tara=0.5, chandra_bala=0.4, avastha=0.4, pushkara=0.2, sudarshana=0.4, jaimini=0.3, arudha=0.2, gulika=0.4, badhaka=0.4),
-    "marriage":    CategoryWeights(rule=0.7, shadbala=0.5, gochara=1.2, dasha=1.2, yoga=1.0, ashtakavarga=0.4, tara=0.5, chandra_bala=0.4, avastha=0.3, pushkara=0.3, sudarshana=0.3, jaimini=0.5, arudha=0.4, gulika=0.3, badhaka=0.3),
-    "travel":      CategoryWeights(rule=0.8, shadbala=0.3, gochara=1.0, dasha=0.8, yoga=0.4, ashtakavarga=0.3, tara=0.4, chandra_bala=0.3, avastha=0.2, pushkara=0.2, sudarshana=0.3, jaimini=0.2, arudha=0.2, gulika=0.2, badhaka=0.2),
-    "education":   CategoryWeights(rule=0.6, shadbala=0.6, gochara=1.2, dasha=1.3, yoga=0.8, ashtakavarga=0.4, tara=0.4, chandra_bala=0.3, avastha=0.3, pushkara=0.2, sudarshana=0.4, jaimini=0.3, arudha=0.2, gulika=0.3, badhaka=0.3),
-    "property":    CategoryWeights(rule=0.6, shadbala=0.5, gochara=1.2, dasha=1.2, yoga=0.6, ashtakavarga=0.4, tara=0.4, chandra_bala=0.3, avastha=0.3, pushkara=0.3, sudarshana=0.3, jaimini=0.3, arudha=0.2, gulika=0.3, badhaka=0.3),
-    "children":    CategoryWeights(rule=0.7, shadbala=0.5, gochara=1.2, dasha=1.2, yoga=0.8, ashtakavarga=0.4, tara=0.5, chandra_bala=0.4, avastha=0.3, pushkara=0.3, sudarshana=0.3, jaimini=0.5, arudha=0.3, gulika=0.3, badhaka=0.3),
-    "spirituality":CategoryWeights(rule=0.7, shadbala=0.4, gochara=0.8, dasha=1.0, yoga=1.2, ashtakavarga=0.3, tara=0.5, chandra_bala=0.3, avastha=0.3, pushkara=0.3, sudarshana=0.4, jaimini=0.4, arudha=0.3, gulika=0.2, badhaka=0.2),
-    "legal":       CategoryWeights(rule=0.6, shadbala=0.6, gochara=1.2, dasha=1.2, yoga=0.6, ashtakavarga=0.4, tara=0.4, chandra_bala=0.3, avastha=0.3, pushkara=0.2, sudarshana=0.4, jaimini=0.3, arudha=0.3, gulika=0.3, badhaka=0.4),
-    "fame":        CategoryWeights(rule=0.5, shadbala=0.7, gochara=1.0, dasha=1.5, yoga=1.0, ashtakavarga=0.4, tara=0.4, chandra_bala=0.3, avastha=0.3, pushkara=0.2, sudarshana=0.5, jaimini=0.4, arudha=0.4, gulika=0.3, badhaka=0.3),
-    "relationships":CategoryWeights(rule=0.7, shadbala=0.5, gochara=1.2, dasha=1.2, yoga=0.8, ashtakavarga=0.4, tara=0.5, chandra_bala=0.4, avastha=0.3, pushkara=0.3, sudarshana=0.3, jaimini=0.4, arudha=0.3, gulika=0.3, badhaka=0.3),
-    "business":    CategoryWeights(rule=0.5, shadbala=0.6, gochara=1.0, dasha=1.4, yoga=0.8, ashtakavarga=0.5, tara=0.4, chandra_bala=0.3, avastha=0.3, pushkara=0.3, sudarshana=0.4, jaimini=0.4, arudha=0.3, gulika=0.3, badhaka=0.4),
-    "accidents":   CategoryWeights(rule=0.6, shadbala=0.8, gochara=1.4, dasha=1.5, yoga=0.6, ashtakavarga=0.4, tara=0.4, chandra_bala=0.3, avastha=0.4, pushkara=0.1, sudarshana=0.4, jaimini=0.3, arudha=0.2, gulika=0.4, badhaka=0.4),
-    "general":     CategoryWeights(rule=0.5, shadbala=0.4, gochara=1.2, dasha=1.2, yoga=0.8, ashtakavarga=0.4, tara=0.4, chandra_bala=0.3, avastha=0.3, pushkara=0.2, sudarshana=0.4, jaimini=0.3, arudha=0.2, gulika=0.3, badhaka=0.3),
+    "career":      CategoryWeights(rule=0.5, shadbala=0.6, gochara=1.0, dasha=1.5, yoga=0.8, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
+    "finance":     CategoryWeights(rule=0.5, shadbala=0.5, gochara=1.0, dasha=1.4, yoga=0.8, ashtakavarga=0.5, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
+    "health":      CategoryWeights(rule=0.6, shadbala=1.0, gochara=1.4, dasha=1.5, yoga=0.6, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
+    "marriage":    CategoryWeights(rule=0.7, shadbala=0.5, gochara=1.2, dasha=1.2, yoga=1.0, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
+    "travel":      CategoryWeights(rule=0.8, shadbala=0.3, gochara=1.0, dasha=0.8, yoga=0.4, ashtakavarga=0.3, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
+    "education":   CategoryWeights(rule=0.6, shadbala=0.6, gochara=1.2, dasha=1.3, yoga=0.8, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
+    "property":    CategoryWeights(rule=0.6, shadbala=0.5, gochara=1.2, dasha=1.2, yoga=0.6, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
+    "children":    CategoryWeights(rule=0.7, shadbala=0.5, gochara=1.2, dasha=1.2, yoga=0.8, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
+    "spirituality":CategoryWeights(rule=0.7, shadbala=0.4, gochara=0.8, dasha=1.0, yoga=1.2, ashtakavarga=0.3, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
+    "legal":       CategoryWeights(rule=0.6, shadbala=0.6, gochara=1.2, dasha=1.2, yoga=0.6, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
+    "fame":        CategoryWeights(rule=0.5, shadbala=0.7, gochara=1.0, dasha=1.5, yoga=1.0, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
+    "relationships":CategoryWeights(rule=0.7, shadbala=0.5, gochara=1.2, dasha=1.2, yoga=0.8, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
+    "business":    CategoryWeights(rule=0.5, shadbala=0.6, gochara=1.0, dasha=1.4, yoga=0.8, ashtakavarga=0.5, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
+    "accidents":   CategoryWeights(rule=0.6, shadbala=0.8, gochara=1.4, dasha=1.5, yoga=0.6, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
+    "general":     CategoryWeights(rule=0.5, shadbala=0.4, gochara=1.2, dasha=1.2, yoga=0.8, ashtakavarga=0.4, tara=0.0, chandra_bala=0.0, avastha=0.0, pushkara=0.0, sudarshana=0.0, jaimini=0.0, arudha=0.0, gulika=0.0, badhaka=0.0),
 }
 
 

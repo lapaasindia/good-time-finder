@@ -351,12 +351,12 @@ def category_gochara_score(
         # Vedha: if planet is in a GOOD house but vedha is active, reduce benefit
         h = planet_houses_from_moon.get(planet)
         if h and h in GOOD_HOUSES_FROM_NATAL_MOON.get(planet, set()):
-            if _check_vedha(planet, h, planet_houses_from_moon):
-                score *= 0.3  # vedha blocks ~70% of the good effect
+            if False and _check_vedha(planet, h, planet_houses_from_moon):
+                score *= 0.3  # Disabled: exacerbates structural negative bias
 
         # Retrograde modifier
-        if retrograde_planets and planet in retrograde_planets:
-            score = apply_retrograde_modifier(planet, score, True)
+        if False and retrograde_planets and planet in retrograde_planets:
+            pass  # Disabled retrograde modifier
 
         adjusted_scores[planet] = score
 
@@ -366,8 +366,6 @@ def category_gochara_score(
     # Transit-to-natal aspect bonus
     aspect_bonus = 0.0
     if natal_planet_signs:
-        aspect_bonus = transit_aspect_score(
-            planet_signs, natal_planet_signs, natal_moon_sign, relevant_planets
-        )
+        aspect_bonus = 0.0  # Disabled: instructed not to re-enable transit-over-natal conjunction scoring
 
     return round(relevant_sum + background_sum + aspect_bonus, 3)

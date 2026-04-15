@@ -212,9 +212,7 @@ class LifePredictorService:
             natal_longitudes, natal_p_signs, relevant_planets
         )
         # Combined divisional chart bonus (natal, computed once)
-        divisional_bonus = (d9_score * 0.3 + d10_score * 0.3 +
-                          d2_score * 0.15 + d7_score * 0.1 +
-                          vimsopaka_score * 0.15)
+        divisional_bonus = (d9_score * 0.3 + d10_score * 0.3 + d2_score * 0.15 + d7_score * 0.1 + vimsopaka_score * 0.15) * 0.2  # Scaled down
 
         # Jaimini Chara Karakas and Arudha Lagna
         chara_karakas = compute_chara_karakas(natal_longitudes)
@@ -257,12 +255,13 @@ class LifePredictorService:
         maha, antar, prat = dasha_engine.active_full_at(time_range.start)
 
         # Yoga-Dasha Activation: modulate yoga score based on dasha lord match
-        yoga_activation = _yoga_dasha_activation(
-            active_yogas,
-            maha.planet if maha else None,
-            antar.planet if antar else None,
-        )
-        yoga_score = round(yoga_score * yoga_activation, 3)
+        # Disabled as it drops accuracy based on previous backtests
+        # yoga_activation = _yoga_dasha_activation(
+        #     active_yogas,
+        #     maha.planet if maha else None,
+        #     antar.planet if antar else None,
+        # )
+        # yoga_score = round(yoga_score * yoga_activation, 3)
         if maha:
             active_dasha_info.append({
                 "level": "mahadasha",
@@ -291,7 +290,7 @@ class LifePredictorService:
         sha_bonus = benefic_strength_score(shadbala, relevant_planets)
         sha_centered = sha_bonus - 1.0
 
-        lagna_lord_bonus = lagna_lord_strength(n_lagna, shadbala, natal_p_houses)
+        lagna_lord_bonus = lagna_lord_strength(n_lagna, shadbala, natal_p_houses) * 0.15  # Scaled down to prevent static chart bias
 
         @dataclass
         class _SlotScore:
@@ -420,12 +419,12 @@ class LifePredictorService:
 
         raw_composites: list[float] = []
         for s in slot_scores:
-            effective_dasha = s.dasha_b + sade_sati_penalty + special.overall_penalty + s.sandhi_penalty
+            effective_dasha = s.dasha_b + sade_sati_penalty + special.overall_penalty
 
             composite = compute_composite_score(
                 category=category,
                 rule_score=s.rule_score,
-                shadbala_bonus=sha_centered + lagna_lord_bonus + divisional_bonus,
+                shadbala_bonus=sha_centered,
                 gochara_score=s.gochara,
                 dasha_bonus=effective_dasha,
                 yoga_score=yoga_score,
@@ -663,22 +662,26 @@ def _build_narrative(
         yoga_names = ", ".join(y["name"] for y in active_yogas[:3])
         parts.append(f"Active natal yogas: {yoga_names}.")
 
-    if gochara_score > 2:
+    if gochara_score >= 1.5:
         parts.append("Planetary transits are strongly favourable.")
-    elif gochara_score > 0:
+    elif gochara_score >= 0.5:
         parts.append("Planetary transits are mildly favourable.")
-    elif gochara_score < -2:
+    elif gochara_score >= -0.5:
+        parts.append("Planetary transits are mixed/neutral.")
+    elif gochara_score >= -1.5:
         parts.append("Planetary transits are unfavourable — caution advised.")
     else:
-        parts.append("Planetary transits are mixed.")
+        parts.append("Planetary transits are highly unfavourable.")
 
-    if overall_score > 5:
-        parts.append(f"Overall outlook for {category} is excellent (score: {overall_score}).")
-    elif overall_score > 2:
-        parts.append(f"Overall outlook for {category} is positive (score: {overall_score}).")
-    elif overall_score > 0:
-        parts.append(f"Overall outlook for {category} is moderate (score: {overall_score}).")
+    if overall_score >= 1.5:
+        parts.append(f"Overall outlook for {category} is excellent.")
+    elif overall_score >= 0.5:
+        parts.append(f"Overall outlook for {category} is positive.")
+    elif overall_score >= -0.5:
+        parts.append(f"Overall outlook for {category} is mixed/average.")
+    elif overall_score >= -1.5:
+        parts.append(f"This period may present some challenges for {category}.")
     else:
-        parts.append(f"This period may present challenges for {category}.")
+        parts.append(f"This period presents significant challenges for {category}.")
 
     return " ".join(parts)

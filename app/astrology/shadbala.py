@@ -232,18 +232,12 @@ def planet_strength(
     dig = _digbala(planet, house)
     nais = _naisargika(planet)
     cheshta = _cheshtabala(planet, speed)
-    kala = _kalabala(planet, is_daytime)
-    drik = _drikbala(planet, planet_houses) if planet_houses else 0.0
+    # Reverted to original simpler calculation
+    # kala = _kalabala(planet, is_daytime)
+    # drik = _drikbala(planet, planet_houses) if planet_houses else 0.0
 
-    # Weighted combination of all 6 components
-    raw = (
-        sthan * 0.25 +
-        dig * 0.20 +
-        nais * 0.15 +
-        cheshta * 0.15 +
-        kala * 0.10 +
-        drik * 0.15
-    )
+    # Weighted combination of original 3 components
+    raw = (sthan * 0.4 + dig * 0.3 + nais * 0.3)
     return round(raw * 2.0, 3)
 
 
