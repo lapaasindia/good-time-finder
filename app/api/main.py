@@ -196,6 +196,10 @@ def natal_chart(req: NatalRequest):
     from app.astrology.calculations import natal_lagna, natal_moon_sign, planet_houses, planet_signs, moon_constellation
     from app.astrology.shadbala import shadbala_summary
     from app.astrology.nakshatra_predictions import nakshatra_prediction_summary
+    from app.astrology.divisional_charts import compute_d9_positions, compute_d10_positions
+    from app.astrology.jaimini import compute_chara_karakas, compute_arudha_lagna
+    from app.astrology.gulika_mandi import estimate_gulika_sign
+    from app.astrology.special_conditions import get_raw_longitudes
 
     person = Person(
         name=req.person.name,
@@ -213,6 +217,18 @@ def natal_chart(req: NatalRequest):
     shadbala = shadbala_summary(p_signs, p_houses)
     nakshatra = moon_constellation(person.birth_datetime, person.birth_location)
     nak_profile = nakshatra_prediction_summary(nakshatra)
+    
+    n_lagna = natal_lagna(person)
+    raw_longitudes = get_raw_longitudes(person.birth_datetime)
+    chara = compute_chara_karakas(raw_longitudes)
+    arudha = compute_arudha_lagna(n_lagna, p_signs)
+    
+    weekday = person.birth_datetime.strftime("%A")
+    birth_hour = person.birth_datetime.hour + person.birth_datetime.minute / 60.0
+    gulika = estimate_gulika_sign(weekday, birth_hour, n_lagna)
+    
+    d9 = compute_d9_positions(raw_longitudes)
+    d10 = compute_d10_positions(raw_longitudes)
 
     return {
         "natal_lagna": natal_lagna(person),
@@ -223,6 +239,13 @@ def natal_chart(req: NatalRequest):
         "planet_houses": p_houses,
         "shadbala": shadbala,
         "yoga_summary": yoga_engine.summary(),
+        "advanced": {
+            "chara_karakas": chara,
+            "arudha_lagna": arudha,
+            "gulika_sign": gulika,
+            "d9_signs": d9,
+            "d10_signs": d10
+        }
     }
 
 
@@ -283,7 +306,7 @@ class GocharaRequest(BaseModel):
 @app.post("/gochara")
 def gochara_scores(req: GocharaRequest):
     from app.astrology.calculations import build_context, natal_moon_sign, planet_signs, natal_lagna, planet_houses
-    from app.astrology.gochara import gochara_score, total_gochara_score
+    from app.astrology.gochara import gochara_score, total_gochara_score, _house_from_sign
     from app.astrology.ashtakavarga import ashtakavarga_bonus
     from app.astrology.shadbala import shadbala_summary
 
@@ -306,7 +329,30 @@ def gochara_scores(req: GocharaRequest):
     n_lagna = natal_lagna(person)
     natal_p_signs = planet_signs(person.birth_datetime, person.birth_location)
     natal_p_houses = planet_houses(person.birth_datetime, person.birth_location)
+    from app.astrology.tara_bala import compute_tara, chandra_bala
+    from app.astrology.avasthas import avastha_score_for_planets
+    from app.astrology.special_conditions import get_speeds, get_raw_longitudes
+    from app.astrology.sudarshana import sudarshana_aggregate
+    from app.astrology.calculations import moon_constellation
+    
     ctx = build_context(req.date, location, person)
+
+    # Calculate advanced transit data
+    natal_nak = moon_constellation(person.birth_datetime, person.birth_location)
+    transit_nak = moon_constellation(req.date, location)
+    tara_name, tara_score = compute_tara(natal_nak, transit_nak)
+    
+    transit_moon_house = _house_from_sign(ctx.planet_signs.get("Moon", ""), n_moon)
+    chandra_score = chandra_bala(transit_moon_house)
+    
+    speeds = get_speeds(req.date)
+    retrograde = [p for p, s in speeds.items() if s < 0]
+    
+    longitudes = get_raw_longitudes(req.date)
+    avasthas = avastha_score_for_planets(longitudes, {"Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"})
+    
+    natal_sun = natal_p_signs.get("Sun", "")
+    sudarshana = sudarshana_aggregate(ctx.planet_signs, n_lagna, n_moon, natal_sun)
 
     scores = gochara_score(ctx.planet_signs, n_moon)
     avarga = ashtakavarga_bonus(ctx.planet_signs, natal_p_signs, n_lagna)
@@ -321,6 +367,14 @@ def gochara_scores(req: GocharaRequest):
         "total_gochara_score": total_gochara_score(ctx.planet_signs, n_moon),
         "ashtakavarga_bonus": avarga,
         "shadbala": shadbala,
+        "advanced": {
+            "tara_name": tara_name,
+            "tara_score": tara_score,
+            "chandra_bala": chandra_score,
+            "retrograde_planets": retrograde,
+            "avasthas": avasthas,
+            "sudarshana_score": sudarshana
+        }
     }
 
 

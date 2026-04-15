@@ -116,11 +116,13 @@ def gochara_score(
 
         # Score from Moon (standard)
         house_moon = _house_from_sign(transit_sign, natal_moon_sign)
+        expected_mean = ((len(good) - len(bad)) / 12.0) * weight
         s_moon = 0.0
         if house_moon in good:
             s_moon = weight
         elif house_moon in bad:
             s_moon = -weight
+        s_moon -= expected_mean
 
         # Score from Lagna (if available) - secondary but important for physical/career
         s_lagna = 0.0
@@ -131,6 +133,8 @@ def gochara_score(
                 s_lagna = weight * 0.35
             elif house_lagna in bad:
                 s_lagna = -weight * 0.35
+            expected_mean_lagna = ((len(good) - len(bad)) / 12.0) * (weight * 0.35)
+            s_lagna -= expected_mean_lagna
         
         # Transit dignity modifier: planet in own/exalted sign is inherently strong
         # Strong transits have reduced negative effects and amplified positive effects
