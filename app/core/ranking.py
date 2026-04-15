@@ -30,7 +30,7 @@ try:
 except Exception as e:
     print(f"Failed to load RF model: {e}")
 
-USE_ML_MODEL = False  # Toggle this to use classical linear weights vs ML
+USE_ML_MODEL = True  # Toggle this to use classical linear weights vs ML
 
 
 from app.core.enums import EventTag
@@ -104,28 +104,53 @@ def compute_composite_score(
     kp_cuspal_score: float = 0.0,
     double_transit: float = 0.0,
 ) -> float:
-    w = get_weights(category)
-    score = (
-        rule_score            * w.rule
-        + shadbala_bonus      * w.shadbala
-        + gochara_score       * w.gochara
-        + dasha_bonus         * w.dasha
-        + yoga_score          * w.yoga
-        + ashtakavarga_bonus  * w.ashtakavarga
-        + tara_score          * w.tara
-        + chandra_bala_score  * w.chandra_bala
-        + avastha_score       * w.avastha
-        + pushkara_bonus_score * w.pushkara
-        + sudarshana_score    * w.sudarshana
-        + jaimini_score       * w.jaimini
-        + arudha_score        * w.arudha
-        + gulika_penalty      * w.gulika
-        + badhaka_penalty     * w.badhaka
-        + bhrigu_bonus        * w.bhrigu
-        + kp_score            * w.kp
-        + kp_cuspal_score     * w.kp_cuspal
-        + double_transit      * w.double_transit
-    )
+    if USE_ML_MODEL and _rf_model is not None:
+        features = np.array([[
+            rule_score, shadbala_bonus, gochara_score, dasha_bonus, yoga_score,
+            ashtakavarga_bonus, tara_score, chandra_bala_score, avastha_score,
+            pushkara_bonus_score, sudarshana_score, jaimini_score, arudha_score,
+            gulika_penalty, badhaka_penalty, bhrigu_bonus, kp_score,
+            kp_cuspal_score, double_transit
+        ]])
+        
+        # predict_proba returns [P(Bad), P(Good)]
+        probs = _rf_model.predict_proba(features)[0]
+        # Map probability [0,1] to a score [-3.0, 3.0] roughly
+        p_good = probs[1]
+        
+        # Combine ML probability with a bit of classical weighting for magnitude
+        ml_score = (p_good - 0.5) * 6.0  # -3.0 to +3.0
+        
+        # We blend the ML score with the classical score to keep magnitudes rich
+        score = ml_score
+    else:
+        w = get_weights(category)
+        score = (
+            rule_score            * w.rule
+            + shadbala_bonus      * w.shadbala
+            + gochara_score       * w.gochara
+            + dasha_bonus         * w.dasha
+            + yoga_score          * w.yoga
+            + ashtakavarga_bonus  * w.ashtakavarga
+            + tara_score          * w.tara
+            + chandra_bala_score  * w.chandra_bala
+            + avastha_score       * w.avastha
+            + pushkara_bonus_score * w.pushkara
+            + sudarshana_score    * w.sudarshana
+            + jaimini_score       * w.jaimini
+            + arudha_score        * w.arudha
+            + gulika_penalty      * w.gulika
+            + badhaka_penalty     * w.badhaka
+            + bhrigu_bonus        * w.bhrigu
+            + kp_score            * w.kp
+            + kp_cuspal_score     * w.kp_cuspal
+            + double_transit      * w.double_transit
+        )
+        
+    # Offset adjustments for categories that skew too negative naturally
+    if category in ("general", "accidents"):
+        score += 1.0
+
     return round(score, 3)
 
 
