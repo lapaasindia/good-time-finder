@@ -385,6 +385,7 @@ def gochara_scores(req: GocharaRequest):
 VALID_CATEGORIES = {
     "general", "travel", "marriage", "career", "finance",
     "health", "education", "property", "children", "spirituality", "legal",
+    "fame", "business", "relationships", "accidents"
 }
 
 
