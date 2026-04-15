@@ -112,6 +112,41 @@ def build_default_registry() -> RuleRegistry:
         StrongSunForLegalRule,
         SaturnNotInBadHouseLegalRule,
     )
+    from app.rules.fame import (
+        GoodNakshatraForFameRule,
+        BadNakshatraForFameRule,
+        GoodWeekdayForFameRule,
+        BadWeekdayForFameRule,
+        GoodLagnaForFameRule,
+        StrongSunForFameRule,
+        JupiterInFameHouseRule,
+    )
+    from app.rules.relationships import (
+        GoodNakshatraForRelationshipsRule,
+        BadNakshatraForRelationshipsRule,
+        GoodWeekdayForRelationshipsRule,
+        GoodLagnaForRelationshipsRule,
+        VenusInGoodHouseForRelationshipsRule,
+        MoonInGoodHouseForRelationshipsRule,
+    )
+    from app.rules.business import (
+        GoodLunarDayForBusinessRule,
+        BadLunarDayForBusinessRule,
+        GoodNakshatraForBusinessRule,
+        BadNakshatraForBusinessRule,
+        GoodWeekdayForBusinessRule,
+        BadWeekdayForBusinessRule,
+        GoodLagnaForBusinessRule,
+        StrongMercuryForBusinessRule,
+    )
+    from app.rules.accidents import (
+        DangerousNakshatraRule,
+        SafeNakshatraRule,
+        DangerousWeekdayRule,
+        SafeWeekdayRule,
+        MarsInDangerHouseRule,
+        SaturnInDangerHouseRule,
+    )
 
     registry = RuleRegistry()
 
@@ -149,6 +184,19 @@ def build_default_registry() -> RuleRegistry:
         GoodWeekdayForLegalRule(), BadWeekdayForLegalRule(),
         GoodNakshatraForLegalRule(), GoodLagnaForLegalRule(),
         StrongSunForLegalRule(), SaturnNotInBadHouseLegalRule(),
+        GoodNakshatraForFameRule(), BadNakshatraForFameRule(),
+        GoodWeekdayForFameRule(), BadWeekdayForFameRule(),
+        GoodLagnaForFameRule(), StrongSunForFameRule(), JupiterInFameHouseRule(),
+        GoodNakshatraForRelationshipsRule(), BadNakshatraForRelationshipsRule(),
+        GoodWeekdayForRelationshipsRule(), GoodLagnaForRelationshipsRule(),
+        VenusInGoodHouseForRelationshipsRule(), MoonInGoodHouseForRelationshipsRule(),
+        GoodLunarDayForBusinessRule(), BadLunarDayForBusinessRule(),
+        GoodNakshatraForBusinessRule(), BadNakshatraForBusinessRule(),
+        GoodWeekdayForBusinessRule(), BadWeekdayForBusinessRule(),
+        GoodLagnaForBusinessRule(), StrongMercuryForBusinessRule(),
+        DangerousNakshatraRule(), SafeNakshatraRule(),
+        DangerousWeekdayRule(), SafeWeekdayRule(),
+        MarsInDangerHouseRule(), SaturnInDangerHouseRule(),
     ]:
         registry.register(rule)
 

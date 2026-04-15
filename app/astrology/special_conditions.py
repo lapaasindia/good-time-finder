@@ -298,6 +298,16 @@ class SpecialConditions:
         }
 
 
+def get_raw_longitudes(dt: datetime) -> dict[str, float]:
+    """Public alias for raw sidereal longitudes."""
+    return _get_raw_longitudes(dt)
+
+
+def get_speeds(dt: datetime) -> dict[str, float]:
+    """Public alias for planetary speeds (negative = retrograde)."""
+    return _get_speeds(dt)
+
+
 def _get_raw_longitudes(dt: datetime) -> dict[str, float]:
     swe.set_sid_mode(swe.SIDM_LAHIRI)
     utc = dt.astimezone(timezone.utc)

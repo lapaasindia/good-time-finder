@@ -25,11 +25,17 @@ from app.astrology.calculations import (
     planet_signs,
 )
 from app.astrology.gochara import category_gochara_score, GOOD_HOUSES_FROM_NATAL_MOON, _house_from_sign
-from app.astrology.shadbala import benefic_strength_score, shadbala_summary
+from app.astrology.shadbala import benefic_strength_score, lagna_lord_strength, shadbala_summary
 from app.astrology.dasha import CATEGORY_PLANETS
 from app.astrology.sade_sati import compute_sade_sati
-from app.astrology.special_conditions import compute_special_conditions, apply_combustion_to_shadbala
+from app.astrology.special_conditions import compute_special_conditions, apply_combustion_to_shadbala, get_raw_longitudes, get_speeds
+from app.astrology.divisional_charts import navamsa_score_for_category, dasamsa_score_for_category, hora_score_for_category, saptamsa_score_for_category, vimsopaka_for_category
 from app.astrology.panchang import build_panchang
+from app.astrology.tara_bala import compute_tara, chandra_bala
+from app.astrology.avasthas import avastha_score_for_planets, pushkara_bonus, transit_speed_weight
+from app.astrology.jaimini import compute_chara_karakas, compute_arudha_lagna, jaimini_karaka_score, arudha_lagna_score
+from app.astrology.gulika_mandi import estimate_gulika_sign, gulika_penalty, badhaka_penalty
+from app.astrology.sudarshana import sudarshana_aggregate
 from app.config import load_event_catalog
 from app.core.dasha_engine import DashaEngine
 from app.core.engine import GoodTimeEngine, evaluate_event_at_context
@@ -81,6 +87,71 @@ class LifePrediction:
     narrative: str
 
 
+# ── Yoga-Dasha Activation ──
+# Maps yoga names to the planets that form them. When the current dasha lord
+# matches a yoga's forming planets, the yoga is "activated" and contributes more.
+YOGA_FORMING_PLANETS: dict[str, set[str]] = {
+    "RajaYoga":              {"Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"},
+    "DhanaYoga":             {"Jupiter", "Venus", "Mercury", "Moon"},
+    "GajakesariYoga":        {"Jupiter", "Moon"},
+    "BudhaAdityaYoga":       {"Sun", "Mercury"},
+    "ChandraMangalYoga":     {"Moon", "Mars"},
+    "SanyasaYoga":           {"Saturn", "Ketu", "Jupiter"},
+    "YogakarakaYoga":        {"Saturn", "Venus", "Mars"},
+    "RuchakaYoga":           {"Mars"},
+    "BhadraYoga":            {"Mercury"},
+    "HamsaYoga":             {"Jupiter"},
+    "MalavyaYoga":           {"Venus"},
+    "ShashaYoga":            {"Saturn"},
+    "NeechaBhangarajaYoga":  {"Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"},
+    "ViparitagajaYoga":      {"Mars", "Saturn", "Jupiter"},
+    "SaraswatiYoga":         {"Mercury", "Venus", "Jupiter"},
+    "LakshmiYoga":           {"Venus", "Jupiter"},
+    "ChandraAdhiYoga":       {"Mercury", "Venus", "Jupiter"},
+    "VesiYoga":              {"Mercury", "Venus", "Mars", "Jupiter", "Saturn"},
+    "VasiYoga":              {"Mercury", "Venus", "Mars", "Jupiter", "Saturn"},
+    "UbhayachariYoga":       {"Mercury", "Venus", "Mars", "Jupiter", "Saturn"},
+    "SunaphaYoga":           {"Mars", "Mercury", "Jupiter", "Venus", "Saturn"},
+    "AnaphaYoga":            {"Mars", "Mercury", "Jupiter", "Venus", "Saturn"},
+    "DurudharaYoga":         {"Mars", "Mercury", "Jupiter", "Venus", "Saturn"},
+    "KemdrumYoga":           {"Moon"},
+    "KemdrumBhanga":         {"Venus", "Jupiter", "Mercury"},
+    "AmalaYoga":             {"Mercury", "Venus", "Jupiter"},
+    "ShakataYoga":           {"Moon", "Jupiter"},
+    "GuruMangalYoga":        {"Jupiter", "Mars"},
+    "ParivartanaYoga":       {"Sun", "Moon", "Mars", "Mercury", "Jupiter", "Venus", "Saturn"},
+}
+
+
+def _yoga_dasha_activation(
+    active_yogas: list[dict],
+    maha_planet: str | None,
+    antar_planet: str | None,
+) -> float:
+    """Return a multiplier (0.9 to 1.2) based on how many active yogas
+    are 'activated' by the current dasha lords.
+
+    Conservative range to avoid over-optimization per user feedback."""
+    if not active_yogas or not maha_planet:
+        return 1.0
+
+    dasha_lords = {maha_planet}
+    if antar_planet:
+        dasha_lords.add(antar_planet)
+
+    total_yogas = len(active_yogas)
+    activated = 0
+    for y in active_yogas:
+        name = y["name"] if isinstance(y, dict) else y.name
+        forming = YOGA_FORMING_PLANETS.get(name, set())
+        if forming & dasha_lords:
+            activated += 1
+
+    ratio = activated / total_yogas if total_yogas else 0.0
+    # Conservative range: 0% activated → 0.9×, 100% activated → 1.2×
+    return 0.9 + ratio * 0.3
+
+
 class LifePredictorService:
     def __init__(self) -> None:
         self._registry = build_default_registry()
@@ -112,6 +183,46 @@ class LifePredictorService:
             raw_shadbala, special.combustion, special.retrograde
         )
 
+        # Natal longitudes for divisional charts (D9 Navamsa, D10 Dasamsa, D2, D3, D7)
+        natal_longitudes = get_raw_longitudes(person.birth_datetime)
+        d9_score = navamsa_score_for_category(
+            natal_longitudes, natal_p_signs, category, relevant_planets
+        )
+        d10_score = dasamsa_score_for_category(
+            natal_longitudes, natal_p_signs, category, relevant_planets
+        )
+        d2_score = hora_score_for_category(
+            natal_longitudes, category, relevant_planets
+        )
+        d7_score = saptamsa_score_for_category(
+            natal_longitudes, natal_p_signs, category, relevant_planets
+        )
+        vimsopaka_score = vimsopaka_for_category(
+            natal_longitudes, natal_p_signs, relevant_planets
+        )
+        # Combined divisional chart bonus (natal, computed once)
+        divisional_bonus = (d9_score * 0.3 + d10_score * 0.3 +
+                          d2_score * 0.15 + d7_score * 0.1 +
+                          vimsopaka_score * 0.15)
+
+        # Jaimini Chara Karakas and Arudha Lagna
+        chara_karakas = compute_chara_karakas(natal_longitudes)
+        arudha_lagna = compute_arudha_lagna(n_lagna, natal_p_signs)
+        jaimini_score = jaimini_karaka_score(
+            chara_karakas, natal_p_signs, natal_p_houses, n_lagna, category
+        )
+        arudha_score = arudha_lagna_score(arudha_lagna, n_lagna, category)
+
+        # Gulika/Mandi and Badhaka
+        weekday = person.birth_datetime.strftime("%A")
+        birth_hour = person.birth_datetime.hour + person.birth_datetime.minute / 60.0
+        gulika_sign = estimate_gulika_sign(weekday, birth_hour, n_lagna)
+        gulika_pen = gulika_penalty(gulika_sign, natal_p_houses, n_lagna)
+        badhaka_pen = badhaka_penalty(n_lagna, natal_p_houses, category)
+
+        # Natal Sun sign for Chandra Bala and Sudarshana
+        natal_sun_sign = natal_p_signs.get("Sun", "")
+
         sade_sati = compute_sade_sati(n_moon, time_range.start)
         sade_sati_penalty = sade_sati.penalty
         sade_sati_dict = {
@@ -133,6 +244,14 @@ class LifePredictorService:
 
         active_dasha_info: list[dict] = []
         maha, antar, prat = dasha_engine.active_full_at(time_range.start)
+
+        # Yoga-Dasha Activation: modulate yoga score based on dasha lord match
+        yoga_activation = _yoga_dasha_activation(
+            active_yogas,
+            maha.planet if maha else None,
+            antar.planet if antar else None,
+        )
+        yoga_score = round(yoga_score * yoga_activation, 3)
         if maha:
             active_dasha_info.append({
                 "level": "mahadasha",
@@ -161,6 +280,8 @@ class LifePredictorService:
         sha_bonus = benefic_strength_score(shadbala, relevant_planets)
         sha_centered = sha_bonus - 1.0
 
+        lagna_lord_bonus = lagna_lord_strength(n_lagna, shadbala, natal_p_houses)
+
         @dataclass
         class _SlotScore:
             dt: datetime
@@ -169,6 +290,12 @@ class LifePredictorService:
             dasha_b: float
             avarga: float
             panchang_s: float
+            tara_score: float
+            chandra_bala_score: float
+            avastha_score: float
+            pushkara_bonus_score: float
+            sudarshana_score: float
+            sandhi_penalty: float
             active_events: list[str]
             nature: str
 
@@ -178,7 +305,39 @@ class LifePredictorService:
             ctx = build_context(dt, location, person)
             current_p_signs = ctx.planet_signs
 
-            gochara = category_gochara_score(current_p_signs, n_moon, CATEGORY_PLANETS.get(category, set()), natal_lagna=n_lagna, natal_planet_signs=natal_p_signs)
+            # Retrograde detection for transit planets
+            transit_speeds = get_speeds(dt)
+            retro_planets = {p for p, spd in transit_speeds.items() if spd < 0}
+
+            # ── Tara Bala (Nakshatra transit strength) ──
+            from app.astrology.calculations import moon_constellation
+            transit_nakshatra = moon_constellation(dt, location)
+            natal_nakshatra = moon_constellation(person.birth_datetime, person.birth_location)
+            _, tara_score = compute_tara(natal_nakshatra, transit_nakshatra)
+
+            # Chandra Bala — Moon's transit strength
+            transit_moon_house = _house_from_sign(current_p_signs.get("Moon", ""), n_moon)
+            chandra_bala_score = chandra_bala(transit_moon_house)
+
+            # ── Planetary Avasthas (age states) ──
+            transit_longitudes = get_raw_longitudes(dt)
+            avastha_score = avastha_score_for_planets(transit_longitudes, relevant_planets)
+
+            # ── Pushkara Navamsa bonus ──
+            transit_moon_lon = transit_longitudes.get("Moon", 0)
+            transit_lagna_lon = transit_longitudes.get("Lagna", 0) if "Lagna" in transit_longitudes else 0
+            pushkara_bonus_score = pushkara_bonus(transit_moon_lon, transit_lagna_lon)
+
+            # ── Sudarshana Chakra (triple-perspective transit) ──
+            transit_sun_sign = current_p_signs.get("Sun", "")
+            sudarshana_score = sudarshana_aggregate(
+                current_p_signs, n_lagna, n_moon, natal_sun_sign
+            )
+
+            # ── Dasha Sandhi (junction penalty) ──
+            sandhi_penalty = dasha_engine.dasha_sandhi_penalty(dt)
+
+            gochara = category_gochara_score(current_p_signs, n_moon, CATEGORY_PLANETS.get(category, set()), natal_lagna=n_lagna, natal_planet_signs=natal_p_signs, retrograde_planets=retro_planets)
             avarga = ashtakavarga_bonus(current_p_signs, natal_p_signs, n_lagna)
             # Transit-dasha correlation: only include planets in STRONG transit
             # (i.e., in good houses from natal Moon) as meaningful triggers
@@ -223,6 +382,12 @@ class LifePredictorService:
                 dasha_b=dasha_b,
                 avarga=avarga,
                 panchang_s=pang_score,
+                tara_score=tara_score,
+                chandra_bala_score=chandra_bala_score,
+                avastha_score=avastha_score,
+                pushkara_bonus_score=pushkara_bonus_score,
+                sudarshana_score=sudarshana_score,
+                sandhi_penalty=sandhi_penalty,
                 active_events=slot_events,
                 nature="",
             ))
@@ -244,16 +409,25 @@ class LifePredictorService:
 
         raw_composites: list[float] = []
         for s in slot_scores:
-            effective_dasha = s.dasha_b + sade_sati_penalty + special.overall_penalty
+            effective_dasha = s.dasha_b + sade_sati_penalty + special.overall_penalty + s.sandhi_penalty
 
             composite = compute_composite_score(
                 category=category,
                 rule_score=s.rule_score,
-                shadbala_bonus=sha_centered,
+                shadbala_bonus=sha_centered + lagna_lord_bonus + divisional_bonus,
                 gochara_score=s.gochara,
                 dasha_bonus=effective_dasha,
                 yoga_score=yoga_score,
                 ashtakavarga_bonus=s.avarga + s.panchang_s,
+                tara_score=s.tara_score,
+                chandra_bala_score=s.chandra_bala_score,
+                avastha_score=s.avastha_score,
+                pushkara_bonus_score=s.pushkara_bonus_score,
+                sudarshana_score=s.sudarshana_score,
+                jaimini_score=jaimini_score,
+                arudha_score=arudha_score,
+                gulika_penalty=gulika_pen,
+                badhaka_penalty=badhaka_pen,
             )
             raw_composites.append(composite)
 

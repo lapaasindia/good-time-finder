@@ -121,7 +121,7 @@ class TestDetectAllExtraYogas:
             "Saturn": "Libra", "Rahu": "Gemini", "Ketu": "Sagittarius",
         }
         results = detect_all_extra_yogas(planet_houses, planet_signs, "Aries")
-        assert len(results) == 9
+        assert len(results) == 20
         for r in results:
             assert hasattr(r, "name")
             assert hasattr(r, "present")

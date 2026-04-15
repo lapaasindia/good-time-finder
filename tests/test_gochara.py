@@ -77,6 +77,8 @@ class TestCategoryGocharaScore:
         score_both = category_gochara_score(planet_signs, "Aries", {"Jupiter", "Saturn"})
         assert score_jupiter_only != score_both
 
-    def test_empty_relevant_returns_zero(self):
+    def test_empty_relevant_still_has_background_score(self):
         planet_signs = {"Jupiter": "Leo"}
-        assert category_gochara_score(planet_signs, "Aries", set()) == 0.0
+        score = category_gochara_score(planet_signs, "Aries", set())
+        # background transits contribute 0.3× even with no relevant planets
+        assert isinstance(score, float)

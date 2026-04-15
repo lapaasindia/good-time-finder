@@ -247,6 +247,10 @@ SPIRITUALITY_PLANETS = {"Jupiter", "Ketu", "Saturn", "Sun"}
 PROPERTY_PLANETS = {"Moon", "Mars", "Saturn", "Venus"}
 CHILDREN_PLANETS = {"Jupiter", "Moon", "Venus"}
 LEGAL_PLANETS = {"Saturn", "Mars", "Sun", "Jupiter"}
+FAME_PLANETS = {"Sun", "Jupiter", "Venus", "Moon"}
+RELATIONSHIPS_PLANETS = {"Venus", "Moon", "Jupiter", "Mercury"}
+BUSINESS_PLANETS = {"Mercury", "Jupiter", "Saturn", "Sun", "Mars"}
+ACCIDENTS_PLANETS = {"Mars", "Saturn", "Rahu", "Ketu"}
 
 # Sign lord mapping (ruler of each zodiac sign)
 SIGN_LORD: dict[str, str] = {
@@ -267,6 +271,10 @@ GOOD_HOUSES_FOR_CATEGORY: dict[str, set[int]] = {
     "property":    {4, 9, 11},
     "children":    {5, 9, 11},
     "legal":       {6, 9, 10, 11},
+    "fame":        {1, 5, 9, 10, 11},
+    "relationships":{5, 7, 9, 11},
+    "business":    {1, 2, 7, 10, 11},
+    "accidents":   {6, 8, 12},
     "travel":      {3, 9, 12},
     "general":     {1, 5, 9, 10, 11},
 }
@@ -282,6 +290,10 @@ BAD_HOUSES_FOR_CATEGORY: dict[str, set[int]] = {
     "property":    {6, 8, 12},
     "children":    {6, 8, 12},
     "legal":       {8, 12},
+    "fame":        {6, 8, 12},
+    "relationships":{6, 8, 12},
+    "business":    {6, 8, 12},
+    "accidents":   {1, 5, 9, 11},
     "travel":      {8},
     "general":     {6, 8, 12},
 }
@@ -354,6 +366,10 @@ CATEGORY_PLANETS: dict[str, set[str]] = {
     "property": PROPERTY_PLANETS,
     "children": CHILDREN_PLANETS,
     "legal": LEGAL_PLANETS,
+    "fame": FAME_PLANETS,
+    "relationships": RELATIONSHIPS_PLANETS,
+    "business": BUSINESS_PLANETS,
+    "accidents": ACCIDENTS_PLANETS,
     "travel": {"Mercury", "Moon", "Venus"},
     "general": {"Jupiter", "Moon", "Sun", "Venus"},
 }
@@ -368,6 +384,10 @@ MALEFIC_CATEGORY_PLANETS: dict[str, set[str]] = {
     "property":    {"Rahu", "Ketu"},
     "children":    {"Saturn", "Rahu", "Ketu"},
     "legal":       {"Rahu", "Ketu", "Venus"},
+    "fame":        {"Saturn", "Rahu", "Ketu"},
+    "relationships": {"Saturn", "Rahu", "Ketu", "Mars"},
+    "business":    {"Rahu", "Ketu"},
+    "accidents":   {"Jupiter", "Venus"},
     "travel":      {"Saturn", "Ketu"},
     "general":     {"Rahu", "Ketu"},
 }

@@ -14,7 +14,7 @@ class TestGetWeights:
     def test_known_category_returns_correct_weights(self):
         w = get_weights("career")
         assert w.dasha == 1.5
-        assert w.rule == 0.7
+        assert w.rule == 0.5
 
     def test_unknown_category_returns_defaults(self):
         w = get_weights("unknown_category")

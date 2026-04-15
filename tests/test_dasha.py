@@ -106,14 +106,14 @@ class TestDashaBonus:
     def test_relevant_planet_in_mahadasha_gives_bonus(self):
         maha = DashaPeriod(planet="Jupiter", start=_BIRTH,
                            end=_BIRTH.replace(year=2010), level="mahadasha")
-        bonus = dasha_bonus_for_category(maha, None, "career")
+        bonus = dasha_bonus_for_category(maha, None, None, "career")
         assert bonus > 0
 
-    def test_irrelevant_planet_gives_no_bonus(self):
+    def test_malefic_planet_gives_negative_score(self):
         maha = DashaPeriod(planet="Ketu", start=_BIRTH,
                            end=_BIRTH.replace(year=1999), level="mahadasha")
-        bonus = dasha_bonus_for_category(maha, None, "finance")
-        assert bonus == 0.0
+        bonus = dasha_bonus_for_category(maha, None, None, "finance")
+        assert bonus < 0
 
     def test_none_maha_returns_zero(self):
-        assert dasha_bonus_for_category(None, None, "career") == 0.0
+        assert dasha_bonus_for_category(None, None, None, "career") == 0.0
