@@ -15,6 +15,23 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
+import os
+import pickle
+import numpy as np
+
+# Load Random Forest Model
+MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", "rf_life_predictor.pkl")
+_rf_model = None
+
+try:
+    if os.path.exists(MODEL_PATH):
+        with open(MODEL_PATH, "rb") as f:
+            _rf_model = pickle.load(f)
+except Exception as e:
+    print(f"Failed to load RF model: {e}")
+
+USE_ML_MODEL = False  # Toggle this to use classical linear weights vs ML
+
 
 from app.core.enums import EventTag
 
