@@ -14,8 +14,17 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from functools import lru_cache
+import os
 
 import swisseph as swe
+
+# Configure Swiss Ephemeris path to use bundled or system ephemeris files
+_ephem_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "ephemeris")
+if os.path.exists(_ephem_path):
+    swe.set_ephe_path(_ephem_path)
+else:
+    # Fallback to system paths
+    swe.set_ephe_path("/usr/share/swisseph")
 
 from app.core.enums import ZODIAC_SIGNS
 
