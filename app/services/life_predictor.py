@@ -474,16 +474,17 @@ class LifePredictorService:
             score_range = max(sorted_c[-1] - sorted_c[0], 1.0)
 
             for c in raw_composites:
-                # Absolute S-curve mapping bounds raw scores to ~ [-3.0, 3.0]
-                abs_norm = 3.0 * math.tanh(c / 4.0)
+                # Gentler S-curve: allows true extremes to reach ±3.0
+                # tanh(c/2.5) maps typical range [-2, +2] to [-0.76, +0.76] * 3 = [-2.3, +2.3]
+                # while preserving ability to hit ±3.0 for truly exceptional periods
+                abs_norm = 3.0 * math.tanh(c / 2.5)
 
-                # Relative mapping forces the period's local minimum/maximum to stretch across [-3, 3]
+                # Relative mapping stretches local variation across full spectrum
                 rel_norm = ((c - median_c) / score_range) * 6.0
                 rel_norm = max(-3.0, min(3.0, rel_norm))
 
-                # Hybrid: heavily absolute to preserve true astrological signal,
-                # with minimal relative weight for local variation
-                hybrid = (abs_norm * 0.85) + (rel_norm * 0.15)
+                # Balance: absolute for cross-chart consistency, relative for local extremes
+                hybrid = (abs_norm * 0.70) + (rel_norm * 0.30)
                 normalized.append(round(hybrid, 3))
 
         composite_slots: list[tuple[_SlotScore, float]] = [
