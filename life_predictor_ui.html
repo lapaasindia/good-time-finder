@@ -84,8 +84,18 @@
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--outline-variant);
     display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
+  }
+
+  @media (max-width: 600px) {
+    header {
+      padding: 16px 20px;
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
   
   .header-left h1 {
@@ -542,6 +552,33 @@
   }
 
   /* Heatmap */
+  .heatmap-table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  .heatmap-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 12px;
+  }
+  .hm-label-th, .hm-row-label {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+  }
+  .hm-label-th {
+    background: #faf7f2;
+    border-right: 2px solid var(--outline-variant);
+  }
+  .hm-row-label {
+    white-space: nowrap;
+    min-width: 140px;
+    background: var(--surface-container-lowest);
+    border-right: 2px solid var(--outline-variant);
+  }
+  .hm-month-col {
+    min-width: 60px;
+  }
   #hm-view-heatmap, #hm-view-list {
     background: transparent;
     color: var(--primary);
@@ -1401,13 +1438,15 @@ function windowsToBuckets(windows, mode) {
       const overlapMinutes = Math.max(0, (overlapEnd - overlapStart) / 60000);
       if (overlapMinutes > 0) {
         if (!buckets[key]) {
-          buckets[key] = { weightedSum: 0, totalMinutes: 0, windows: [], bestScore: -Infinity, worstScore: Infinity };
+          buckets[key] = { weightedSum: 0, totalMinutes: 0, windows: [], bestScore: -Infinity, worstScore: Infinity, confSum: 0, confCount: 0 };
         }
         buckets[key].weightedSum += w.composite_score * overlapMinutes;
         buckets[key].totalMinutes += overlapMinutes;
         buckets[key].windows.push(w);
         buckets[key].bestScore = Math.max(buckets[key].bestScore, w.composite_score);
         buckets[key].worstScore = Math.min(buckets[key].worstScore, w.composite_score);
+        buckets[key].confSum += (w.confidence || 0) * overlapMinutes;
+        buckets[key].confCount += overlapMinutes;
       }
       cur = new Date(bounds.end);
     }
@@ -1415,35 +1454,28 @@ function windowsToBuckets(windows, mode) {
   return buckets;
 }
 
-// 9-step Score → RGBA colour  (relative: uses globalMin/globalMax)
-function scoreToColor(score, globalMin, globalMax) {
-  // Normalise to 0..1 within the actual data range
-  const range = globalMax - globalMin;
-  // When all scores are identical, treat as neutral (0.5) instead of worst (0)
-  const t = range === 0 ? 0.5 : (score - globalMin) / range;  // 0 = worst, 1 = best
-  if (t >= 0.95) return 'rgba(10,80,30,.95)';     // Exceptional
-  if (t >= 0.80) return 'rgba(34,110,54,.90)';    // Excellent
-  if (t >= 0.65) return 'rgba(68,160,80,.85)';    // Good
-  if (t >= 0.50) return 'rgba(110,175,90,.80)';   // Favourable
-  if (t >= 0.40) return 'rgba(180,180,130,.65)';  // Neutral
-  if (t >= 0.30) return 'rgba(210,155,80,.75)';   // Caution
-  if (t >= 0.18) return 'rgba(210,110,60,.80)';   // Challenging
-  if (t >= 0.05) return 'rgba(190,65,45,.85)';    // Difficult
-  return                'rgba(140,25,20,.90)';    // Severe
+// 9-step Score → RGBA colour  (absolute scale)
+function scoreToColor(score) {
+  if (score >= 2.0) return 'rgba(10,80,30,.95)';     // Exceptional
+  if (score >= 1.2) return 'rgba(34,110,54,.90)';    // Excellent
+  if (score >= 0.6) return 'rgba(68,160,80,.85)';    // Good
+  if (score >= 0.2) return 'rgba(110,175,90,.80)';   // Favourable
+  if (score >= -0.2) return 'rgba(180,180,130,.65)'; // Neutral
+  if (score >= -0.6) return 'rgba(210,155,80,.75)';  // Caution
+  if (score >= -1.2) return 'rgba(210,110,60,.80)';  // Challenging
+  if (score >= -2.0) return 'rgba(190,65,45,.85)';   // Difficult
+  return                'rgba(140,25,20,.90)';       // Severe
 }
 
-function scoreLabel(score, globalMin, globalMax) {
-  const range = globalMax - globalMin;
-  // When all scores are identical, treat as neutral (0.5) instead of worst (0)
-  const t = range === 0 ? 0.5 : (score - globalMin) / range;
-  if (t >= 0.95) return 'Exceptional';
-  if (t >= 0.80) return 'Excellent';
-  if (t >= 0.65) return 'Good';
-  if (t >= 0.50) return 'Favourable';
-  if (t >= 0.40) return 'Neutral';
-  if (t >= 0.30) return 'Caution';
-  if (t >= 0.18) return 'Challenging';
-  if (t >= 0.05) return 'Difficult';
+function scoreLabel(score) {
+  if (score >= 2.0) return 'Exceptional';
+  if (score >= 1.2) return 'Excellent';
+  if (score >= 0.6) return 'Good';
+  if (score >= 0.2) return 'Favourable';
+  if (score >= -0.2) return 'Neutral';
+  if (score >= -0.6) return 'Caution';
+  if (score >= -1.2) return 'Challenging';
+  if (score >= -2.0) return 'Difficult';
   return                'Severe';
 }
 
@@ -1544,7 +1576,7 @@ function renderHeatmap() {
   for (const ys of yearSpans) {
     html += `<th class="hm-yr-th" colspan="${ys.span}">${ys.y}</th>`;
   }
-  html += `</tr><tr><th class="hm-label-th" style="padding:4px 10px;font-family:'DM Mono',monospace;font-size:.65rem;color:var(--on-surface-variant);font-weight:400;text-transform:uppercase;letter-spacing:.08em;border-right:2px solid var(--outline-variant);background:#faf7f2">Aspect</th>`;
+  html += `</tr><tr><th class="hm-label-th" style="padding:4px 10px;font-family:'DM Mono',monospace;font-size:.65rem;color:var(--on-surface-variant);font-weight:400;text-transform:uppercase;letter-spacing:.08em;">Aspect</th>`;
   for (let i = 0; i < cols.length; i++) {
     const isLastOfYear = i === cols.length-1 || cols[i+1].y !== cols[i].y;
     html += `<th class="hm-mo-th${isLastOfYear?' year-sep':''}">${cols[i].label}</th>`;
@@ -1563,8 +1595,10 @@ function renderHeatmap() {
       const c = cols[i];
       const b   = buckets[c.key];
       const avg = b && b.totalMinutes ? b.weightedSum / b.totalMinutes : null;
-      const bg  = avg !== null ? scoreToColor(avg, globalMin, globalMax) : 'rgba(220,210,195,.25)';
-      const lbl = avg !== null ? scoreLabel(avg, globalMin, globalMax)   : 'No data';
+      const avgConf = b && b.confCount ? b.confSum / b.confCount : 1;
+      const isLowConf = avg !== null && avgConf < 0.4;
+      const bg  = isLowConf ? 'rgba(180,180,180,.45)' : (avg !== null ? scoreToColor(avg) : 'rgba(220,210,195,.25)');
+      const lbl = isLowConf ? 'Low confidence' : (avg !== null ? scoreLabel(avg)   : 'No data');
       const wins = b ? b.windows.length : 0;
       const coverageHours = b ? Math.round(b.totalMinutes / 60) : 0;
       const isLastOfYear = i === cols.length-1 || cols[i+1]?.y !== cols[i].y;
@@ -1587,7 +1621,6 @@ Dasha: ${dStr}`;
            const yb = w.map(x => x.yoga_score||0).reduce((a,x)=>a+x,0)/w.length;
            const sb = w.map(x => x.sudarshana_score||0).reduce((a,x)=>a+x,0)/w.length;
            
-           // We might not have jaimini in window, let's check
            extraTip += `
 
 Breakdown:`;
@@ -1605,12 +1638,12 @@ Bhrigu / DoubleTransit: ${bhr.toFixed(1)} / ${dt.toFixed(1)}`;
 Bucket range: ${b.bestScore.toFixed(2)} to ${b.worstScore.toFixed(2)}`;
         }
 
-        const tip = encodeURIComponent(`${c.label} ${c.y} · ${cat}
-${lbl} · ${wins} window${wins!==1?'s':''} · ${coverageHours}h coverage
-Avg score: ${avg!==null?avg.toFixed(2):'—'}${extraTip}`);
-      html += `<td class="hm-cell${isLastOfYear?' year-sep':''}" style="background:${bg}" `+
+        const confStr = isLowConf ? `\nConfidence: ${(avgConf*100).toFixed(0)}% — insufficient signal agreement` : '';
+        const tip = encodeURIComponent(`${c.label} ${c.y} · ${cat}\n${lbl} · ${wins} window${wins!==1?'s':''} · ${coverageHours}h coverage\nAvg score: ${avg!==null?avg.toFixed(2):'—'}${confStr}${extraTip}`);
+      const cellContent = isLowConf ? '<span style="font-size:.7rem;color:#888;font-weight:600">?</span>' : '';
+      html += `<td class="hm-cell${isLastOfYear?' year-sep':''}" style="background:${bg};text-align:center;vertical-align:middle" `+
         `onmouseenter="hmTip(event,'${tip}')" onmouseleave="hmHide()" `+
-        `onclick="hmClick('${cat}','${c.key}','${c.label} ${c.y}', ${c.startTs}, ${c.endTs})"></td>`;
+        `onclick="hmClick('${cat}','${c.key}','${c.label} ${c.y}', ${c.startTs}, ${c.endTs})">${cellContent}</td>`;
     }
     html += `</tr>`;
   }
@@ -1630,7 +1663,8 @@ Avg score: ${avg!==null?avg.toFixed(2):'—'}${extraTip}`);
     <span class="hm-swatch" style="background:rgba(190,65,45,.85)"></span>
     <span class="hm-swatch" style="background:rgba(140,25,20,.90)"></span><span class="hm-swatch-lbl">Difficult</span>
     <span class="hm-swatch" style="background:rgba(220,210,195,.3);margin-left:8px"></span><span class="hm-swatch-lbl">No data</span>
-    <span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--on-surface-variant)">Relative scale within current filter · click any cell for details</span>
+    <span class="hm-swatch" style="background:rgba(180,180,180,.45);margin-left:8px;position:relative"><span style="position:absolute;top:-1px;left:3px;font-size:.55rem;color:#888;font-weight:700">?</span></span><span class="hm-swatch-lbl">Low confidence</span>
+    <span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--on-surface-variant)">Absolute prediction scale · click any cell for details</span>
   </div>`;
 
   // detail panel

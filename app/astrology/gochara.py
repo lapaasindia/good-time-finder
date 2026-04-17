@@ -328,6 +328,31 @@ def apply_retrograde_modifier(
     return base_score
 
 
+def house_specific_gochara_score(
+    planet_signs: dict[str, str],
+    natal_moon_sign: str,
+    relevant_houses: set[int]
+) -> float:
+    """Computes a gochara score limited to transits happening IN specific houses from the Moon.
+    
+    Example: for 'marriage', relevant_houses={7}. Only planets transiting the 7th house
+    from the natal moon will contribute to this specific bonus/penalty.
+    """
+    score = 0.0
+    for planet, transit_sign in planet_signs.items():
+        if transit_sign not in ZODIAC_SIGNS:
+            continue
+        house_from_moon = _house_from_sign(transit_sign, natal_moon_sign)
+        if house_from_moon in relevant_houses:
+            weight = PLANET_GOCHARA_WEIGHT.get(planet, 1.0)
+            good = GOOD_HOUSES_FROM_NATAL_MOON.get(planet, set())
+            bad = BAD_HOUSES_FROM_NATAL_MOON.get(planet, set())
+            if house_from_moon in good:
+                score += weight
+            elif house_from_moon in bad:
+                score -= weight
+    return round(score, 3)
+
 def category_gochara_score(
     planet_signs: dict[str, str],
     natal_moon_sign: str,

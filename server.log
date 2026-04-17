@@ -1,0 +1,19 @@
+INFO:     Started server process [29457]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8080 (Press CTRL+C to quit)
+Traceback (most recent call last):
+  File "/Users/sahilkhanna/Downloads/Life predicter/good_time_finder/app/api/main.py", line 486, in generate_pdf_report
+    report_data = generate_full_report_data(person)
+  File "/Users/sahilkhanna/Downloads/Life predicter/good_time_finder/app/services/report_generator.py", line 857, in generate_full_report_data
+    synthesis_items.append(_build_domain_story(syn, domain_tl))
+                           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/Users/sahilkhanna/Downloads/Life predicter/good_time_finder/app/services/report_generator.py", line 554, in _build_domain_story
+    guide = DOMAIN_GUIDANCE[domain_key]
+            ~~~~~~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'finance'
+INFO:     127.0.0.1:56104 - "POST /report HTTP/1.1" 500 Internal Server Error
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [29457]

@@ -201,7 +201,6 @@ def get_active_dasha(
 ) -> tuple[DashaPeriod | None, DashaPeriod | None]:
     # Ensure dt is offset-aware for comparison
     if dt.tzinfo is None:
-        from datetime import timezone
         dt = dt.replace(tzinfo=timezone.utc)
     
     active_maha: DashaPeriod | None = None

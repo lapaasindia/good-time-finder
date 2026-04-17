@@ -33,7 +33,8 @@ from app.astrology.shadbala import benefic_strength_score, lagna_lord_strength, 
 from app.astrology.special_conditions import compute_special_conditions, get_raw_longitudes
 from app.astrology.yogas import detect_all_yogas
 from app.core.models import Person
-from app.services.synthesis_engine import DomainSynthesis, SynthesisEngine
+from app.services.synthesis_engine import SynthesisEngine
+from app.core.domain_scorer import DomainScore, ScoringContext
 
 
 PLANET_PLAIN_MEANINGS: dict[str, str] = {
@@ -102,6 +103,17 @@ DOMAIN_GUIDANCE = {
             "Prefer practical planning over risky bets.",
         ],
     },
+    "finance": {
+        "label": "Wealth & Finances",
+        "what_it_means": "income stability, savings habits, gains, and your ability to turn effort into usable resources",
+        "positive": "Financial patterns look constructive. Slow, sensible accumulation is favored more than impulsive speculation.",
+        "mixed": "Money can move in the right direction, but only if budgeting and discipline stay stronger than mood or social pressure.",
+        "care": "This area needs protection. Leakage, overpromising, or emotional spending can undo progress faster than expected.",
+        "focus": [
+            "Protect savings and cash flow before chasing upside.",
+            "Prefer practical planning over risky bets.",
+        ],
+    },
     "marriage": {
         "label": "Marriage & Relationships",
         "what_it_means": "partnership, emotional reciprocity, relationship timing, and how you handle closeness and commitment",
@@ -124,6 +136,54 @@ DOMAIN_GUIDANCE = {
             "Reduce all-or-nothing habits and favor repeatable routines.",
         ],
     },
+    "education": {
+        "label": "Education & Knowledge",
+        "what_it_means": "learning, skill acquisition, academic pursuits, and intellectual growth",
+        "positive": "This is an excellent time for learning and acquiring new skills. Focus is sharp.",
+        "mixed": "Progress in learning requires structured discipline. Distractions may arise.",
+        "care": "Focus may scatter easily. Break down complex subjects and protect your study time.",
+        "focus": ["Prioritize structured learning.", "Avoid overwhelming yourself with too many topics."],
+    },
+    "children": {
+        "label": "Children & Creativity",
+        "what_it_means": "parenting, progeny, creative projects, and personal expression",
+        "positive": "Creative flow is strong, and matters involving children are supportive.",
+        "mixed": "Patience is needed in creative endeavors or parenting matters.",
+        "care": "Expect delays or stress in these areas. Focus on understanding rather than controlling.",
+        "focus": ["Foster patience in creative blocks.", "Listen more when dealing with children."],
+    },
+    "property": {
+        "label": "Property & Vehicles",
+        "what_it_means": "real estate, home environment, vehicles, and foundational comforts",
+        "positive": "Favorable energy for investments, home improvements, or securing assets.",
+        "mixed": "Delays or moderate friction possible in property or vehicle matters. Double check details.",
+        "care": "Avoid hasty property investments or major changes to your home environment.",
+        "focus": ["Delay major property decisions if unsure.", "Focus on maintaining what you have."],
+    },
+    "spirituality": {
+        "label": "Spirituality & Luck",
+        "what_it_means": "inner growth, religious pursuits, mentors, and natural fortune",
+        "positive": "Strong alignment with spiritual growth and serendipitous opportunities.",
+        "mixed": "Inner peace requires deliberate effort and stepping back from daily noise.",
+        "care": "You may feel disconnected or unlucky. Focus on grounding practices and giving back.",
+        "focus": ["Dedicate time to inner reflection.", "Don't force luck; let things unfold."],
+    },
+    "legal": {
+        "label": "Legal & Competitors",
+        "what_it_means": "disputes, opposition, court matters, and handling adversaries",
+        "positive": "You have the upper hand in resolving disputes or facing competition.",
+        "mixed": "Competitors or legal matters require careful negotiation and patience.",
+        "care": "Avoid starting new disputes. Protect yourself and seek counsel.",
+        "focus": ["Resolve conflicts amicably if possible.", "Avoid unnecessary provocations."],
+    },
+    "travel": {
+        "label": "Travel & Foreign",
+        "what_it_means": "journeys, relocation, foreign connections, and isolation",
+        "positive": "Travel and foreign connections are highly fruitful and expansive.",
+        "mixed": "Journeys may have minor hiccups. Plan carefully and stay flexible.",
+        "care": "Travel may bring stress or exhaustion. Avoid unnecessary long journeys.",
+        "focus": ["Double check all travel arrangements.", "Keep a flexible itinerary."],
+    }
 }
 
 SUPPORTIVE_PLANETS = {"Jupiter", "Venus", "Mercury", "Moon"}
@@ -475,42 +535,62 @@ def _build_timing_overview(
     }
 
 
-def _domain_key(domain_en: str) -> str:
-    lowered = domain_en.lower()
+def _domain_key(domain_str: str) -> str:
+    lowered = domain_str.lower()
     if "career" in lowered or "profession" in lowered:
         return "career"
     if "wealth" in lowered or "finance" in lowered:
-        return "wealth"
+        return "finance"
     if "marriage" in lowered or "relationship" in lowered:
         return "marriage"
     if "health" in lowered or "well-being" in lowered:
         return "health"
+    if "education" in lowered or "knowledge" in lowered:
+        return "education"
+    if "children" in lowered or "creativity" in lowered:
+        return "children"
+    if "property" in lowered or "vehicles" in lowered:
+        return "property"
+    if "spirituality" in lowered or "luck" in lowered:
+        return "spirituality"
+    if "legal" in lowered or "competitors" in lowered:
+        return "legal"
+    if "travel" in lowered or "foreign" in lowered:
+        return "travel"
     return "career"
 
 
-def _build_domain_story(syn: DomainSynthesis) -> dict:
-    domain_key = _domain_key(syn.domain_en)
-    guide = DOMAIN_GUIDANCE[domain_key]
-    score_band = _score_band(syn.score)
-    if score_band in {"Excellent", "Supportive"}:
+def _build_domain_story(syn: DomainScore, timeline: list[dict] = None) -> dict:
+    domain_key = _domain_key(syn.category)
+    guide = DOMAIN_GUIDANCE.get(domain_key) or DOMAIN_GUIDANCE.get("career")
+    
+    score_band = syn.band.title()
+    if score_band in {"Exceptional", "Strong"}:
         plain = f"{guide['label']} here means {guide['what_it_means']}. {guide['positive']}"
-    elif score_band == "Mixed":
+    elif score_band == "Moderate":
         plain = f"{guide['label']} here means {guide['what_it_means']}. {guide['mixed']}"
     else:
         plain = f"{guide['label']} here means {guide['what_it_means']}. {guide['care']}"
 
+    factors_en = []
+    factors_hi = []
+    for f in syn.factors:
+        factors_en.append(f.text_en)
+        factors_hi.append(f.text_hi)
+
     return {
-        "domain_en": syn.domain_en,
-        "domain_hi": syn.domain_hi,
+        "domain_en": syn.category,
+        "domain_hi": getattr(syn, "domain_hi", syn.category),
         "score": round(syn.score, 2),
         "score_band": score_band,
-        "confidence": _confidence_band(syn.score, len(syn.key_factors_en)),
+        "confidence": "High" if syn.confidence >= 0.7 else "Medium" if syn.confidence >= 0.4 else "Low",
         "summary_en": syn.summary_en,
         "summary_hi": syn.summary_hi,
-        "key_factors_en": syn.key_factors_en,
-        "key_factors_hi": syn.key_factors_hi,
+        "key_factors_en": factors_en,
+        "key_factors_hi": factors_hi,
         "plain_english": plain,
-        "focus_now": guide["focus"],
+        "focus_now": guide.get("focus", []),
+        "timeline": timeline or []
     }
 
 
@@ -537,7 +617,9 @@ def _build_remedy_focus(report: dict) -> dict:
             supportive_items.append(f"{planet}: {gem.get('gem_en')} - {status}.")
 
     for item in rudraksha[:2]:
-        supportive_items.append(f"{item['planet']}: {item['rudraksha_en']} for {item['benefit_en'].replace(f'To balance weak {item['planet']}: ', '')}.")
+        planet_name = item['planet']
+        benefit_text = item['benefit_en'].replace(f'To balance weak {planet_name}: ', '')
+        supportive_items.append(f"{planet_name}: {item['rudraksha_en']} for {benefit_text}.")
 
     if vastu:
         supportive_items.append(
@@ -675,16 +757,36 @@ def generate_full_report_data(person: Person, current_dt: datetime | None = None
     nadi_links = compute_nadi_linkages(natal_planet_houses)
     chara_karakas = compute_chara_karakas(natal_longitudes)
 
-    synthesis_engine = SynthesisEngine(
-        planet_houses=natal_planet_houses,
-        planet_signs=natal_planet_signs,
+    # Compute KP & Bhrigu base values
+    from app.astrology.kp import kp_score, true_kp_cuspal_score
+    from app.astrology.bhrigu import calculate_bhrigu_bindu, bhrigu_transit_score
+    moon_long = natal_longitudes.get("Moon", 0.0)
+    rahu_long = natal_longitudes.get("Rahu", 0.0)
+    bb_long = calculate_bhrigu_bindu(moon_long, rahu_long)
+    bhrigu_bonus = bhrigu_transit_score(bb_long, natal_longitudes)
+    kp_score_val = kp_score(natal_longitudes, lagna, "career")
+    kp_cuspal_val = true_kp_cuspal_score(
+        "career", person.birth_datetime, person.birth_location.latitude,
+        person.birth_location.longitude, natal_longitudes, natal_planet_houses
+    )
+
+    synthesis_ctx = ScoringContext(
+        natal_houses=natal_planet_houses,
+        natal_signs=natal_planet_signs,
         lagna=lagna,
         shadbala=shadbala,
-        drishti=drishti,
+        drishti_house=drishti[0],
+        drishti_planet=drishti[1],
         avasthas=avasthas,
         nadi_links=nadi_links,
         chara_karakas=chara_karakas,
+        kp_natal_cuspal=kp_cuspal_val,
+        kp_natal_score=kp_score_val,
+        bhrigu_bonus=bhrigu_bonus,
+        active_maha=None,
+        active_antar=None,
     )
+    synthesis_engine = SynthesisEngine(ctx=synthesis_ctx)
     synthesis_outcomes = synthesis_engine.run_all()
 
     remedies_lal_kitab = get_lal_kitab_remedies(natal_planet_houses)
@@ -696,8 +798,16 @@ def generate_full_report_data(person: Person, current_dt: datetime | None = None
     current_maha = None
     current_antar = None
     dasha_list: list[dict] = []
+    # Synchronize timezone awareness with dasha system outputs
+    if mahas and mahas[0].end.tzinfo is not None and current_dt.tzinfo is None:
+        eval_dt = current_dt.replace(tzinfo=mahas[0].end.tzinfo)
+    elif mahas and mahas[0].end.tzinfo is None and current_dt.tzinfo is not None:
+        eval_dt = current_dt.replace(tzinfo=None)
+    else:
+        eval_dt = current_dt
+
     for maha in mahas:
-        if maha.end > current_dt:
+        if maha.end > eval_dt:
             dasha_list.append(
                 {
                     "planet": maha.planet,
@@ -705,10 +815,10 @@ def generate_full_report_data(person: Person, current_dt: datetime | None = None
                     "end": maha.end.strftime("%Y-%m-%d"),
                 }
             )
-        if maha.start <= current_dt <= maha.end:
+        if maha.start <= eval_dt <= maha.end:
             current_maha = maha
             for antar in compute_antardashas(maha):
-                if antar.start <= current_dt <= antar.end:
+                if antar.start <= eval_dt <= antar.end:
                     current_antar = antar
                     break
 
@@ -750,7 +860,44 @@ def generate_full_report_data(person: Person, current_dt: datetime | None = None
     }
 
     timing_overview = _build_timing_overview(current_maha, current_antar, dasha_list, transit_scores, sade_sati)
-    synthesis_items = [_build_domain_story(item) for item in synthesis_outcomes]
+
+    # Phase 5.5: Dasha × Domain Activation Matrix
+    from app.services.dasha_domain_matrix import build_dasha_domain_matrix
+    # Find current pratyantar for the matrix
+    current_pratyantar = None
+    if current_antar:
+        from app.astrology.dasha import compute_pratyantardashas
+        try:
+            for prat in compute_pratyantardashas(current_antar):
+                if prat.start <= current_dt <= prat.end:
+                    current_pratyantar = prat
+                    break
+        except Exception:
+            pass
+
+    dasha_matrix = build_dasha_domain_matrix(
+        maha_lord=current_maha.planet if current_maha else None,
+        antar_lord=current_antar.planet if current_antar else None,
+        pratyantar_lord=current_pratyantar.planet if current_pratyantar else None,
+        shadbala=shadbala,
+        natal_houses=natal_planet_houses,
+    )
+    from app.services.timeline_builder import build_domain_timeline
+    from app.services.life_predictor import LifePredictorService
+    _predictor = LifePredictorService()
+    
+    synthesis_items = []
+    for syn in synthesis_outcomes:
+        # Build 12 month timeline for each domain
+        # Using a very low-res step to keep it fast
+        domain_tl = build_domain_timeline(
+            person=person,
+            category=_domain_key(syn.category),
+            start_dt=current_dt,
+            months=12,
+            predictor=_predictor
+        )
+        synthesis_items.append(_build_domain_story(syn, domain_tl))
 
     report = {
         "personal_info": {
@@ -828,6 +975,7 @@ def generate_full_report_data(person: Person, current_dt: datetime | None = None
         },
         "timing_overview": timing_overview,
         "transits": transit_scores,
+        "dasha_domain_matrix": dasha_matrix,
     }
 
     special_summary = report["doshas"]

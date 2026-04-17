@@ -428,6 +428,8 @@ class PredictionWindowResponse(BaseModel):
     kp_score: float
     kp_cuspal_score: float
     double_transit: float
+    panchang_score: float = 0.0
+    confidence: float = 0.0
 
 
 class PredictResponse(BaseModel):
@@ -456,6 +458,10 @@ class PredictResponse(BaseModel):
     kp_score: float
     kp_cuspal_score: float
     double_transit: float
+    kp_natal_score: float
+    kp_natal_cuspal: float
+    domain_static_scores: dict[str, float] = {}
+    domain_confidences: dict[str, float] = {}
 
 
 class LifePredictionRequest(BaseModel):
@@ -577,6 +583,8 @@ def predict(req: PredictRequest) -> PredictResponse:
                 kp_score=w.kp_score,
                 kp_cuspal_score=w.kp_cuspal_score,
                 double_transit=w.double_transit,
+                panchang_score=w.panchang_score,
+                confidence=w.confidence,
             )
             for w in result.top_windows
         ],
@@ -606,6 +614,8 @@ def predict(req: PredictRequest) -> PredictResponse:
                 kp_score=w.kp_score,
                 kp_cuspal_score=w.kp_cuspal_score,
                 double_transit=w.double_transit,
+                panchang_score=w.panchang_score,
+                confidence=w.confidence,
             )
             for w in result.windows
         ],
@@ -619,6 +629,10 @@ def predict(req: PredictRequest) -> PredictResponse:
         kp_score=result.kp_score,
         kp_cuspal_score=result.kp_cuspal_score,
         double_transit=result.double_transit,
+        kp_natal_score=result.kp_natal_score,
+        kp_natal_cuspal=result.kp_natal_cuspal,
+        domain_static_scores=result.domain_static_scores,
+        domain_confidences=result.domain_confidences,
     )
 
 

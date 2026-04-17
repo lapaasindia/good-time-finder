@@ -77,6 +77,8 @@ class PredictionWindow:
     kp_score: float = 0.0
     kp_cuspal_score: float = 0.0
     double_transit: float = 0.0
+    panchang_score: float = 0.0
+    confidence: float = 0.0
 
 
 @dataclass
@@ -107,6 +109,12 @@ class LifePrediction:
     kp_score: float = 0.0
     kp_cuspal_score: float = 0.0
     double_transit: float = 0.0
+    # Phase 2: static natal KP anchors (for chart signature vs per-slot kp_score/kp_cuspal_score)
+    kp_natal_score: float = 0.0
+    kp_natal_cuspal: float = 0.0
+    # Phase 6: domain static scores & confidences
+    domain_static_scores: dict[str, float] = field(default_factory=dict)
+    domain_confidences: dict[str, float] = field(default_factory=dict)
 
 
 # ── Yoga-Dasha Activation ──
@@ -321,6 +329,8 @@ class LifePredictorService:
             kp_score: float
             kp_cuspal_score: float
             double_transit: float
+            gochara_house_specific: float
+            planet_focus: float
             active_events: list[str]
             nature: str
 
@@ -342,6 +352,48 @@ class LifePredictorService:
         natal_bhrigu_score = bhrigu_transit_score(bb_long, natal_longs)
         # Natal double transit (Jupiter + Saturn vs natal positions)
         natal_double_transit = double_transit_score(category, natal_longs, natal_p_houses, n_lagna)
+
+        # Phase 3 specific mappings
+        CATEGORY_HOUSES = {
+            "career": {10, 6, 11},
+            "finance": {2, 11},
+            "marriage": {7},
+            "relationships": {5, 7},
+            "health": {1, 6},
+            "education": {4, 5, 9},
+            "children": {5},
+            "property": {4},
+            "spirituality": {9, 12},
+            "legal": {6, 8, 12},
+            "travel": {3, 9, 12},
+            "business": {7, 10, 11},
+            "accidents": {8, 12},
+            "fame": {10, 11},
+            "general": {1, 9, 10}
+        }
+        
+        CATEGORY_PRIMARY_PLANET = {
+            "career": "Saturn",
+            "finance": "Jupiter",
+            "marriage": "Venus",
+            "relationships": "Venus",
+            "health": "Sun",
+            "education": "Mercury",
+            "children": "Jupiter",
+            "property": "Mars",
+            "spirituality": "Ketu",
+            "legal": "Saturn",
+            "travel": "Rahu",
+            "business": "Mercury",
+            "accidents": "Mars",
+            "fame": "Sun",
+            "general": "Jupiter"
+        }
+        
+        relevant_houses = CATEGORY_HOUSES.get(category, {1})
+        primary_planet = CATEGORY_PRIMARY_PLANET.get(category, "Jupiter")
+        # Static planet focus for the category based on natal shadbala
+        planet_focus = shadbala.get(primary_planet, 1.0) - 1.0
 
         slot_scores: list[_SlotScore] = []
 
@@ -383,6 +435,9 @@ class LifePredictorService:
             sandhi_penalty = dasha_engine.dasha_sandhi_penalty(dt)
 
             gochara = category_gochara_score(current_p_signs, n_moon, CATEGORY_PLANETS.get(category, set()), natal_lagna=n_lagna, natal_planet_signs=natal_p_signs, retrograde_planets=retro_planets)
+            from app.astrology.gochara import house_specific_gochara_score
+            gochara_house_specific = house_specific_gochara_score(current_p_signs, n_moon, relevant_houses)
+            
             avarga = ashtakavarga_bonus(current_p_signs, natal_p_signs, n_lagna)
             # Transit-dasha correlation: only include planets in STRONG transit
             # (i.e., in good houses from natal Moon) as meaningful triggers
@@ -422,7 +477,24 @@ class LifePredictorService:
 
             bhrigu_score = bhrigu_transit_score(bb_long, transit_longitudes)
             dt_score = double_transit_score(category, transit_longitudes, natal_p_houses, n_lagna)
-            
+
+            # Phase 2: KP scores computed per-slot using transit data
+            # kp_score uses transit Moon sub-lord (changes every few hours)
+            transit_kp = kp_score(transit_longitudes, n_lagna, category)
+            # true_kp_cuspal_score computes ascendant cusp from current dt (rotates ~4 min)
+            # and checks transit cusp sub-lord's star-lord placement in natal houses
+            try:
+                transit_kp_cuspal = true_kp_cuspal_score(
+                    category=category,
+                    birth_dt=dt,
+                    lat=location.latitude,
+                    lon=location.longitude,
+                    natal_longs=transit_longitudes,
+                    natal_houses=natal_p_houses,
+                )
+            except Exception:
+                transit_kp_cuspal = natal_kp_cuspal
+
             slot_scores.append(_SlotScore(
                 dt=dt,
                 rule_score=slot_rule_total,
@@ -437,9 +509,11 @@ class LifePredictorService:
                 sudarshana_score=sudarshana_score,
                 sandhi_penalty=sandhi_penalty,
                 bhrigu_bonus=bhrigu_score,
-                kp_score=natal_kp_score,
-                kp_cuspal_score=natal_kp_cuspal,
+                kp_score=transit_kp,
+                kp_cuspal_score=transit_kp_cuspal,
                 double_transit=dt_score,
+                gochara_house_specific=gochara_house_specific,
+                planet_focus=planet_focus,
                 active_events=slot_events,
                 nature="",
             ))
@@ -462,13 +536,15 @@ class LifePredictorService:
         feature_rows: list[list[float]] = []
         for s in slot_scores:
             effective_dasha = s.dasha_b + sade_sati_penalty + special.overall_penalty
+            # Phase 1: panchang is an independent feature; Phase 3 adds 2 placeholders
             feature_rows.append([
                 s.rule_score, sha_centered, s.gochara, effective_dasha,
-                yoga_score, s.avarga + s.panchang_s, s.tara_score,
+                yoga_score, s.avarga, s.panchang_s, s.tara_score,
                 s.chandra_bala_score, s.avastha_score, s.pushkara_bonus_score,
                 s.sudarshana_score, jaimini_score, arudha_score,
                 gulika_pen, badhaka_pen, s.bhrigu_bonus,
                 s.kp_score, s.kp_cuspal_score, s.double_transit,
+                s.gochara_house_specific, s.planet_focus,  # gochara_house_specific, planet_focus (Phase 3)
             ])
         raw_composites = batch_composite_scores(category, feature_rows)
 
@@ -476,24 +552,14 @@ class LifePredictorService:
 
         normalized: list[float] = []
         if raw_composites:
-            sorted_c = sorted(raw_composites)
-            median_c = sorted_c[len(sorted_c) // 2]
-            # avoid division by zero
-            score_range = max(sorted_c[-1] - sorted_c[0], 1.0)
-
             for c in raw_composites:
-                # Gentler S-curve: allows true extremes to reach ±3.0
-                # tanh(c/2.5) maps typical range [-2, +2] to [-0.76, +0.76] * 3 = [-2.3, +2.3]
-                # while preserving ability to hit ±3.0 for truly exceptional periods
-                abs_norm = 3.0 * math.tanh(c / 2.5)
-
-                # Relative mapping stretches local variation across full spectrum
-                rel_norm = ((c - median_c) / score_range) * 6.0
-                rel_norm = max(-3.0, min(3.0, rel_norm))
-
-                # Balance: absolute for cross-chart consistency, relative for local extremes
-                hybrid = (abs_norm * 0.70) + (rel_norm * 0.30)
-                normalized.append(round(hybrid, 3))
+                # Phase 6: Pure tanh normalization against SCALE=2.0
+                # raw_composites from batch_composite_scores are not clamped anymore?
+                # Actually, batch_composite_scores clamps to [-3,3]. Let's remove the clamp in ranking.py
+                # or just use the raw score. We'll use tanh to gently map large values.
+                # We will map `c` through 3.0 * tanh(c / 2.0).
+                norm = 3.0 * math.tanh(c / 2.0)
+                normalized.append(round(norm, 3))
 
         composite_slots: list[tuple[_SlotScore, float]] = [
             (slot_scores[i], normalized[i]) for i in range(len(slot_scores))
@@ -530,6 +596,23 @@ class LifePredictorService:
             avg_kp = sum(sl.kp_score for sl in slots) / len(slots)
             avg_kp_cuspal = sum(sl.kp_cuspal_score for sl in slots) / len(slots)
             avg_double_transit = sum(sl.double_transit for sl in slots) / len(slots)
+            avg_panchang = sum(sl.panchang_s for sl in slots) / len(slots)
+
+            # Phase 6.4: Confidence = fraction of non-zero signals agreeing with composite sign
+            feature_vals = [
+                avg_gochara, avg_dasha, avg_avarga, avg_rule,
+                avg_tara, avg_chandra, avg_avastha, avg_pushkara,
+                avg_sudarshana, avg_sandhi, avg_bhrigu, avg_kp,
+                avg_kp_cuspal, avg_double_transit, avg_panchang,
+                sha_centered, yoga_score,
+            ]
+            nonzero = [v for v in feature_vals if abs(v) > 1e-6]
+            if nonzero and abs(avg_score) > 1e-6:
+                sign_of_composite = 1.0 if avg_score > 0 else -1.0
+                agreeing = sum(1 for v in nonzero if (v > 0) == (sign_of_composite > 0))
+                window_confidence = round(agreeing / len(nonzero), 3)
+            else:
+                window_confidence = 0.0
 
             w_maha, w_antar, w_prat = dasha_engine.active_full_at(start)
             if w_maha and w_antar and w_prat:
@@ -568,6 +651,8 @@ class LifePredictorService:
                 kp_score=round(avg_kp, 3),
                 kp_cuspal_score=round(avg_kp_cuspal, 3),
                 double_transit=round(avg_double_transit, 3),
+                panchang_score=round(avg_panchang, 3),
+                confidence=window_confidence,
             )
 
         max_window_hours = 12
@@ -624,6 +709,42 @@ class LifePredictorService:
             windows=prediction_windows,
         )
 
+        # Phase 6: Compute domain static scores for current category
+        from app.core.domain_scorer import score_domain, ScoringContext
+        from app.astrology.drishti import compute_aspects
+        from app.astrology.avasthas import compute_all_avasthas
+        from app.astrology.nadi import compute_nadi_linkages
+
+        natal_drishti = compute_aspects(natal_p_houses)
+        natal_avasthas = compute_all_avasthas(natal_longitudes)
+        natal_nadi_links = compute_nadi_linkages(natal_p_houses)
+        scoring_ctx = ScoringContext(
+            natal_houses=natal_p_houses,
+            natal_signs=natal_p_signs,
+            lagna=n_lagna,
+            shadbala=shadbala,
+            drishti_house=natal_drishti[0] if isinstance(natal_drishti, tuple) else natal_drishti,
+            drishti_planet=natal_drishti[1] if isinstance(natal_drishti, tuple) else {},
+            avasthas=natal_avasthas,
+            nadi_links=natal_nadi_links,
+            chara_karakas=chara_karakas,
+            kp_natal_cuspal=natal_kp_cuspal,
+            kp_natal_score=natal_kp_score,
+            bhrigu_bonus=natal_bhrigu_score,
+            active_maha=maha.planet if maha else None,
+            active_antar=antar.planet if antar else None,
+        )
+
+        domain_static_scores: dict[str, float] = {}
+        domain_confidences: dict[str, float] = {}
+        try:
+            ds = score_domain(category, scoring_ctx)
+            domain_static_scores[category] = round(ds.score, 3)
+            domain_confidences[category] = ds.confidence
+        except Exception:
+            domain_static_scores[category] = 0.0
+            domain_confidences[category] = 0.0
+
         return LifePrediction(
             category=category,
             person_name=person.name,
@@ -651,6 +772,10 @@ class LifePredictorService:
             kp_score=round(natal_kp_score, 3),
             kp_cuspal_score=round(natal_kp_cuspal, 3),
             double_transit=round(natal_double_transit, 3),
+            kp_natal_score=round(natal_kp_score, 3),
+            kp_natal_cuspal=round(natal_kp_cuspal, 3),
+            domain_static_scores=domain_static_scores,
+            domain_confidences=domain_confidences,
         )
 
 

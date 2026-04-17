@@ -7,39 +7,29 @@ from datetime import datetime, timedelta
 from app.core.models import Person, GeoLocation, TimeRange
 from app.services.life_predictor import LifePredictorService
 from scripts.backtest_personalities import PERSONALITIES
+import app.core.ranking as ranking
 import app.services.life_predictor as lp
 
-# Monkey patch compute_composite_score in life_predictor module
+# Monkey patch batch_composite_scores in both namespaces
 global_features = []
 
-original_compute = lp.compute_composite_score
+original_compute = ranking.batch_composite_scores
 
-def mocked_compute(category, rule_score, shadbala_bonus=0, gochara_score=0, dasha_bonus=0, yoga_score=0, ashtakavarga_bonus=0, tara_score=0, chandra_bala_score=0, avastha_score=0, pushkara_bonus_score=0, sudarshana_score=0, jaimini_score=0, arudha_score=0, gulika_penalty=0, badhaka_penalty=0, bhrigu_bonus=0, kp_score=0, kp_cuspal_score=0, double_transit=0):
-    feats = {
-        "rule": rule_score,
-        "shadbala": shadbala_bonus,
-        "gochara": gochara_score,
-        "dasha": dasha_bonus,
-        "yoga": yoga_score,
-        "ashtakavarga": ashtakavarga_bonus,
-        "tara": tara_score,
-        "chandra_bala": chandra_bala_score,
-        "avastha": avastha_score,
-        "pushkara": pushkara_bonus_score,
-        "sudarshana": sudarshana_score,
-        "jaimini": jaimini_score,
-        "arudha": arudha_score,
-        "gulika": gulika_penalty,
-        "badhaka": badhaka_penalty,
-        "bhrigu": bhrigu_bonus,
-        "kp": kp_score,
-        "kp_cuspal": kp_cuspal_score,
-        "double_transit": double_transit
-    }
-    global_features.append(feats)
-    return original_compute(category, rule_score, shadbala_bonus, gochara_score, dasha_bonus, yoga_score, ashtakavarga_bonus, tara_score, chandra_bala_score, avastha_score, pushkara_bonus_score, sudarshana_score, jaimini_score, arudha_score, gulika_penalty, badhaka_penalty, bhrigu_bonus, kp_score, kp_cuspal_score, double_transit)
+def mocked_compute(category, feature_rows):
+    feature_names = [
+        "rule", "shadbala", "gochara", "dasha", "yoga", "ashtakavarga", "panchang", "tara", "chandra_bala", "avastha",
+        "pushkara", "sudarshana", "jaimini", "arudha", "gulika", "badhaka", "bhrigu", "kp", "kp_cuspal", "double_transit",
+        "gochara_house_specific", "planet_focus"
+    ]
+    for row in feature_rows:
+        feats = dict(zip(feature_names, row))
+        global_features.append(feats)
+    return original_compute(category, feature_rows)
 
-lp.compute_composite_score = mocked_compute
+ranking.batch_composite_scores = mocked_compute
+lp.batch_composite_scores = mocked_compute
+lp.USE_ML_MODEL = False
+ranking.USE_ML_MODEL = False
 
 def run():
     service = LifePredictorService()
@@ -83,6 +73,8 @@ def run():
             else:
                 category = 'general'
             
+            
+            print(f"Processing event: {p_data['name']} - {event['desc']} (Category: {category})")
             global_features.clear()
             service.predict(person, person.birth_location, time_range, category)
             

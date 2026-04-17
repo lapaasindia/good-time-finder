@@ -49,6 +49,39 @@ curl -X POST http://localhost:8000/find \
   }'
 ```
 
+## Example response
+
+```json
+{
+  "chart_signature": { ... },
+  "predictions": {
+    "travel": {
+      "tag": "travel",
+      "overall_period_score": 1.25,
+      "domain_static_scores": {
+        "career": 2.1,
+        "travel": -0.5
+      },
+      "domain_confidences": {
+        "career": 0.85,
+        "travel": 0.6
+      },
+      "windows": [
+        {
+          "start_time": "2026-04-12T00:00:00+05:30",
+          "end_time": "2026-04-12T00:15:00+05:30",
+          "composite_score": 1.2,
+          "confidence": 0.75,
+          "panchang_score": 0.4,
+          "kp_score": 2.0,
+          ...
+        }
+      ]
+    }
+  }
+}
+```
+
 ## Run tests
 
 ```bash

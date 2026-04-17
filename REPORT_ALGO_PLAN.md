@@ -110,3 +110,13 @@ To transition from the current "Dictionary Lookup" report to this "World-Class S
 5. **`app/services/synthesis_engine.py`**: The core ML/Tag-based scoring engine that aggregates the Parashari, KP, Jaimini, and Nadi "votes" to output the single most accurate narrative prediction for a life domain.
 
 By implementing this, the report will no longer just say "Mars is in the 10th house". It will say: *"Because Mars is in the 10th house, aspected by Jupiter, and the 10th lord is strong in D10, you are destined for an executive role in engineering or real estate, and your success will peak during your Youth."*
+
+---
+
+## 6. Phase 7 Shipped Capabilities (v2.0 Update)
+
+The v2.0 Algorithm Upgrade successfully transitioned the predictive engine to the new **World-Class Synthesis Engine Model**:
+1. **Dynamic Domain Scoring**: The core report narrative now uses the `score_domain()` logic to calculate life domain outcomes using 5 independent votes (**Parashari, Jaimini, Nadi, KP, and Bhrigu**).
+2. **10 Distinct Life Domains**: Expanded coverage to Career, Wealth, Marriage, Health, Education, Children, Property, Spirituality, Legal, and Travel.
+3. **Dasha-Domain Matrix**: Implemented the dynamic `Maha/Antar/Pratyantar` matrix which maps current dasha lord signatures and transit quality over all 10 life domains in a comprehensive table.
+4. **Confidence Tracks**: The UI tracking uses a signal agreement ratio (`confidence` / `panchang_score`) across the entire heatmap to separate consistent vs noisy windows. Low confidence is visually distinct to prevent over-reliance on unstable periods.

@@ -375,10 +375,11 @@ def build_pdf_report(report_data: dict) -> bytes:
     story.append(Paragraph("Life Domain Synthesis", section_style))
     for syn in report_data.get("synthesis", []):
         badge_color = {
-            "Excellent": "#bbf7d0",
-            "Supportive": "#dbeafe",
-            "Mixed": "#fde68a",
-            "Needs care": "#fecaca",
+            "Exceptional": "#bbf7d0",
+            "Strong": "#dbeafe",
+            "Moderate": "#fde68a",
+            "Strained": "#fed7aa",
+            "Challenging": "#fecaca",
         }.get(syn.get("score_band"), "#e5e7eb")
         domain_header = Table(
             [
@@ -407,6 +408,54 @@ def build_pdf_report(report_data: dict) -> bytes:
         story.append(Paragraph(_safe(syn.get("summary_en", "")), body_style))
         if syn.get("plain_english"):
             story.append(Paragraph(_safe(syn.get("plain_english", "")), small_style))
+            
+        # Draw 12 month timeline if available
+        timeline = syn.get("timeline", [])
+        if timeline:
+            tl_cells = []
+            for m in timeline:
+                c_color = {
+                    "Exceptional": "#22c55e",
+                    "Strong": "#3b82f6",
+                    "Moderate": "#eab308",
+                    "Strained": "#f97316",
+                    "Challenging": "#ef4444"
+                }.get(m.get("band"), "#9ca3af")
+                # Just month prefix (e.g. Jan)
+                m_label = m.get("month", "")[:3]
+                
+                # A mini colored box for each month
+                from reportlab.platypus import KeepInFrame
+                cell_p = Paragraph(f'<font color="white" size="6"><b>{m_label}</b></font>', styles["Normal"])
+                tl_cells.append(cell_p)
+                
+            if tl_cells:
+                tl_table = Table([tl_cells], colWidths=[0.45 * inch] * len(tl_cells), hAlign="LEFT")
+                # Create styles mapping for the background colors
+                style_commands = [
+                    ("BOX", (0, 0), (-1, -1), 0.5, colors.HexColor("#e5e7eb")),
+                    ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#ffffff")),
+                    ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+                    ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                    ("TOPPADDING", (0, 0), (-1, -1), 2),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
+                ]
+                for i, m in enumerate(timeline):
+                    c_color = {
+                        "Exceptional": "#22c55e",
+                        "Strong": "#3b82f6",
+                        "Moderate": "#eab308",
+                        "Strained": "#f97316",
+                        "Challenging": "#ef4444"
+                    }.get(m.get("band"), "#9ca3af")
+                    style_commands.append(("BACKGROUND", (i, 0), (i, 0), colors.HexColor(c_color)))
+                    
+                tl_table.setStyle(TableStyle(style_commands))
+                story.append(Spacer(1, 4))
+                story.append(Paragraph("<b>12-Month Outlook:</b>", small_style))
+                story.append(tl_table)
+                story.append(Spacer(1, 4))
+        
         focus_now = syn.get("focus_now", [])
         info_line = []
         if syn.get("confidence"):
@@ -415,6 +464,8 @@ def build_pdf_report(report_data: dict) -> bytes:
             info_line.append(f"Focus now: {', '.join(focus_now[:2])}")
         if info_line:
             story.append(Paragraph(_safe(" | ".join(info_line)), muted_style))
+            
+        story.append(Paragraph("<b>Why this score:</b>", small_style))
         story.extend(_bullet_lines(syn.get("key_factors_en", [])[:4], small_style))
         story.append(Spacer(1, 8))
 
@@ -579,6 +630,59 @@ def build_pdf_report(report_data: dict) -> bytes:
             )
         )
         story.append(transit_table)
+
+    # Phase 5.5: Dasha × Domain Activation Matrix
+    dasha_matrix = report_data.get("dasha_domain_matrix", [])
+    if dasha_matrix:
+        story.append(Spacer(1, 14))
+        story.append(Paragraph("Current Dasha Activation", section_style))
+        dm_rows = [["Domain", "Maha", "Antar", "Pratyantar", "Composite"]]
+        for row in dasha_matrix:
+            maha_info = row.get("maha", {})
+            antar_info = row.get("antar", {})
+            prat_info = row.get("pratyantar", {})
+            dm_rows.append([
+                row.get("domain", "").title(),
+                f"{maha_info.get('band', 'N/A')} ({maha_info.get('activation', 0):.1f})",
+                f"{antar_info.get('band', 'N/A')} ({antar_info.get('activation', 0):.1f})",
+                f"{prat_info.get('band', 'N/A')} ({prat_info.get('activation', 0):.1f})",
+                f"{row.get('composite', 0):.2f}",
+            ])
+        dm_table = Table(
+            dm_rows,
+            colWidths=[1.2 * inch, 1.2 * inch, 1.2 * inch, 1.2 * inch, 0.9 * inch],
+            repeatRows=1,
+            hAlign="LEFT",
+        )
+        dm_style_commands = [
+            ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1e3a8a")),
+            ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+            ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+            ("BOX", (0, 0), (-1, -1), 0.75, colors.HexColor("#d1d5db")),
+            ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#e5e7eb")),
+            ("FONTSIZE", (0, 0), (-1, -1), 8),
+            ("LEADING", (0, 0), (-1, -1), 10),
+            ("LEFTPADDING", (0, 0), (-1, -1), 6),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+            ("TOPPADDING", (0, 0), (-1, -1), 5),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ]
+        # Color-code composite column by activation level
+        for i, row in enumerate(dasha_matrix, start=1):
+            comp = row.get("composite", 0)
+            if comp >= 1.5:
+                bg = "#bbf7d0"
+            elif comp >= 0.8:
+                bg = "#dbeafe"
+            elif comp >= 0.0:
+                bg = "#fef9c3"
+            else:
+                bg = "#fecaca"
+            dm_style_commands.append(("BACKGROUND", (4, i), (4, i), colors.HexColor(bg)))
+        dm_table.setStyle(TableStyle(dm_style_commands))
+        story.append(dm_table)
+        story.append(Spacer(1, 8))
 
     story.append(PageBreak())
     story.append(Paragraph("Remedies And Practical Focus", section_style))
