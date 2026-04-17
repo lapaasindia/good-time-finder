@@ -5,7 +5,7 @@ from typing import Annotated
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, RedirectResponse, HTMLResponse
+from fastapi.responses import FileResponse, RedirectResponse, HTMLResponse, StreamingResponse
 from pydantic import BaseModel, Field
 import os
 
@@ -13,6 +13,8 @@ from app.core.enums import EventNature, EventTag
 from app.core.models import GeoLocation, Person, TimeRange
 from app.services.finder import CombinedWindow, FinderResult, GoodTimeFinderService
 from app.services.life_predictor import LifePredictorService, LifePrediction, PredictionWindow
+from app.services.report_generator import generate_full_report_data
+from app.services.pdf_builder import build_pdf_report
 
 app = FastAPI(
     title="Life Predictor",
@@ -422,6 +424,10 @@ class PredictionWindowResponse(BaseModel):
     pushkara_bonus_score: float
     sudarshana_score: float
     sandhi_penalty: float
+    bhrigu_bonus: float
+    kp_score: float
+    kp_cuspal_score: float
+    double_transit: float
 
 
 class PredictResponse(BaseModel):
@@ -446,6 +452,52 @@ class PredictResponse(BaseModel):
     gulika_penalty: float
     badhaka_penalty: float
     divisional_scores: dict[str, float]
+    bhrigu_bonus: float
+    kp_score: float
+    kp_cuspal_score: float
+    double_transit: float
+
+
+class LifePredictionRequest(BaseModel):
+    name: str = Field(default="Native")
+    birth_datetime: datetime
+    latitude: float
+    longitude: float
+    timezone: str = Field(default="Asia/Kolkata")
+
+@app.post(
+    "/report",
+    summary="Generate Comprehensive PDF Report",
+    description="Returns a full astrology report covering personality, remedies, planets, houses, yogas, and dashas in PDF format.",
+)
+async def generate_pdf_report(request: LifePredictionRequest):
+    try:
+        person = Person(
+            name=request.name,
+            birth_datetime=request.birth_datetime,
+            birth_location=GeoLocation(
+                latitude=request.latitude,
+                longitude=request.longitude,
+                timezone=request.timezone
+            )
+        )
+        report_data = generate_full_report_data(person)
+        pdf_bytes = build_pdf_report(report_data)
+        
+        from io import BytesIO
+        buffer = BytesIO(pdf_bytes)
+        
+        return StreamingResponse(
+            buffer,
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": f"attachment; filename={request.name}_Astrology_Report.pdf"
+            }
+        )
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.post("/predict", response_model=PredictResponse)
@@ -521,6 +573,10 @@ def predict(req: PredictRequest) -> PredictResponse:
                 pushkara_bonus_score=w.pushkara_bonus_score,
                 sudarshana_score=w.sudarshana_score,
                 sandhi_penalty=w.sandhi_penalty,
+                bhrigu_bonus=w.bhrigu_bonus,
+                kp_score=w.kp_score,
+                kp_cuspal_score=w.kp_cuspal_score,
+                double_transit=w.double_transit,
             )
             for w in result.top_windows
         ],
@@ -546,6 +602,10 @@ def predict(req: PredictRequest) -> PredictResponse:
                 pushkara_bonus_score=w.pushkara_bonus_score,
                 sudarshana_score=w.sudarshana_score,
                 sandhi_penalty=w.sandhi_penalty,
+                bhrigu_bonus=w.bhrigu_bonus,
+                kp_score=w.kp_score,
+                kp_cuspal_score=w.kp_cuspal_score,
+                double_transit=w.double_transit,
             )
             for w in result.windows
         ],
@@ -555,6 +615,10 @@ def predict(req: PredictRequest) -> PredictResponse:
         gulika_penalty=result.gulika_penalty,
         badhaka_penalty=result.badhaka_penalty,
         divisional_scores=result.divisional_scores,
+        bhrigu_bonus=result.bhrigu_bonus,
+        kp_score=result.kp_score,
+        kp_cuspal_score=result.kp_cuspal_score,
+        double_transit=result.double_transit,
     )
 
 

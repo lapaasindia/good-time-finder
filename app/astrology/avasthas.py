@@ -23,6 +23,15 @@ from app.core.enums import ZODIAC_SIGNS
 #   Reversed: 0-6° = Mrita, 6-12° = Vriddha, 12-18° = Yuva,
 #   18-24° = Kumara, 24-30° = Bala
 
+from dataclasses import dataclass
+
+@dataclass
+class PlanetAvastha:
+    planet: str
+    state_en: str
+    state_hi: str
+    score: float
+
 ODD_SIGN_INDICES = {0, 2, 4, 6, 8, 10}  # Aries, Gemini, Leo, Libra, Sag, Aquarius
 EVEN_SIGN_INDICES = {1, 3, 5, 7, 9, 11}  # Taurus, Cancer, Virgo, Scorpio, Cap, Pisces
 
@@ -36,6 +45,26 @@ AVASTHA_STRENGTH: dict[str, float] = {
     "Mrita":   0.10,   # Dead — almost no ability to deliver
 }
 
+
+def compute_all_avasthas(longitudes: dict[str, float]) -> dict[str, PlanetAvastha]:
+    """Calculate the Avasthas for all given planets in both Hindi and English."""
+    result = {}
+    hi_map = {
+        "Bala": "बाल",
+        "Kumara": "कुमार",
+        "Yuva": "युवा",
+        "Vriddha": "वृद्ध",
+        "Mrita": "मृत"
+    }
+    
+    for planet, lon in longitudes.items():
+        if planet in {"Lagna", "Uranus", "Neptune", "Pluto"}:
+            continue
+        state_en, score = compute_avastha(lon)
+        state_hi = hi_map.get(state_en, state_en)
+        result[planet] = PlanetAvastha(planet, state_en, state_hi, score)
+        
+    return result
 
 def compute_avastha(longitude: float) -> tuple[str, float]:
     """Determine planetary avastha (age state) from sidereal longitude.

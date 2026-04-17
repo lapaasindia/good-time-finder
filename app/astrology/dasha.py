@@ -199,9 +199,17 @@ def get_active_dasha(
     mahadashas: list[DashaPeriod],
     dt: datetime,
 ) -> tuple[DashaPeriod | None, DashaPeriod | None]:
+    # Ensure dt is offset-aware for comparison
+    if dt.tzinfo is None:
+        from datetime import timezone
+        dt = dt.replace(tzinfo=timezone.utc)
+    
     active_maha: DashaPeriod | None = None
     for m in mahadashas:
-        if m.start <= dt < m.end:
+        # Normalize m.start and m.end to be offset-aware if they aren't
+        m_start = m.start if m.start.tzinfo else m.start.replace(tzinfo=timezone.utc)
+        m_end = m.end if m.end.tzinfo else m.end.replace(tzinfo=timezone.utc)
+        if m_start <= dt < m_end:
             active_maha = m
             break
 
@@ -211,7 +219,9 @@ def get_active_dasha(
     antardashas = compute_antardashas(active_maha)
     active_antar: DashaPeriod | None = None
     for a in antardashas:
-        if a.start <= dt < a.end:
+        a_start = a.start if a.start.tzinfo else a.start.replace(tzinfo=timezone.utc)
+        a_end = a.end if a.end.tzinfo else a.end.replace(tzinfo=timezone.utc)
+        if a_start <= dt < a_end:
             active_antar = a
             break
 
@@ -222,6 +232,9 @@ def get_active_dasha_full(
     mahadashas: list[DashaPeriod],
     dt: datetime,
 ) -> tuple[DashaPeriod | None, DashaPeriod | None, DashaPeriod | None]:
+    # Ensure dt is offset-aware
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
     active_maha, active_antar = get_active_dasha(mahadashas, dt)
 
     if active_antar is None:
@@ -230,7 +243,9 @@ def get_active_dasha_full(
     pratyantardashas = compute_pratyantardashas(active_antar)
     active_prat: DashaPeriod | None = None
     for p in pratyantardashas:
-        if p.start <= dt < p.end:
+        p_start = p.start if p.start.tzinfo else p.start.replace(tzinfo=timezone.utc)
+        p_end = p.end if p.end.tzinfo else p.end.replace(tzinfo=timezone.utc)
+        if p_start <= dt < p_end:
             active_prat = p
             break
 

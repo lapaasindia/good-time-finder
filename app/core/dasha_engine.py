@@ -4,7 +4,7 @@ Dasha Engine — computes dasha timeline and active periods for a person.
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from app.astrology.dasha import (
     DashaPeriod,
@@ -114,8 +114,13 @@ class DashaEngine:
             sandhi_days = total_days * 0.10
             sandhi_td = timedelta(days=sandhi_days)
 
-            days_from_start = (dt - period.start).total_seconds() / 86400
-            days_to_end = (period.end - dt).total_seconds() / 86400
+            # Normalize datetime for comparison
+            p_start = period.start if period.start.tzinfo else period.start.replace(tzinfo=timezone.utc)
+            p_end = period.end if period.end.tzinfo else period.end.replace(tzinfo=timezone.utc)
+            dt_norm = dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+            
+            days_from_start = (dt_norm - p_start).total_seconds() / 86400
+            days_to_end = (p_end - dt_norm).total_seconds() / 86400
 
             if days_from_start < sandhi_days:
                 # In start-sandhi (incoming period)

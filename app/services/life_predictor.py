@@ -103,6 +103,10 @@ class LifePrediction:
     gulika_penalty: float = 0.0
     badhaka_penalty: float = 0.0
     divisional_scores: dict[str, float] = field(default_factory=dict)
+    bhrigu_bonus: float = 0.0
+    kp_score: float = 0.0
+    kp_cuspal_score: float = 0.0
+    double_transit: float = 0.0
 
 
 # ── Yoga-Dasha Activation ──
@@ -334,6 +338,10 @@ class LifePredictorService:
             natal_longs=natal_longs,
             natal_houses=natal_p_houses
         )
+        # Natal Bhrigu score at birth (transits over BB)
+        natal_bhrigu_score = bhrigu_transit_score(bb_long, natal_longs)
+        # Natal double transit (Jupiter + Saturn vs natal positions)
+        natal_double_transit = double_transit_score(category, natal_longs, natal_p_houses, n_lagna)
 
         slot_scores: list[_SlotScore] = []
 
@@ -518,6 +526,10 @@ class LifePredictorService:
             avg_pushkara = sum(sl.pushkara_bonus_score for sl in slots) / len(slots)
             avg_sudarshana = sum(sl.sudarshana_score for sl in slots) / len(slots)
             avg_sandhi = sum(sl.sandhi_penalty for sl in slots) / len(slots)
+            avg_bhrigu = sum(sl.bhrigu_bonus for sl in slots) / len(slots)
+            avg_kp = sum(sl.kp_score for sl in slots) / len(slots)
+            avg_kp_cuspal = sum(sl.kp_cuspal_score for sl in slots) / len(slots)
+            avg_double_transit = sum(sl.double_transit for sl in slots) / len(slots)
 
             w_maha, w_antar, w_prat = dasha_engine.active_full_at(start)
             if w_maha and w_antar and w_prat:
@@ -552,6 +564,10 @@ class LifePredictorService:
                 pushkara_bonus_score=round(avg_pushkara, 3),
                 sudarshana_score=round(avg_sudarshana, 3),
                 sandhi_penalty=round(avg_sandhi, 3),
+                bhrigu_bonus=round(avg_bhrigu, 3),
+                kp_score=round(avg_kp, 3),
+                kp_cuspal_score=round(avg_kp_cuspal, 3),
+                double_transit=round(avg_double_transit, 3),
             )
 
         max_window_hours = 12
@@ -630,6 +646,10 @@ class LifePredictorService:
             gulika_penalty=gulika_pen,
             badhaka_penalty=badhaka_pen,
             divisional_scores={"d9": d9_score, "d10": d10_score, "d2": d2_score, "d7": d7_score, "vimsopaka": vimsopaka_score},
+            bhrigu_bonus=round(natal_bhrigu_score, 3),
+            kp_score=round(natal_kp_score, 3),
+            kp_cuspal_score=round(natal_kp_cuspal, 3),
+            double_transit=round(natal_double_transit, 3),
         )
 
 

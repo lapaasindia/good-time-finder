@@ -5,893 +5,591 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Jyotish — Vedic Life Predictor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+
   :root {
-    --ink:     #0e0b07;
-    --cream:   #f5f0e8;
-    --gold:    #c8973a;
-    --gold2:   #e8c27a;
-    --rust:    #8b3a2a;
-    --teal:    #1a4a4a;
-    --muted:   #6b5f4e;
-    --card:    #faf7f2;
-    --border:  #ddd5c4;
-    --shadow:  0 4px 32px rgba(14,11,7,.10);
-    --r:       6px;
+    --surface: #131313;
+    --surface-container-lowest: #080808;
+    --surface-container-low: #1b1b1c;
+    --surface-container-high: #2a2a2a;
+    --surface-container-highest: #333333;
+    
+    --primary: #97d94f;
+    --primary-container: #72b02a;
+    --on-primary: #131313;
+    
+    --on-surface: #e5e2e1;
+    --on-surface-variant: #a3a3a3;
+    --outline-variant: rgba(229, 226, 225, 0.15);
+    
+    --shadow-ambient: 0 40px 40px 0 rgba(229, 226, 225, 0.06);
+    --r-lg: 0.5rem;
+    --r-full: 9999px;
   }
 
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; border: none; outline: none; }
 
   html { scroll-behavior: smooth; }
 
   body {
-    background: var(--cream);
-    color: var(--ink);
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 17px;
-    line-height: 1.6;
+    background: var(--surface);
+    color: var(--on-surface);
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    line-height: 1.7;
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
   }
-
-  /* ── BACKGROUND MANDALA ── */
-  body::before {
-    content: '';
+  
+  /* Intentional Asymmetry / Mandala Background Glyph */
+  body::after {
+    content: '✧';
     position: fixed;
-    inset: 0;
-    background:
-      radial-gradient(ellipse 80% 60% at 50% -10%, rgba(200,151,58,.08) 0%, transparent 65%),
-      radial-gradient(ellipse 60% 80% at 100% 60%,  rgba(26,74,74,.06)  0%, transparent 60%),
-      radial-gradient(ellipse 50% 50% at -5%  80%,  rgba(139,58,42,.05) 0%, transparent 55%);
+    right: -5vw;
+    top: 10vh;
+    font-size: 50vw;
+    color: rgba(229, 226, 225, 0.02);
+    z-index: -1;
     pointer-events: none;
-    z-index: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
   }
 
-  /* ── HEADER ── */
+  /* ── Typography ── */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    letter-spacing: -0.04em;
+    line-height: 1.2;
+    color: var(--on-surface);
+  }
+
+  .label-md {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    color: var(--on-surface-variant);
+  }
+
+  /* ── Header (Glassmorphism) ── */
   header {
-    position: relative;
-    z-index: 10;
-    text-align: center;
-    padding: 56px 24px 40px;
-    border-bottom: 1px solid var(--border);
-  }
-  .header-symbol {
-    font-size: 36px;
-    line-height: 1;
-    color: var(--gold);
-    letter-spacing: .2em;
-    margin-bottom: 12px;
-  }
-  header h1 {
-    font-size: clamp(2.2rem, 5vw, 3.4rem);
-    font-weight: 300;
-    letter-spacing: .08em;
-    color: var(--teal);
-    line-height: 1.1;
-  }
-  header h1 em {
-    font-style: italic;
-    color: var(--gold);
-  }
-  header p {
-    margin-top: 10px;
-    font-size: .95rem;
-    color: var(--muted);
-    font-family: 'DM Mono', monospace;
-    letter-spacing: .04em;
-  }
-
-  /* ── MAIN LAYOUT ── */
-  .wrap {
-    position: relative;
-    z-index: 1;
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 0 24px 80px;
-  }
-
-  /* ── FORM CARD ── */
-  .form-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    box-shadow: var(--shadow);
-    padding: 40px 44px;
-    margin: 44px 0 36px;
-  }
-  .form-card h2 {
-    font-size: 1.3rem;
-    font-weight: 400;
-    letter-spacing: .06em;
-    color: var(--teal);
-    margin-bottom: 28px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    text-align: left;
+    padding: 32px 48px;
+    background: rgba(19, 19, 19, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--outline-variant);
     display: flex;
-    align-items: center;
-    gap: 10px;
+    justify-content: space-between;
+    align-items: flex-end;
   }
-  .form-card h2::before { content: '◈'; color: var(--gold); font-size: 1rem; }
+  
+  .header-left h1 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 700;
+  }
+  
+  .header-left h1 em {
+    font-style: normal;
+    color: var(--primary);
+  }
+  
+  .header-left p {
+    margin-top: 8px;
+    font-size: 0.875rem;
+    color: var(--on-surface-variant);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
 
+  /* ── Buttons ── */
+  button, .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-container));
+    color: var(--on-primary);
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: var(--r-lg);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  button:hover, .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-ambient);
+  }
+
+  /* ── Layout ── */
+  .wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 48px 24px 100px;
+    z-index: 1;
+    position: relative;
+  }
+
+  /* ── Form Card (Surface Container Low) ── */
+  .form-card {
+    background: var(--surface-container-low);
+    border-radius: var(--r-lg);
+    padding: 48px;
+    margin-bottom: 80px;
+  }
+  
+  .form-card h2 {
+    font-size: 2rem;
+    margin-bottom: 32px;
+  }
+  
   .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 20px 28px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 40px;
   }
-  .form-group { display: flex; flex-direction: column; gap: 6px; }
-  .form-group label {
-    font-family: 'DM Mono', monospace;
-    font-size: .72rem;
-    letter-spacing: .1em;
-    color: var(--muted);
-    text-transform: uppercase;
-  }
-  .form-group input,
-  .form-group select {
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 10px 12px;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem;
-    color: var(--ink);
-    outline: none;
-    transition: border-color .2s, box-shadow .2s;
-  }
-  .form-group input:focus,
-  .form-group select:focus {
-    border-color: var(--gold);
-    box-shadow: 0 0 0 3px rgba(200,151,58,.12);
-  }
-  .form-group input::placeholder { color: #bbb; }
 
-  /* range row */
+  .form-group label {
+    display: block;
+    margin-bottom: 12px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    color: var(--on-surface-variant);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Input Fields (Recessed) */
+  input, select {
+    width: 100%;
+    background: var(--surface-container-lowest);
+    color: var(--on-surface);
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    padding: 16px;
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  
+  input:focus, select:focus {
+    border-bottom: 2px solid var(--primary);
+    background: var(--surface-container-high);
+  }
+  
+  ::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
+
   .range-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px 28px;
-    margin-top: 4px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 40px;
+    margin-top: 40px;
+    padding-top: 40px;
+    border-top: 1px solid var(--surface-container-high);
   }
 
-  /* category pills */
-  .category-section { margin-top: 28px; }
-  .category-section label {
-    font-family: 'DM Mono', monospace;
-    font-size: .72rem;
-    letter-spacing: .1em;
-    color: var(--muted);
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 10px;
-  }
+  /* ── Chips / Pills (Speed Read Chips) ── */
+  .category-section { margin-top: 48px; }
   .pills {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 16px;
+    margin-top: 16px;
   }
   .pill {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    padding: 6px 14px;
-    border-radius: 50px;
-    border: 1.5px solid var(--border);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: .92rem;
+    background: var(--surface-container-highest);
+    color: var(--on-surface-variant);
+    padding: 12px 24px;
+    border-radius: var(--r-full);
+    font-size: 0.9rem;
+    font-weight: 500;
     cursor: pointer;
-    background: #fff;
-    color: var(--muted);
-    transition: all .18s;
-    user-select: none;
+    transition: all 0.2s ease;
   }
-  .pill:hover { border-color: var(--gold); color: var(--gold); }
+  .pill:hover {
+    background: var(--surface-container-high);
+    color: var(--on-surface);
+  }
   .pill.active {
-    background: var(--teal);
-    border-color: var(--teal);
-    color: #fff;
+    background: var(--primary);
+    color: var(--on-primary);
+    box-shadow: var(--shadow-ambient);
   }
-  .pill-icon { font-size: 1rem; }
 
-  /* submit */
-  .btn-row { margin-top: 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--teal), #1e5555);
-    color: #fff;
-    border: none;
-    padding: 13px 36px;
-    border-radius: 4px;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.05rem;
-    letter-spacing: .08em;
-    cursor: pointer;
-    transition: opacity .2s, transform .15s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .btn-primary:hover { opacity: .88; transform: translateY(-1px); }
-  .btn-primary:active { transform: translateY(0); }
-  .btn-primary:disabled { opacity: .45; cursor: not-allowed; transform: none; }
-
-  /* ── SPINNER ── */
+  .btn-row { margin-top: 48px; display: flex; align-items: center; gap: 24px; }
   .spinner {
+    width: 24px; height: 24px;
+    border: 3px solid var(--outline-variant);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
     display: none;
-    width: 22px; height: 22px;
-    border: 2.5px solid rgba(200,151,58,.3);
-    border-top-color: var(--gold);
-    border-radius: 50%;
-    animation: spin .7s linear infinite;
   }
-  .spinner.show { display: block; }
   @keyframes spin { to { transform: rotate(360deg); } }
+  .status-msg { color: var(--on-surface-variant); font-size: 0.9rem; }
 
-  .status-msg {
-    font-family: 'DM Mono', monospace;
-    font-size: .82rem;
-    color: var(--muted);
+  /* ── Narrative Box / Cards (High Elevation on Hover) ── */
+  .narrative-box, .mini-card, .dosha-card {
+    background: var(--surface-container-low);
+    border-radius: var(--r-lg);
+    padding: 40px;
+    margin-bottom: 40px;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
   }
-  .status-msg.err { color: var(--rust); }
-
-  /* ── RESULTS ── */
-  #results { display: none; }
-  #results.show { display: block; animation: fadeUp .5s ease both; }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: translateY(0); }
+  
+  .narrative-box:hover, .mini-card:hover, .dosha-card:hover {
+    background: var(--surface-container-high);
+    box-shadow: var(--shadow-ambient);
   }
-
-  /* ── OVERVIEW STRIP ── */
-  .overview {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 14px;
+  
+  .narrative-box h3, .sec-head {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.75rem;
     margin-bottom: 32px;
+    color: var(--on-surface);
   }
-  .stat-box {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    padding: 18px 16px;
-    text-align: center;
+
+  /* ── Tabs (Ghost Buttons) ── */
+  .section-nav {
+    display: flex;
+    gap: 16px;
+    margin: 64px 0 48px;
+    overflow-x: auto;
+    padding-bottom: 16px;
   }
-  .stat-box .val {
-    font-size: 1.9rem;
-    font-weight: 300;
-    color: var(--teal);
+  
+  .tab-link {
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--outline-variant);
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 12px 24px;
+    border-radius: var(--r-full);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .tab-link:hover {
+    background: rgba(229, 226, 225, 0.05);
+  }
+  
+  .tab-link.active {
+    background: var(--surface-container-highest);
+    color: var(--on-surface);
+    border-color: transparent;
+  }
+  
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeUp 0.4s ease forwards; }
+  
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Timeline / Perspective Sidebar ── */
+  .timeline-list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .timeline-item {
+    display: flex;
+    gap: 32px;
+    padding: 32px;
+    background: var(--surface-container-lowest);
+    border-radius: var(--r-lg);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease;
+  }
+  
+  .timeline-item:hover {
+    background: var(--surface-container-high);
+  }
+  
+  .tl-date {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    min-width: 160px;
+    z-index: 2;
+  }
+  
+  .tl-content {
+    z-index: 2;
+  }
+  
+  .tl-content h4 {
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+  }
+  
+  .tl-content p {
+    color: var(--on-surface-variant);
+    font-size: 1.1rem;
+  }
+  
+  /* Large low-opacity perspective number/icon */
+  .tl-score {
+    position: absolute;
+    right: -20px;
+    bottom: -20px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 8rem;
+    font-weight: 800;
+    color: var(--on-surface);
+    opacity: 0.03;
     line-height: 1;
-    margin-bottom: 4px;
+    pointer-events: none;
+    z-index: 1;
   }
-  .stat-box .lbl {
-    font-family: 'DM Mono', monospace;
-    font-size: .68rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .stat-box.accent .val { color: var(--gold); }
-  .stat-box.warn   .val { color: var(--rust); }
+  
+  /* Utilities */
+  .text-primary { color: var(--primary); }
+  .text-muted { color: var(--on-surface-variant); }
+  .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 40px; }
+  .gochara-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; }
 
-  /* ── SECTION HEADING ── */
-  .sec-head {
-    font-size: 1.15rem;
-    font-weight: 400;
-    letter-spacing: .06em;
-    color: var(--teal);
-    margin: 32px 0 14px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .sec-head .ico { color: var(--gold); }
 
-  /* ── NARRATIVE BOX ── */
-  .narrative-box {
-    background: linear-gradient(135deg, #fef9f2, #f5f0e8);
-    border-left: 3px solid var(--gold);
-    border-radius: 0 var(--r) var(--r) 0;
-    padding: 18px 22px;
-    font-size: 1.05rem;
-    font-style: italic;
-    color: var(--ink);
-    line-height: 1.8;
-    margin-bottom: 28px;
+  /* Adjusting Typography & Spacing for Better Readability (Un-zoomed) */
+  body {
+    font-size: 0.95rem;
+    line-height: 1.6;
   }
-
-  /* ── ALERT BANNERS ── */
-  .alert {
-    padding: 12px 18px;
-    border-radius: var(--r);
-    margin-bottom: 12px;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: .96rem;
+  
+  .display-lg { font-size: 2.5rem; }
+  
+  header {
+    padding: 20px 32px;
   }
-  .alert-warn {
-    background: #fff5f0;
-    border: 1px solid #f0bfb0;
-    color: var(--rust);
+  
+  .header-left h1 {
+    font-size: clamp(2rem, 4vw, 2.5rem);
   }
-  .alert-info {
-    background: #f0f8f5;
-    border: 1px solid #b0d8cc;
-    color: var(--teal);
+  
+  .wrap {
+    padding: 32px 24px 80px;
+    max-width: 1100px;
   }
-  .alert-neutral {
-    background: #f9f7f0;
-    border: 1px solid var(--border);
-    color: var(--muted);
+  
+  .form-card, .narrative-box, .mini-card, .dosha-card {
+    padding: 24px 32px;
+    margin-bottom: 24px;
   }
-  .alert-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
-
-  /* ── TWO-COL ── */
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  @media (max-width: 640px) { .two-col { grid-template-columns: 1fr; } }
-
-  /* ── MINI CARD ── */
-  .mini-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    padding: 18px 20px;
+  
+  .form-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 24px;
   }
-  .mini-card h4 {
-    font-size: .82rem;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 12px;
+  
+  .form-grid {
+    gap: 20px;
   }
-
-  /* ── DASHA TIMELINE ── */
-  .dasha-item {
-    display: flex;
-    align-items: center;
+  
+  input, select {
+    padding: 12px 16px;
+    font-size: 0.95rem;
+  }
+  
+  .range-row {
+    gap: 20px;
+    margin-top: 24px;
+    padding-top: 24px;
+  }
+  
+  .pill {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+  }
+  
+  .narrative-box h3, .sec-head {
+    font-size: 1.25rem;
+    margin-bottom: 20px;
+  }
+  
+  .section-nav {
+    margin: 40px 0 32px;
     gap: 12px;
-    padding: 8px 0;
-    border-bottom: 1px dashed var(--border);
   }
-  .dasha-item:last-child { border-bottom: none; }
-  .dasha-dot {
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    background: var(--gold);
-    flex-shrink: 0;
+  
+  .tab-link {
+    padding: 8px 16px;
+    font-size: 0.9rem;
   }
-  .dasha-dot.antar { background: var(--teal); width: 7px; height: 7px; }
-  .dasha-planet { font-size: 1rem; font-weight: 600; min-width: 80px; color: var(--teal); }
-  .dasha-dates { font-family: 'DM Mono', monospace; font-size: .78rem; color: var(--muted); }
-  .dasha-level {
+  
+  .timeline-item {
+    padding: 20px 24px;
+    gap: 24px;
+  }
+  
+  .tl-date {
+    font-size: 1.1rem;
+    min-width: 120px;
+  }
+  
+  .tl-content h4 {
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+  }
+  
+  .tl-content p {
+    font-size: 0.95rem;
+  }
+  
+  .tl-score {
+    font-size: 4rem;
+    bottom: -10px;
+    right: -10px;
+  }
+  
+  .two-col, .gochara-grid {
+    gap: 24px;
+  }
+  
+  th, td {
+    padding: 12px 16px;
+    font-size: 0.85rem;
+  }
+  
+  /* Fix broken UI lists and grids */
+  ul, ol { margin-left: 20px; }
+  li { margin-bottom: 4px; }
+  
+  .score-tag {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
     font-family: 'DM Mono', monospace;
-    font-size: .65rem;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    padding: 2px 7px;
-    border-radius: 3px;
-    background: var(--border);
-    color: var(--muted);
+    font-size: 0.75rem;
+    background: var(--surface-container-high);
   }
-  .dasha-level.maha { background: rgba(200,151,58,.15); color: var(--gold); }
-
-  /* ── YOGAS ── */
+  .score-tag.good { color: var(--primary); background: rgba(151, 217, 79, 0.1); }
+  .score-tag.bad { color: #e05e5e; background: rgba(224, 94, 94, 0.1); }
+  
   .yoga-chip {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 4px 12px;
-    border-radius: 50px;
-    background: rgba(26,74,74,.08);
-    border: 1px solid rgba(26,74,74,.18);
-    color: var(--teal);
-    font-size: .9rem;
-    margin: 3px;
+    background: var(--surface-container-highest);
+    padding: 6px 12px;
+    border-radius: 20px;
+    margin: 4px;
+    font-size: 0.85rem;
   }
-  .yoga-chip .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+  .yoga-chip .dot {
+    width: 8px; height: 8px; border-radius: 50%; margin-right: 8px;
+  }
 
-  /* ── PLANET TABLE ── */
-  .planet-table { width: 100%; border-collapse: collapse; font-size: .93rem; }
-  .planet-table th {
-    font-family: 'DM Mono', monospace;
-    font-size: .68rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding: 6px 10px;
-    text-align: left;
-    border-bottom: 1px solid var(--border);
-  }
-  .planet-table td { padding: 8px 10px; border-bottom: 1px solid #f0ebe0; }
-  .planet-table tr:last-child td { border-bottom: none; }
-  .bar-wrap { width: 90px; height: 6px; background: #e8e0d0; border-radius: 3px; overflow: hidden; }
-  .bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--teal), var(--gold)); }
-
-  /* ── WINDOWS TABLE ── */
-  .score-badge {
-    display: inline-block;
-    padding: 2px 9px;
-    border-radius: 50px;
-    font-family: 'DM Mono', monospace;
-    font-size: .78rem;
-    font-weight: 500;
-  }
-  .score-high   { background: rgba(26,74,74,.1);   color: var(--teal); }
-  .score-medium { background: rgba(200,151,58,.15); color: #9a6e1e; }
-  .score-low    { background: rgba(139,58,42,.08);  color: var(--rust); }
-  .nature-good { color: #2a6b3a; font-size: .8rem; }
-  .nature-bad  { color: var(--rust); font-size: .8rem; }
-
-  /* ── HEATMAP ── */
-  .heatmap-wrap {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--r);
-    overflow: hidden;
-    margin-bottom: 28px;
-  }
-  .heatmap-scroll { overflow-x: auto; }
-  .heatmap-table {
+  /* Tables */
+  table {
+    width: 100%;
     border-collapse: collapse;
-    min-width: 100%;
-    table-layout: fixed;
+    background: var(--surface-container-lowest);
+    border-radius: var(--r-lg);
+    overflow: hidden;
   }
-  .hm-label-col { width: 116px; min-width: 116px; }
-  .hm-month-col { width: 38px;  min-width: 32px; }
-
-  /* header rows */
-  .hm-yr-th {
-    font-family: 'DM Mono', monospace;
-    font-size: .78rem;
-    font-weight: 500;
-    letter-spacing: .06em;
-    color: var(--teal);
-    background: #f0ebe0;
-    padding: 7px 0;
-    text-align: center;
-    border-right: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-  }
-  .hm-mo-th {
-    font-family: 'DM Mono', monospace;
-    font-size: .62rem;
-    color: var(--muted);
-    background: #faf7f2;
-    text-align: center;
-    padding: 4px 0;
-    border-right: 1px solid #ede7da;
-    border-bottom: 2px solid var(--border);
-  }
-  .hm-label-th {
-    background: #f0ebe0;
-    border-bottom: 2px solid var(--border);
-    border-right: 2px solid var(--border);
-  }
-
-  /* row label */
-  .hm-row-label {
-    font-size: .82rem;
-    padding: 0 10px 0 12px;
-    white-space: nowrap;
-    border-right: 2px solid var(--border);
-    border-bottom: 1px solid #ede7da;
-    background: #faf7f2;
-    vertical-align: middle;
-    height: 28px;
-    color: var(--ink);
-  }
-  .hm-row-label span { color: var(--muted); font-family:'DM Mono',monospace; font-size:.65rem; margin-left:4px; }
-
-  /* cells */
-  .hm-cell {
-    height: 28px;
-    min-width: 14px;
-    border-right: 1px solid rgba(255,255,255,.4);
-    border-bottom: 1px solid rgba(255,255,255,.3);
-    cursor: pointer;
-    position: relative;
-    transition: filter .12s, transform .1s;
-  }
-  .hm-cell:hover { filter: brightness(1.15); transform: scaleY(1.08); z-index: 2; }
-  .hm-cell.year-sep { border-right: 2px solid rgba(255,255,255,.7); }
-
-  /* ── SCORE COLOUR SCALE ── */
-  /* very good:  deep green  */
-  /* good:       green       */
-  /* neutral:    amber/gold  */
-  /* caution:    orange      */
-  /* bad:        red         */
-
-  /* ── HEATMAP LEGEND ── */
-  .hm-legend {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
-    padding: 10px 14px;
-    border-top: 1px solid var(--border);
-    background: #faf7f2;
-  }
-  .hm-legend-label {
-    font-family: 'DM Mono', monospace;
-    font-size: .68rem;
-    letter-spacing: .07em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-right: 4px;
-  }
-  .hm-swatch {
-    width: 18px; height: 12px;
-    border-radius: 2px;
-    display: inline-block;
-  }
-  .hm-swatch-lbl {
-    font-family: 'DM Mono', monospace;
-    font-size: .68rem;
-    color: var(--muted);
-    margin-right: 8px;
-  }
-
-  /* ── TOOLTIP ── */
-  .hm-tooltip {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    background: var(--teal);
-    color: #fff;
-    padding: 8px 13px;
-    border-radius: 5px;
-    font-family: 'DM Mono', monospace;
-    font-size: .78rem;
-    line-height: 1.5;
-    pointer-events: none;
-    max-width: 260px;
-    box-shadow: 0 4px 20px rgba(0,0,0,.25);
-    white-space: normal;
-  }
-  .hm-tooltip.show { display: block; }
-  .hm-tooltip::before {
-    content: '';
-    position: absolute;
-    bottom: -5px; left: 14px;
-    width: 10px; height: 10px;
-    background: var(--teal);
-    transform: rotate(45deg);
-    border-radius: 2px;
-  }
-
-  /* ── DETAIL PANEL ── */
-  .hm-detail {
-    display: none;
-    border-top: 1px solid var(--border);
-    padding: 16px 18px;
-    background: #fff;
-    animation: fadeUp .2s ease both;
-  }
-  .hm-detail.show { display: block; }
-  .hm-detail-head {
-    font-size: 1rem;
+  
+  th {
+    text-align: left;
+    padding: 20px 24px;
+    background: var(--surface-container-high);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--on-surface-variant);
     font-weight: 600;
-    color: var(--teal);
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .win-list { display: flex; flex-direction: column; gap: 6px; }
-  .win-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr auto auto;
-    gap: 8px 16px;
-    align-items: center;
-    padding: 7px 10px;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-    font-size: .88rem;
-  }
-  .win-row.good   { border-left: 3px solid #3a8a4a; background: rgba(58,138,74,.04); }
-  .win-row.medium { border-left: 3px solid var(--gold); background: rgba(200,151,58,.04); }
-  .win-row.bad    { border-left: 3px solid var(--rust); background: rgba(139,58,42,.04); }
-  .win-dates { font-family: 'DM Mono', monospace; font-size: .78rem; color: var(--muted); }
-  .win-dur   { font-family: 'DM Mono', monospace; font-size: .78rem; }
-
-  /* ── SADE SATI TIMELINE ── */
-  .ss-timeline { display: flex; flex-direction: column; gap: 0; }
-  .ss-phase {
-    display: flex;
-    align-items: stretch;
-    gap: 16px;
-    padding: 14px 0;
-    border-bottom: 1px dashed var(--border);
-    position: relative;
-  }
-  .ss-phase:last-child { border-bottom: none; }
-  .ss-line { width: 3px; border-radius: 2px; flex-shrink: 0; background: var(--border); }
-  .ss-line.moderate { background: var(--gold2); }
-  .ss-line.high     { background: var(--rust); }
-  .ss-content { flex: 1; }
-  .ss-phase-name {
-    font-weight: 600;
-    font-size: 1.05rem;
-    color: var(--teal);
-  }
-  .ss-dates {
-    font-family: 'DM Mono', monospace;
-    font-size: .78rem;
-    color: var(--muted);
-    margin: 2px 0 4px;
-  }
-  .ss-badge {
-    display: inline-block;
-    padding: 2px 10px;
-    border-radius: 50px;
-    font-size: .75rem;
-    font-family: 'DM Mono', monospace;
-  }
-  .ss-badge.moderate { background: rgba(232,194,122,.2); color: #9a6e1e; }
-  .ss-badge.high     { background: rgba(139,58,42,.12);  color: var(--rust); }
-  .ss-active-tag {
-    display: inline-block;
-    background: var(--rust);
-    color: #fff;
-    font-family: 'DM Mono', monospace;
-    font-size: .68rem;
-    padding: 2px 8px;
-    border-radius: 3px;
-    margin-left: 8px;
-    vertical-align: middle;
-    letter-spacing: .05em;
-  }
-
-  /* ── TIMELINE EVENTS ── */
-  .timeline-list { display: flex; flex-direction: column; gap: 0; }
-  .timeline-event {
-    display: grid;
-    grid-template-columns: 110px 3px 1fr;
-    gap: 0 16px;
-    padding: 0 0 24px;
-    position: relative;
-  }
-  .tl-date {
-    font-family: 'DM Mono', monospace;
-    font-size: .76rem;
-    color: var(--muted);
-    padding-top: 3px;
-    text-align: right;
-  }
-  .tl-spine { position: relative; }
-  .tl-spine::before {
-    content: '';
-    position: absolute;
-    top: 8px; bottom: -8px;
-    left: 50%;
-    width: 1px;
-    background: var(--border);
-    transform: translateX(-50%);
-  }
-  .tl-dot {
-    position: absolute;
-    top: 3px; left: 50%;
-    transform: translateX(-50%);
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    background: var(--gold);
-    border: 2px solid var(--cream);
-    z-index: 1;
-  }
-  .tl-dot.neg { background: var(--rust); }
-  .tl-dot.nat { background: var(--teal); }
-  .tl-body { padding-top: 1px; }
-  .tl-title { font-size: 1rem; font-weight: 400; color: var(--ink); margin-bottom: 2px; }
-  .tl-desc  { font-size: .88rem; color: var(--muted); font-style: italic; }
-  .tl-cat {
-    display: inline-block;
-    padding: 1px 8px;
-    border-radius: 3px;
-    background: var(--border);
-    font-family: 'DM Mono', monospace;
-    font-size: .65rem;
     text-transform: uppercase;
-    letter-spacing: .06em;
-    color: var(--muted);
-    margin-bottom: 4px;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
   }
-  .tl-score {
-    font-family: 'DM Mono', monospace;
-    font-size: .76rem;
-    margin-left: 6px;
+  
+  td {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--surface-container-low);
+    color: var(--on-surface);
   }
-  .tl-score.pos { color: #2a6b3a; }
-  .tl-score.neg { color: var(--rust); }
+  
+  tr:last-child td { border-bottom: none; }
 
-  /* ── GOCHARA PLANET BARS ── */
-  .gochara-grid { display: flex; flex-direction: column; gap: 8px; }
-  .gochara-row { display: flex; align-items: center; gap: 12px; }
-  .gochara-planet { width: 70px; font-size: .9rem; color: var(--teal); }
-  .gochara-bar-wrap {
-    flex: 1;
-    height: 8px;
-    background: #e8e0d0;
-    border-radius: 4px;
-    overflow: visible;
-    position: relative;
+  /* Dropdown search */
+  #city-dropdown {
+    background: var(--surface-container-high) !important;
+    border: none !important;
+    border-radius: 0 0 var(--r-lg) var(--r-lg) !important;
+    box-shadow: var(--shadow-ambient);
   }
-  .gochara-bar {
-    position: absolute;
-    top: 0; height: 100%;
-    border-radius: 4px;
-    transition: width .4s ease;
-  }
-  .gochara-bar.pos { background: linear-gradient(90deg, var(--teal), var(--gold)); left: 50%; }
-  .gochara-bar.neg { background: linear-gradient(90deg, var(--rust), #e08060); right: 50%; }
-  .gochara-center { position: absolute; left: 50%; top: -2px; width: 1px; height: 12px; background: var(--border); }
-  .gochara-val {
-    width: 42px;
-    text-align: right;
-    font-family: 'DM Mono', monospace;
-    font-size: .78rem;
-    color: var(--muted);
-  }
-
-  /* ── DOSHA ROWS ── */
-  .dosha-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 9px 0;
-    border-bottom: 1px dashed var(--border);
-    font-size: .96rem;
-  }
-  .dosha-row:last-child { border-bottom: none; }
-  .dosha-name { color: var(--ink); }
-  .dosha-yes { color: var(--rust); font-family: 'DM Mono', monospace; font-size: .82rem; }
-  .dosha-no  { color: #2a6b3a;    font-family: 'DM Mono', monospace; font-size: .82rem; }
-
-  /* ── FILTER TABS ── */
-  .filter-bar {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 18px;
-  }
-  .filter-tab {
-    padding: 5px 14px;
-    border-radius: 50px;
-    border: 1.5px solid var(--border);
-    font-family: 'DM Mono', monospace;
-    font-size: .72rem;
-    letter-spacing: .07em;
-    text-transform: uppercase;
+  #city-dropdown div {
+    padding: 12px 16px;
     cursor: pointer;
-    background: #fff;
-    color: var(--muted);
-    transition: all .15s;
+    color: var(--on-surface);
   }
-  .filter-tab:hover { border-color: var(--gold); color: var(--gold); }
-  .filter-tab.active {
-    background: var(--teal);
-    border-color: var(--teal);
-    color: #fff;
+  #city-dropdown div:hover {
+    background: var(--surface-container-low);
+    color: var(--primary);
   }
 
-  /* ── SECTION TABS (top nav) ── */
-  .section-nav {
-    display: flex;
-    gap: 4px;
-    flex-wrap: wrap;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 28px;
-  }
-  .section-tab {
-    padding: 10px 18px;
-    font-family: 'DM Mono', monospace;
-    font-size: .76rem;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    cursor: pointer;
-    border: none;
+  /* Heatmap */
+  #hm-view-heatmap, #hm-view-list {
     background: transparent;
-    color: var(--muted);
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    transition: all .15s;
-  }
-  .section-tab:hover { color: var(--teal); }
-  .section-tab.active {
-    color: var(--teal);
-    border-bottom-color: var(--gold);
-  }
-
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; animation: fadeUp .3s ease both; }
-
-  .score-tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
-    font-weight: 500;
-  }
-  .score-tag.good { color: #1a4a4a; }
-  .score-tag.bad { color: #8b3a2a; }
-
-  /* ── MOBILE ── */
-  @media (max-width: 600px) {
-    .form-card { padding: 28px 20px; }
-    .form-grid { grid-template-columns: 1fr; }
-    .range-row { grid-template-columns: 1fr; }
-    header { padding: 36px 16px 28px; }
-  }
-
-  /* ── EMPTY STATE ── */
-  .empty {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--muted);
-    font-style: italic;
-  }
-  /* ── EXPORT PDF BUTTON ── */
-  .export-btn {
-    position: fixed;
-    top: 20px;
-    right: 24px;
-    z-index: 1000;
-    background: var(--teal);
-    color: #fff;
-    border: none;
-    padding: 10px 18px;
-    border-radius: var(--r);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
+    color: var(--primary);
+    border: 1px solid var(--outline-variant);
+    padding: 8px 16px;
+    border-radius: var(--r-full);
     cursor: pointer;
-    box-shadow: var(--shadow);
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    font-size: 0.875rem;
   }
-  .export-btn:hover {
-    background: #0d3d3d;
-    transform: translateY(-1px);
+  #hm-view-heatmap.active, #hm-view-list.active {
+    background: var(--primary);
+    color: var(--on-primary);
+    border-color: var(--primary);
   }
-  .export-btn:disabled {
-    background: var(--muted);
-    cursor: not-allowed;
-    opacity: 0.7;
+  
+  .hm-tooltip {
+    background: var(--surface-container-highest) !important;
+    color: var(--on-surface) !important;
+    border: none !important;
+    border-radius: var(--r-lg) !important;
+    box-shadow: var(--shadow-ambient) !important;
+    padding: 16px !important;
+    font-family: 'Inter', sans-serif !important;
   }
-  .export-btn.spin::after {
-    content: '';
-    width: 14px;
-    height: 14px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+  .hm-tooltip strong {
+    color: var(--primary) !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 1.1rem !important;
+    display: block; margin-bottom: 8px;
   }
-  @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── PRINT STYLES ── */
-  @media print {
-    .export-btn, nav, .form-card, #tab-timeline, #tab-natal, #tab-dashas, #tab-doshas {
-      display: none !important;
-    }
-    .tab-panel { display: block !important; }
-    #tab-predict { display: block !important; page-break-before: always; }
-    body { background: white; }
-    .wrap { max-width: 100%; padding: 0 20px; }
-  }
 </style>
 <script src="https://unpkg.com/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js" onerror="console.error('html2pdf.js failed to load from CDN')"></script>
 </head>
 <body>
 
-<button class="export-btn" id="export-pdf-btn" onclick="exportToPDF()" title="Export full report as PDF">
-  <span>↓</span> Export PDF
-</button>
+
 
 <header>
-  <div class="header-symbol">☽ ☀ ♃</div>
-  <h1>Vedic <em>Life Predictor</em></h1>
-  <p>Jyotish · Dasha · Gochara · Yogas · Sade Sati</p>
+  <div class="header-left">
+    <h1>The Illuminated <em>Archive</em></h1>
+    <p>Astrological Synthesis & Predictive Timelines</p>
+  </div>
+  <div class="header-actions">
+    <button class="btn-primary" id="export-pdf-btn" onclick="exportToPDF()" title="Export full report as PDF">
+      Download Complete Report
+    </button>
+  </div>
 </header>
 
 <div class="wrap">
@@ -932,21 +630,21 @@
           <input id="f-city-search" type="text" placeholder="Type a city name…" autocomplete="off"
             style="width:100%;padding-right:36px"
             oninput="filterCities(this.value)" onfocus="showDropdown()" onblur="hideDropdownSoon()"/>
-          <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none">⌕</span>
+          <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--on-surface-variant);pointer-events:none">⌕</span>
           <div id="city-dropdown" style="
             display:none;position:absolute;top:100%;left:0;right:0;z-index:999;
-            background:#fff;border:1px solid var(--border);border-top:none;
+            background:#fff;border:1px solid var(--outline-variant);border-top:none;
             border-radius:0 0 4px 4px;max-height:220px;overflow-y:auto;
             box-shadow:0 8px 24px rgba(14,11,7,.12);
           "></div>
         </div>
       </div>
       <div class="form-group">
-        <label>Latitude <span style="font-size:.75rem;color:var(--muted)">(auto-filled or override)</span></label>
+        <label>Latitude <span style="font-size:.75rem;color:var(--on-surface-variant)">(auto-filled or override)</span></label>
         <input id="f-lat" type="number" step="0.0001" placeholder="e.g. 28.6139" value="28.6139"/>
       </div>
       <div class="form-group">
-        <label>Longitude <span style="font-size:.75rem;color:var(--muted)">(auto-filled or override)</span></label>
+        <label>Longitude <span style="font-size:.75rem;color:var(--on-surface-variant)">(auto-filled or override)</span></label>
         <input id="f-lon" type="number" step="0.0001" placeholder="e.g. 77.2090" value="77.2090"/>
       </div>
     </div>
@@ -1056,18 +754,18 @@
     <!-- PREDICTIONS TAB -->
     <div class="tab-panel" id="tab-predict">
       <div id="pred-controls" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px">
-        <span style="font-family:'DM Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">View:</span>
+        <span style="font-family:'DM Mono',monospace;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--on-surface-variant)">View:</span>
         <div class="filter-tab active" id="hm-view-heatmap" onclick="switchPredView('heatmap',this)">◫ Heatmap</div>
         <div class="filter-tab" id="hm-view-list" onclick="switchPredView('list',this)">☰ Best Windows</div>
         <div style="margin-left:auto;display:flex;gap:6px;align-items:center">
-          <span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted)">Grouping:</span>
-          <select id="hm-time-group" style="font-family:'DM Mono',monospace;font-size:.75rem;padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:#fff;color:var(--teal);margin-right:12px" onchange="renderHeatmap()">
+          <span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--on-surface-variant)">Grouping:</span>
+          <select id="hm-time-group" style="font-family:'DM Mono',monospace;font-size:.75rem;padding:4px 8px;border:1px solid var(--outline-variant);border-radius:4px;background:#fff;color:var(--primary);margin-right:12px" onchange="renderHeatmap()">
             <option value="month">Monthly</option>
             <option value="week">Weekly</option>
             <option value="day">Daily</option>
           </select>
-          <span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted)">Filter aspect:</span>
-          <select id="hm-cat-filter" style="font-family:'DM Mono',monospace;font-size:.75rem;padding:4px 8px;border:1px solid var(--border);border-radius:4px;background:#fff;color:var(--teal)" onchange="refreshPredView()">
+          <span style="font-family:'DM Mono',monospace;font-size:.68rem;color:var(--on-surface-variant)">Filter aspect:</span>
+          <select id="hm-cat-filter" style="font-family:'DM Mono',monospace;font-size:.75rem;padding:4px 8px;border:1px solid var(--outline-variant);border-radius:4px;background:#fff;color:var(--primary)" onchange="refreshPredView()">
             <option value="all">All aspects</option>
           </select>
         </div>
@@ -1122,7 +820,7 @@
 </div>
 
 <script>
-const API = 'http://localhost:8000';
+const API = '';
 let _selectedCats = new Set(['all']);
 let _results = {};
 let _tlActiveFilter = 'all';
@@ -1222,17 +920,17 @@ function filterCities(query) {
 function renderCityDropdown(cities, highlight) {
   const dd = document.getElementById('city-dropdown');
   if (!cities.length) {
-    dd.innerHTML = '<div style="padding:10px 14px;color:var(--muted);font-style:italic;font-size:.9rem">No cities found</div>';
+    dd.innerHTML = '<div style="padding:10px 14px;color:var(--on-surface-variant);font-style:italic;font-size:.9rem">No cities found</div>';
     return;
   }
   dd.innerHTML = cities.map((c, i) => {
     const label = highlight
-      ? c.name.replace(new RegExp(`(${highlight})`, 'gi'), '<strong style="color:var(--teal)">$1</strong>')
+      ? c.name.replace(new RegExp(`(${highlight})`, 'gi'), '<strong style="color:var(--primary)">$1</strong>')
       : c.name;
     return `<div class="city-option" data-idx="${i}" onmousedown="selectCity('${c.name.replace(/'/,"'")}',${c.lat},${c.lon},'${c.tz}')"
       style="padding:9px 14px;cursor:pointer;font-size:.96rem;border-bottom:1px solid #f5f0e8;transition:background .12s"
-      onmouseenter="this.style.background='rgba(200,151,58,.08)'" onmouseleave="this.style.background=''"
-    >${label} <span style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted);margin-left:6px">${c.tz}</span></div>`;
+      onmouseenter="this.style.background='var(--surface-container-high)'" onmouseleave="this.style.background=''"
+    >${label} <span style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--on-surface-variant);margin-left:6px">${c.tz}</span></div>`;
   }).join('');
 }
 
@@ -1244,7 +942,7 @@ function selectCity(name, lat, lon, tz) {
   document.getElementById('city-dropdown').style.display = 'none';
   // flash confirmation
   const search = document.getElementById('f-city-search');
-  search.style.borderColor = 'var(--gold)';
+  search.style.borderColor = 'var(--primary)';
   search.style.boxShadow   = '0 0 0 3px rgba(200,151,58,.18)';
   setTimeout(() => { search.style.borderColor = ''; search.style.boxShadow = ''; }, 1200);
 }
@@ -1817,7 +1515,7 @@ function renderHeatmap() {
   for (const ys of yearSpans) {
     html += `<th class="hm-yr-th" colspan="${ys.span}">${ys.y}</th>`;
   }
-  html += `</tr><tr><th class="hm-label-th" style="padding:4px 10px;font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);font-weight:400;text-transform:uppercase;letter-spacing:.08em;border-right:2px solid var(--border);background:#faf7f2">Aspect</th>`;
+  html += `</tr><tr><th class="hm-label-th" style="padding:4px 10px;font-family:'DM Mono',monospace;font-size:.65rem;color:var(--on-surface-variant);font-weight:400;text-transform:uppercase;letter-spacing:.08em;border-right:2px solid var(--outline-variant);background:#faf7f2">Aspect</th>`;
   for (let i = 0; i < cols.length; i++) {
     const isLastOfYear = i === cols.length-1 || cols[i+1].y !== cols[i].y;
     html += `<th class="hm-mo-th${isLastOfYear?' year-sep':''}">${cols[i].label}</th>`;
@@ -1898,7 +1596,7 @@ Avg score: ${avg!==null?avg.toFixed(2):'—'}${extraTip}`);
     <span class="hm-swatch" style="background:rgba(190,65,45,.85)"></span>
     <span class="hm-swatch" style="background:rgba(140,25,20,.90)"></span><span class="hm-swatch-lbl">Difficult</span>
     <span class="hm-swatch" style="background:rgba(220,210,195,.3);margin-left:8px"></span><span class="hm-swatch-lbl">No data</span>
-    <span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--muted)">Click any cell for details</span>
+    <span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--on-surface-variant)">Click any cell for details</span>
   </div>`;
 
   // detail panel
@@ -1950,7 +1648,7 @@ function hmClick(cat, key, label, startTs, endTs) {
   _hmDetailState = {cat, key: key};
 
   if (!windows.length) {
-    detail.innerHTML = `<div class="hm-detail-head">${CAT_ICONS[cat]} ${cat} · ${label} <span style="font-size:.78rem;color:var(--muted);font-weight:400">— no windows this period</span></div>`;
+    detail.innerHTML = `<div class="hm-detail-head">${CAT_ICONS[cat]} ${cat} · ${label} <span style="font-size:.78rem;color:var(--on-surface-variant);font-weight:400">— no windows this period</span></div>`;
     detail.classList.add('show');
     return;
   }
@@ -1958,26 +1656,26 @@ function hmClick(cat, key, label, startTs, endTs) {
   const sorted = [...windows].sort((a,b) => parseFloat(b.composite_score) - parseFloat(a.composite_score));
   let html = `<div class="hm-detail-head">
     ${CAT_ICONS[cat]} ${cat.charAt(0).toUpperCase()+cat.slice(1)} · ${label}
-    <span style="font-size:.78rem;color:var(--muted);font-weight:400;margin-left:4px">${windows.length} window${windows.length!==1?'s':''}</span>
+    <span style="font-size:.78rem;color:var(--on-surface-variant);font-weight:400;margin-left:4px">${windows.length} window${windows.length!==1?'s':''}</span>
     <button onclick="document.getElementById('hm-detail').classList.remove('show');_hmDetailState=null"
-      style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--muted);font-size:1.1rem">✕</button>
+      style="margin-left:auto;background:none;border:none;cursor:pointer;color:var(--on-surface-variant);font-size:1.1rem">✕</button>
   </div><div class="win-list">`;
   for (const w of sorted.slice(0, 12)) {
     const score = parseFloat(w.composite_score);
     const cls = score >= 1.5 ? 'good' : score >= -1.5 ? 'medium' : 'bad';
     const dur = Math.round(w.duration_minutes / 60);
     const evts = (w.active_events||[]).slice(0,3).join(', ') || '—';
-    const dasha = w.dasha_active && w.dasha_active[0] ? `<span style="color:var(--teal);margin-right:6px">☽ ${w.dasha_active[0]}</span>` : '';
+    const dasha = w.dasha_active && w.dasha_active[0] ? `<span style="color:var(--primary);margin-right:6px">☽ ${w.dasha_active[0]}</span>` : '';
     html += `<div class="win-row ${cls}">
       <div>
         <div class="win-dates">${w.start.slice(0,10)} → ${w.end.slice(0,10)}</div>
-        <div style="font-size:.82rem;color:var(--muted);font-style:italic;margin-top:2px">${dasha}${evts}</div>
-        <div style="font-size:.75rem;color:var(--muted);margin-top:2px">Tara: ${(w.tara_score||0).toFixed(2)} | Chandra: ${(w.chandra_bala_score||0).toFixed(2)} | Avastha: ${(w.avastha_score||0).toFixed(2)} | Pushkara: ${(w.pushkara_bonus_score||0).toFixed(2)} | Sudarshana: ${(w.sudarshana_score||0).toFixed(2)} | Sandhi: ${(w.sandhi_penalty||0).toFixed(2)}</div>
-            <div style="font-size:.75rem;color:var(--muted);margin-top:2px;border-top:1px dashed var(--border);padding-top:2px">Double Transit: ${(w.double_transit||0).toFixed(2)} | True KP Cusp: ${(w.kp_cuspal_score||0).toFixed(2)} | Bhrigu: ${(w.bhrigu_bonus||0).toFixed(2)} | KP Base: ${(w.kp_score||0).toFixed(2)}</div>
+        <div style="font-size:.82rem;color:var(--on-surface-variant);font-style:italic;margin-top:2px">${dasha}${evts}</div>
+        <div style="font-size:.75rem;color:var(--on-surface-variant);margin-top:2px">Tara: ${(w.tara_score||0).toFixed(2)} | Chandra: ${(w.chandra_bala_score||0).toFixed(2)} | Avastha: ${(w.avastha_score||0).toFixed(2)} | Pushkara: ${(w.pushkara_bonus_score||0).toFixed(2)} | Sudarshana: ${(w.sudarshana_score||0).toFixed(2)} | Sandhi: ${(w.sandhi_penalty||0).toFixed(2)}</div>
+            <div style="font-size:.75rem;color:var(--on-surface-variant);margin-top:2px;border-top:1px dashed var(--outline-variant);padding-top:2px">Double Transit: ${(w.double_transit||0).toFixed(2)} | True KP Cusp: ${(w.kp_cuspal_score||0).toFixed(2)} | Bhrigu: ${(w.bhrigu_bonus||0).toFixed(2)} | KP Base: ${(w.kp_score||0).toFixed(2)}</div>
       </div>
       <div class="win-dur">${dur < 48 ? dur+'h' : Math.round(dur/24)+'d'}</div>
       <div>${scoreBadge(w.composite_score)}</div>
-      <div style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted)">${w.nature}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--on-surface-variant)">${w.nature}</div>
     </div>`;
   }
   html += `</div>`;
@@ -2000,13 +1698,13 @@ function renderListView() {
     const top = [...bestW, ...worstW].sort((a,b) => parseFloat(b.composite_score) - parseFloat(a.composite_score));
     html += `<div class="sec-head"><span class="ico">${CAT_ICONS[cat]}</span>
       ${cat.charAt(0).toUpperCase()+cat.slice(1)}
-      <small style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted);margin-left:auto">
+      <small style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--on-surface-variant);margin-left:auto">
         Overall ${pred.overall_period_score.toFixed(2)} · ${pred.total_windows} windows
       </small></div>`;
       
     // Render the new advanced predictive features
-    html += `<div style="font-size:0.8rem; margin-bottom: 12px; padding: 8px; background: var(--cream); border-radius: 4px; border: 1px solid var(--border);">
-      <strong style="color:var(--teal)">Advanced Indicators:</strong> 
+    html += `<div style="font-size:0.8rem; margin-bottom: 12px; padding: 8px; background: transparent; border-radius: 4px; border: 1px solid var(--outline-variant);">
+      <strong style="color:var(--primary)">Advanced Indicators:</strong> 
       Jaimini: <span class="${pred.jaimini_score >= 0 ? 'score-tag good' : 'score-tag bad'}">${(pred.jaimini_score||0).toFixed(2)}</span> · 
       Arudha: <span class="${pred.arudha_score >= 0 ? 'score-tag good' : 'score-tag bad'}">${(pred.arudha_score||0).toFixed(2)}</span> · 
       Gulika: <span class="${pred.gulika_penalty < 0 ? 'score-tag bad' : 'score-tag'}">${(pred.gulika_penalty||0).toFixed(2)}</span> · 
@@ -2025,17 +1723,17 @@ function renderListView() {
       const score = parseFloat(w.composite_score);
       const cls = score >= 1.5 ? 'good' : score >= -1.5 ? 'medium' : 'bad';
       const dur = Math.round(w.duration_minutes/60);
-      const dasha = w.dasha_active && w.dasha_active[0] ? `<span style="color:var(--teal);margin-right:6px">☽ ${w.dasha_active[0]}</span>` : '';
+      const dasha = w.dasha_active && w.dasha_active[0] ? `<span style="color:var(--primary);margin-right:6px">☽ ${w.dasha_active[0]}</span>` : '';
       html += `<div class="win-row ${cls}">
         <div>
           <div class="win-dates">${w.start.slice(0,10)} → ${w.end.slice(0,10)}</div>
-          <div style="font-size:.82rem;color:var(--muted);font-style:italic;margin-top:2px">${dasha}${(w.active_events||[]).slice(0,3).join(', ')||'—'}</div>
-          <div style="font-size:.75rem;color:var(--muted);margin-top:2px">Tara: ${(w.tara_score||0).toFixed(2)} | Chandra: ${(w.chandra_bala_score||0).toFixed(2)} | Avastha: ${(w.avastha_score||0).toFixed(2)} | Pushkara: ${(w.pushkara_bonus_score||0).toFixed(2)} | Sudarshana: ${(w.sudarshana_score||0).toFixed(2)} | Sandhi: ${(w.sandhi_penalty||0).toFixed(2)}</div>
-            <div style="font-size:.75rem;color:var(--muted);margin-top:2px;border-top:1px dashed var(--border);padding-top:2px">Double Transit: ${(w.double_transit||0).toFixed(2)} | True KP Cusp: ${(w.kp_cuspal_score||0).toFixed(2)} | Bhrigu: ${(w.bhrigu_bonus||0).toFixed(2)} | KP Base: ${(w.kp_score||0).toFixed(2)}</div>
+          <div style="font-size:.82rem;color:var(--on-surface-variant);font-style:italic;margin-top:2px">${dasha}${(w.active_events||[]).slice(0,3).join(', ')||'—'}</div>
+          <div style="font-size:.75rem;color:var(--on-surface-variant);margin-top:2px">Tara: ${(w.tara_score||0).toFixed(2)} | Chandra: ${(w.chandra_bala_score||0).toFixed(2)} | Avastha: ${(w.avastha_score||0).toFixed(2)} | Pushkara: ${(w.pushkara_bonus_score||0).toFixed(2)} | Sudarshana: ${(w.sudarshana_score||0).toFixed(2)} | Sandhi: ${(w.sandhi_penalty||0).toFixed(2)}</div>
+            <div style="font-size:.75rem;color:var(--on-surface-variant);margin-top:2px;border-top:1px dashed var(--outline-variant);padding-top:2px">Double Transit: ${(w.double_transit||0).toFixed(2)} | True KP Cusp: ${(w.kp_cuspal_score||0).toFixed(2)} | Bhrigu: ${(w.bhrigu_bonus||0).toFixed(2)} | KP Base: ${(w.kp_score||0).toFixed(2)}</div>
         </div>
         <div class="win-dur">${dur<48?dur+'h':Math.round(dur/24)+'d'}</div>
         <div>${scoreBadge(w.composite_score)}</div>
-        <div style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--muted)">${w.nature}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--on-surface-variant)">${w.nature}</div>
       </div>`;
     }
     html += '</div>';
@@ -2056,26 +1754,26 @@ function renderNatal() {
   if (n.nakshatra_profile) {
     const nak = n.nakshatra_profile;
     nakHtml = `
-      <div style="margin-top:16px;padding:12px;background:var(--card);border:1px solid var(--border);border-radius:4px">
-        <div style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--muted);text-transform:uppercase;margin-bottom:8px;letter-spacing:1px">Nakshatra Details</div>
+      <div style="margin-top:16px;padding:12px;background:var(--surface-container-lowest);border:1px solid var(--outline-variant);border-radius:4px">
+        <div style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--on-surface-variant);text-transform:uppercase;margin-bottom:8px;letter-spacing:1px">Nakshatra Details</div>
         <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
-          <span style="font-size:.75rem;padding:2px 8px;border-radius:4px;background:rgba(45,140,120,.08);color:var(--teal)">${nak.deity}</span>
-          <span style="font-size:.75rem;padding:2px 8px;border-radius:4px;background:rgba(100,100,180,.08);color:#7b7bc4">${nak.guna} · ${nak.nature}</span>
-          <span style="font-size:.75rem;padding:2px 8px;border-radius:4px;background:rgba(180,80,60,.08);color:var(--rust)">${nak.symbol}</span>
+          <span style="font-size:.75rem;padding:2px 8px;border-radius:4px;background:var(--surface-container-high);color:var(--primary)">${nak.deity}</span>
+          <span style="font-size:.75rem;padding:2px 8px;border-radius:4px;background:var(--surface-container-high);color:var(--on-surface)">${nak.guna} · ${nak.nature}</span>
+          <span style="font-size:.75rem;padding:2px 8px;border-radius:4px;background:var(--surface-container-high);color:#e05e5e">${nak.symbol}</span>
         </div>
-        <div style="font-size:.85rem;color:var(--muted);line-height:1.5;margin-bottom:8px">${nak.personality}</div>
-        <div style="font-size:.82rem;margin-bottom:4px"><strong style="color:var(--teal);font-size:.75rem;text-transform:uppercase">Strengths:</strong> ${nak.strengths.join(' · ')}</div>
-        <div style="font-size:.82rem;margin-bottom:4px"><strong style="color:var(--rust);font-size:.75rem;text-transform:uppercase">Challenges:</strong> ${nak.challenges.join(' · ')}</div>
-        <div style="font-size:.82rem;margin-bottom:4px"><strong style="color:var(--gold);font-size:.75rem;text-transform:uppercase">Career:</strong> ${nak.career_hints.join(' · ')}</div>
-        <div style="font-size:.82rem;margin-bottom:4px"><strong style="color:#7b7bc4;font-size:.75rem;text-transform:uppercase">Health areas:</strong> ${nak.health_areas.join(' · ')}</div>
-        <div style="font-size:.82rem;margin-top:6px;font-style:italic;color:var(--muted)">${nak.spiritual_theme}</div>
+        <div style="font-size:.85rem;color:var(--on-surface-variant);line-height:1.5;margin-bottom:8px">${nak.personality}</div>
+        <div style="font-size:.82rem;margin-bottom:4px"><strong style="color:var(--primary);font-size:.75rem;text-transform:uppercase">Strengths:</strong> ${nak.strengths.join(' · ')}</div>
+        <div style="font-size:.82rem;margin-bottom:4px"><strong style="color:#e05e5e;font-size:.75rem;text-transform:uppercase">Challenges:</strong> ${nak.challenges.join(' · ')}</div>
+        <div style="font-size:.82rem;margin-bottom:4px"><strong style="color:var(--primary);font-size:.75rem;text-transform:uppercase">Career:</strong> ${nak.career_hints.join(' · ')}</div>
+        <div style="font-size:.82rem;margin-bottom:4px"><strong style="color:var(--on-surface);font-size:.75rem;text-transform:uppercase">Health areas:</strong> ${nak.health_areas.join(' · ')}</div>
+        <div style="font-size:.82rem;margin-top:6px;font-style:italic;color:var(--on-surface-variant)">${nak.spiritual_theme}</div>
       </div>
     `;
   }
 
   let advHtml = `
-    <div style="margin-top:20px; border-top: 1px solid var(--border); padding-top: 12px; font-size: 0.85rem;">
-      <strong style="color:var(--teal)">Advanced Natal Properties:</strong><br/>
+    <div style="margin-top:20px; border-top: 1px solid var(--outline-variant); padding-top: 12px; font-size: 0.85rem;">
+      <strong style="color:var(--primary)">Advanced Natal Properties:</strong><br/>
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px;">
         <div><b>Arudha Lagna:</b> ${adv.arudha_lagna || '—'}</div>
         <div><b>Gulika Sign:</b> ${adv.gulika_sign || '—'}</div>
@@ -2086,9 +1784,9 @@ function renderNatal() {
   `;
 
   document.getElementById('natal-basics').innerHTML = `
-    <div style="font-size:1.8rem;color:var(--gold);margin-bottom:8px">Lagna: ${n.natal_lagna}</div>
+    <div style="font-size:1.8rem;color:var(--primary);margin-bottom:8px">Lagna: ${n.natal_lagna}</div>
     <div style="margin-bottom:8px">Moon Sign (Rasi): ${n.natal_moon_sign}</div>
-    <div style="font-size:.9rem;color:var(--muted)">Nakshatra: ${n.natal_nakshatra}</div>
+    <div style="font-size:.9rem;color:var(--on-surface-variant)">Nakshatra: ${n.natal_nakshatra}</div>
     ${nakHtml}
     ${advHtml}
   `;
@@ -2101,16 +1799,16 @@ function renderNatal() {
     <h4>Active Natal Yogas (${activeCount} / ${allYogas.length || natal.yoga_summary?.yogas_found || 0})</h4>
     <div style="margin-top:8px">
       ${active.length ? active.map(y =>
-        `<span class="yoga-chip"><span class="dot" style="background:${y.strength >= 0.8 ? 'var(--teal)' : 'var(--gold)'}"></span>${y.name}
-         <small style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--muted);margin-left:2px">[${y.category}]</small>
+        `<span class="yoga-chip"><span class="dot" style="background:${y.strength >= 0.8 ? 'var(--primary)' : 'var(--primary)'}"></span>${y.name}
+         <small style="font-family:'DM Mono',monospace;font-size:.65rem;color:var(--on-surface-variant);margin-left:2px">[${y.category}]</small>
          </span>`).join('') : '<div class="empty" style="padding:16px">No active yogas.</div>'}
     </div>
     ${active.length ? `<div style="margin-top:14px">
       ${active.map(y =>
-        `<div style="padding:6px 0;border-bottom:1px dashed var(--border);font-size:.9rem">
-           <strong style="color:var(--teal)">${y.name}</strong>
-           <span style="float:right;font-family:'DM Mono',monospace;font-size:.72rem;color:var(--gold)">str: ${(y.strength||0).toFixed(2)}</span>
-           <br><em style="color:var(--muted);font-size:.85rem">${y.description}</em>
+        `<div style="padding:6px 0;border-bottom:1px dashed var(--outline-variant);font-size:.9rem">
+           <strong style="color:var(--primary)">${y.name}</strong>
+           <span style="float:right;font-family:'DM Mono',monospace;font-size:.72rem;color:var(--primary)">str: ${(y.strength||0).toFixed(2)}</span>
+           <br><em style="color:var(--on-surface-variant);font-size:.85rem">${y.description}</em>
          </div>`).join('')}
     </div>` : ''}
   `;
@@ -2123,28 +1821,28 @@ function renderNatal() {
   });
   document.getElementById('natal-all-yogas').innerHTML = allYogas.length ? `
     <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px">
-      <div style="font-family:'DM Mono',monospace;font-size:.72rem;text-transform:uppercase;color:var(--muted)">
-        Total Checked: <strong style="color:var(--ink)">${allYogas.length}</strong>
+      <div style="font-family:'DM Mono',monospace;font-size:.72rem;text-transform:uppercase;color:var(--on-surface-variant)">
+        Total Checked: <strong style="color:var(--on-surface)">${allYogas.length}</strong>
       </div>
-      <div style="font-family:'DM Mono',monospace;font-size:.72rem;text-transform:uppercase;color:var(--muted)">
-        Active: <strong style="color:var(--teal)">${activeCount}</strong>
+      <div style="font-family:'DM Mono',monospace;font-size:.72rem;text-transform:uppercase;color:var(--on-surface-variant)">
+        Active: <strong style="color:var(--primary)">${activeCount}</strong>
       </div>
-      <div style="font-family:'DM Mono',monospace;font-size:.72rem;text-transform:uppercase;color:var(--muted)">
-        Absent: <strong style="color:var(--rust)">${allYogas.length - activeCount}</strong>
+      <div style="font-family:'DM Mono',monospace;font-size:.72rem;text-transform:uppercase;color:var(--on-surface-variant)">
+        Absent: <strong style="color:#e05e5e">${allYogas.length - activeCount}</strong>
       </div>
     </div>
     ${Object.entries(yogasByCategory).map(([cat, yogas]) => `
       <div style="margin-bottom:18px">
-        <div style="font-size:.82rem;font-weight:600;text-transform:uppercase;color:var(--gold);letter-spacing:.08em;margin-bottom:6px;border-bottom:1px solid var(--border);padding-bottom:4px">${cat}</div>
+        <div style="font-size:.82rem;font-weight:600;text-transform:uppercase;color:var(--primary);letter-spacing:.08em;margin-bottom:6px;border-bottom:1px solid var(--outline-variant);padding-bottom:4px">${cat}</div>
         ${yogas.map(y => `
-          <div style="padding:8px 0;border-bottom:1px dashed var(--border);display:flex;gap:10px;align-items:flex-start">
+          <div style="padding:8px 0;border-bottom:1px dashed var(--outline-variant);display:flex;gap:10px;align-items:flex-start">
             <span style="flex-shrink:0;width:18px;font-size:.9rem;text-align:center">${y.present ? '✓' : '✗'}</span>
             <div style="flex:1;min-width:0">
               <div style="display:flex;justify-content:space-between;align-items:center">
-                <strong style="color:${y.present ? 'var(--teal)' : 'var(--muted)'};font-size:.92rem">${y.name}</strong>
-                <span style="font-family:'DM Mono',monospace;font-size:.7rem;color:${y.present ? 'var(--gold)' : 'var(--border)'}">${y.present ? 'str: '+(y.strength||0).toFixed(2) : 'absent'}</span>
+                <strong style="color:${y.present ? 'var(--primary)' : 'var(--on-surface-variant)'};font-size:.92rem">${y.name}</strong>
+                <span style="font-family:'DM Mono',monospace;font-size:.7rem;color:${y.present ? 'var(--primary)' : 'var(--outline-variant)'}">${y.present ? 'str: '+(y.strength||0).toFixed(2) : 'absent'}</span>
               </div>
-              <div style="font-size:.83rem;color:var(--muted);margin-top:2px;line-height:1.4">${y.description}</div>
+              <div style="font-size:.83rem;color:var(--on-surface-variant);margin-top:2px;line-height:1.4">${y.description}</div>
             </div>
           </div>
         `).join('')}
@@ -2165,10 +1863,10 @@ function renderNatal() {
         const sign = n.planet_signs?.[planet] || '—';
         const house = n.planet_houses?.[planet] || '—';
         const label = score >= 1.2 ? 'Strong' : score < 0.7 ? 'Weak' : 'Medium';
-        const labelColor = score >= 1.2 ? 'var(--teal)' : score < 0.7 ? 'var(--rust)' : 'var(--muted)';
+        const labelColor = score >= 1.2 ? 'var(--primary)' : score < 0.7 ? '#e05e5e' : 'var(--on-surface-variant)';
         return `<tr>
-          <td style="font-weight:500;color:var(--teal)">${planet}</td>
-          <td style="color:var(--muted)">${sign}</td>
+          <td style="font-weight:500;color:var(--primary)">${planet}</td>
+          <td style="color:var(--on-surface-variant)">${sign}</td>
           <td style="font-family:'DM Mono',monospace;font-size:.82rem">${house}</td>
           <td>
             <div class="bar-wrap">
@@ -2191,11 +1889,11 @@ function renderDashas() {
   document.getElementById('dasha-current').innerHTML = cd ? `
     <h4>Current Dasha Period (Vimshottari)</h4>
     <div style="display:flex;gap:14px;flex-wrap:wrap;margin:10px 0">
-      ${cd.mahadasha ? '<div style="flex:1;min-width:140px;padding:10px;border-radius:6px;background:rgba(200,151,58,.08);border:1px solid var(--border)"><div style="font-family:\'DM Mono\',monospace;font-size:.68rem;text-transform:uppercase;color:var(--muted)">Mahadasha</div><div style="font-size:1.3rem;font-weight:700;color:var(--gold)">' + cd.mahadasha.planet + '</div><div style="font-size:.75rem;color:var(--muted)">' + formatDate(cd.mahadasha.start) + ' → ' + formatDate(cd.mahadasha.end) + '</div></div>' : ''}
-      ${cd.antardasha ? '<div style="flex:1;min-width:140px;padding:10px;border-radius:6px;background:rgba(45,140,120,.08);border:1px solid var(--border)"><div style="font-family:\'DM Mono\',monospace;font-size:.68rem;text-transform:uppercase;color:var(--muted)">Antardasha</div><div style="font-size:1.3rem;font-weight:700;color:var(--teal)">' + cd.antardasha.planet + '</div><div style="font-size:.75rem;color:var(--muted)">' + formatDate(cd.antardasha.start) + ' → ' + formatDate(cd.antardasha.end) + '</div></div>' : ''}
-      ${cd.pratyantardasha ? '<div style="flex:1;min-width:140px;padding:10px;border-radius:6px;background:rgba(100,100,180,.08);border:1px solid var(--border)"><div style="font-family:\'DM Mono\',monospace;font-size:.68rem;text-transform:uppercase;color:var(--muted)">Pratyantardasha</div><div style="font-size:1.3rem;font-weight:700;color:#7b7bc4">' + cd.pratyantardasha.planet + '</div><div style="font-size:.75rem;color:var(--muted)">' + formatDate(cd.pratyantardasha.start) + ' → ' + formatDate(cd.pratyantardasha.end) + '</div></div>' : ''}
+      ${cd.mahadasha ? '<div style="flex:1;min-width:140px;padding:10px;border-radius:6px;background:var(--surface-container-high);border:1px solid var(--outline-variant)"><div style="font-family:\'DM Mono\',monospace;font-size:.68rem;text-transform:uppercase;color:var(--on-surface-variant)">Mahadasha</div><div style="font-size:1.3rem;font-weight:700;color:var(--primary)">' + cd.mahadasha.planet + '</div><div style="font-size:.75rem;color:var(--on-surface-variant)">' + formatDate(cd.mahadasha.start) + ' → ' + formatDate(cd.mahadasha.end) + '</div></div>' : ''}
+      ${cd.antardasha ? '<div style="flex:1;min-width:140px;padding:10px;border-radius:6px;background:var(--surface-container-high);border:1px solid var(--outline-variant)"><div style="font-family:\'DM Mono\',monospace;font-size:.68rem;text-transform:uppercase;color:var(--on-surface-variant)">Antardasha</div><div style="font-size:1.3rem;font-weight:700;color:var(--primary)">' + cd.antardasha.planet + '</div><div style="font-size:.75rem;color:var(--on-surface-variant)">' + formatDate(cd.antardasha.start) + ' → ' + formatDate(cd.antardasha.end) + '</div></div>' : ''}
+      ${cd.pratyantardasha ? '<div style="flex:1;min-width:140px;padding:10px;border-radius:6px;background:var(--surface-container-high);border:1px solid var(--outline-variant)"><div style="font-family:\'DM Mono\',monospace;font-size:.68rem;text-transform:uppercase;color:var(--on-surface-variant)">Pratyantardasha</div><div style="font-size:1.3rem;font-weight:700;color:var(--on-surface)">' + cd.pratyantardasha.planet + '</div><div style="font-size:.75rem;color:var(--on-surface-variant)">' + formatDate(cd.pratyantardasha.start) + ' → ' + formatDate(cd.pratyantardasha.end) + '</div></div>' : ''}
     </div>
-    <div style="font-family:'DM Mono',monospace;font-size:.82rem;color:var(--ink);margin-top:6px">Active: <strong>${cd.dasha_string}</strong></div>
+    <div style="font-family:'DM Mono',monospace;font-size:.82rem;color:var(--on-surface);margin-top:6px">Active: <strong>${cd.dasha_string}</strong></div>
   ` : '';
 
   // Dasha list
@@ -2218,7 +1916,7 @@ function renderDashas() {
   const phases = sadeSati.phases || [];
   document.getElementById('sade-sati-box').innerHTML = `
     <h4>Sade Sati — Moon: ${sadeSati.natal_moon_sign}</h4>
-    <p style="font-size:.9rem;color:var(--muted);margin:8px 0 14px;font-style:italic">${sadeSati.summary}</p>
+    <p style="font-size:.9rem;color:var(--on-surface-variant);margin:8px 0 14px;font-style:italic">${sadeSati.summary}</p>
     <div class="ss-timeline">
       ${phases.map(p => {
         const active = new Date(p.start) <= now && new Date(p.end) >= now;
@@ -2256,7 +1954,7 @@ function renderDoshas() {
     ['Daridra Dosha',      doshas.daridra_dosha,      ''],
   ];
   const activeCount = doshaRows.filter(r => r[1]).length;
-  const sevMap = {high:'var(--rust)', moderate:'var(--gold)', none:'#2a6b3a'};
+  const sevMap = {high:'#e05e5e', moderate:'var(--primary)', none:'var(--primary)'};
 
   document.getElementById('dosha-main').innerHTML = `
     <h4>Natal Doshas (${activeCount} active)</h4>
@@ -2264,7 +1962,7 @@ function renderDoshas() {
       <div class="dosha-row">
         <span class="dosha-name">
           ${name}
-          ${detail ? '<br><small style="font-size:.82rem;color:var(--muted)">' + detail + '</small>' : ''}
+          ${detail ? '<br><small style="font-size:.82rem;color:var(--on-surface-variant)">' + detail + '</small>' : ''}
         </span>
         <span class="${present ? 'dosha-yes' : 'dosha-no'}">${present ? 'YES ⚠' : 'CLEAR ✓'}</span>
       </div>`).join('')}
@@ -2283,30 +1981,30 @@ function renderDoshas() {
     <h4>Planetary Conditions</h4>
     <div class="dosha-row">
       <span class="dosha-name">Retrograde ℞</span>
-      <span style="color:var(--teal);font-size:.88rem">${retro.length ? retro.join(', ') : 'None'}</span>
+      <span style="color:var(--primary);font-size:.88rem">${retro.length ? retro.join(', ') : 'None'}</span>
     </div>
     <div class="dosha-row">
       <span class="dosha-name">Combust (near Sun)</span>
-      <span style="color:${combust.length?'var(--rust)':'#2a6b3a'};font-size:.88rem">${combust.length ? combust.join(', ') : 'None'}</span>
+      <span style="color:${combust.length?'#e05e5e':'var(--primary)'};font-size:.88rem">${combust.length ? combust.join(', ') : 'None'}</span>
     </div>
     <div class="dosha-row">
       <span class="dosha-name">Graha Yuddha</span>
-      <span style="font-size:.88rem;color:var(--muted)">${yuddha.length ? yuddha.map(g=>g.winner+'>'+g.loser).join(', ') : 'None'}</span>
+      <span style="font-size:.88rem;color:var(--on-surface-variant)">${yuddha.length ? yuddha.map(g=>g.winner+'>'+g.loser).join(', ') : 'None'}</span>
     </div>
   `;
 
   // Complete Dosha Analysis with descriptions and remedies
   const details = doshas.dosha_details || [];
   document.getElementById('dosha-details').innerHTML = details.length ? details.map(d => `
-    <div style="padding:14px 0;border-bottom:1px solid var(--border)">
+    <div style="padding:14px 0;border-bottom:1px solid var(--outline-variant)">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <strong style="font-size:1rem;color:${d.present ? 'var(--rust)' : 'var(--teal)'}">${d.name}</strong>
-        <span style="font-family:'DM Mono',monospace;font-size:.75rem;padding:2px 8px;border-radius:4px;background:${d.present ? 'rgba(200,80,60,.12)' : 'rgba(40,150,100,.1)'};color:${d.present ? 'var(--rust)' : '#2a6b3a'}">${d.present ? d.severity.toUpperCase() : 'CLEAR'}</span>
+        <strong style="font-size:1rem;color:${d.present ? '#e05e5e' : 'var(--primary)'}">${d.name}</strong>
+        <span style="font-family:'DM Mono',monospace;font-size:.75rem;padding:2px 8px;border-radius:4px;background:${d.present ? 'rgba(224, 94, 94, 0.15)' : 'rgba(151, 217, 79, 0.15)'};color:${d.present ? '#e05e5e' : 'var(--primary)'}">${d.present ? d.severity.toUpperCase() : 'CLEAR'}</span>
       </div>
-      <div style="font-size:.88rem;color:var(--muted);line-height:1.5;margin-bottom:8px">${d.description}</div>
-      ${d.present && d.effects ? '<div style="font-size:.84rem;margin-bottom:8px"><strong style="color:var(--gold);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em">Effects:</strong> <span style="color:var(--ink)">' + d.effects + '</span></div>' : ''}
-      ${d.present && d.remedies && d.remedies.length ? '<div style="margin-top:6px"><strong style="color:var(--teal);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em">Remedies:</strong><ol style="margin:4px 0 0 18px;padding:0;font-size:.84rem;color:var(--ink);line-height:1.6">' + d.remedies.map(r => '<li>' + r + '</li>').join('') + '</ol></div>' : ''}
-      ${d.present ? '<div style="margin-top:4px;font-family:\'DM Mono\',monospace;font-size:.72rem;color:var(--rust)">Penalty: ' + d.penalty.toFixed(1) + '</div>' : ''}
+      <div style="font-size:.88rem;color:var(--on-surface-variant);line-height:1.5;margin-bottom:8px">${d.description}</div>
+      ${d.present && d.effects ? '<div style="font-size:.84rem;margin-bottom:8px"><strong style="color:var(--primary);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em">Effects:</strong> <span style="color:var(--on-surface)">' + d.effects + '</span></div>' : ''}
+      ${d.present && d.remedies && d.remedies.length ? '<div style="margin-top:6px"><strong style="color:var(--primary);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em">Remedies:</strong><ol style="margin:4px 0 0 18px;padding:0;font-size:.84rem;color:var(--on-surface);line-height:1.6">' + d.remedies.map(r => '<li>' + r + '</li>').join('') + '</ol></div>' : ''}
+      ${d.present ? '<div style="margin-top:4px;font-family:\'DM Mono\',monospace;font-size:.72rem;color:#e05e5e">Penalty: ' + d.penalty.toFixed(1) + '</div>' : ''}
     </div>
   `).join('') : '<div class="empty">No dosha detail data available.</div>';
 }
@@ -2320,8 +2018,8 @@ function renderGochara() {
   const maxAbs = Math.max(...Object.values(byPlanet).map(Math.abs), 1);
 
   document.getElementById('gochara-bars').innerHTML = `
-    <div style="margin-bottom:20px; padding:12px; background:var(--card); border:1px solid var(--border); border-radius:4px; font-size:0.85rem;">
-      <strong style="color:var(--teal)">Advanced Transit Information:</strong><br/>
+    <div style="margin-bottom:20px; padding:12px; background:var(--surface-container-lowest); border:1px solid var(--outline-variant); border-radius:4px; font-size:0.85rem;">
+      <strong style="color:var(--primary)">Advanced Transit Information:</strong><br/>
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:8px;">
         <div><b>Tara Bala:</b> ${adv.tara_name || '—'} (Score: ${adv.tara_score !== undefined ? adv.tara_score : '—'})</div>
         <div><b>Chandra Bala:</b> ${adv.chandra_bala !== undefined ? adv.chandra_bala : '—'}</div>
@@ -2338,23 +2036,23 @@ function renderGochara() {
         <div class="gochara-center"></div>
         <div class="gochara-bar ${pos ? 'pos' : 'neg'}" style="width:${pct}%"></div>
       </div>
-      <div class="gochara-val" style="color:${pos?'var(--teal)':'var(--rust)'}">
+      <div class="gochara-val" style="color:${pos?'var(--primary)':'#e05e5e'}">
         ${score > 0 ? '+' : ''}${score.toFixed(1)}
       </div>
     </div>`;
   }).join('') + `
-    <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:flex;gap:24px;flex-wrap:wrap">
+    <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--outline-variant);display:flex;gap:24px;flex-wrap:wrap">
       <div>
-        <div style="font-family:'DM Mono',monospace;font-size:.72rem;text-transform:uppercase;color:var(--muted)">Total Gochara</div>
-        <div style="font-size:1.4rem;color:${gochara.total_gochara_score>=0?'var(--teal)':'var(--rust)'}">${gochara.total_gochara_score > 0?'+':''}${gochara.total_gochara_score.toFixed(2)}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.72rem;text-transform:uppercase;color:var(--on-surface-variant)">Total Gochara</div>
+        <div style="font-size:1.4rem;color:${gochara.total_gochara_score>=0?'var(--primary)':'#e05e5e'}">${gochara.total_gochara_score > 0?'+':''}${gochara.total_gochara_score.toFixed(2)}</div>
       </div>
       <div>
-        <div style="font-family:'DM Mono',monospace;font-size:.72rem;text-transform:uppercase;color:var(--muted)">Ashtakavarga</div>
-        <div style="font-size:1.4rem;color:var(--teal)">${gochara.ashtakavarga_bonus.toFixed(3)}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.72rem;text-transform:uppercase;color:var(--on-surface-variant)">Ashtakavarga</div>
+        <div style="font-size:1.4rem;color:var(--primary)">${gochara.ashtakavarga_bonus.toFixed(3)}</div>
       </div>
       <div>
-        <div style="font-family:'DM Mono',monospace;font-size:.72rem;text-transform:uppercase;color:var(--muted)">Natal Moon</div>
-        <div style="font-size:1.4rem;color:var(--teal)">${gochara.natal_moon_sign}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:.72rem;text-transform:uppercase;color:var(--on-surface-variant)">Natal Moon</div>
+        <div style="font-size:1.4rem;color:var(--primary)">${gochara.natal_moon_sign}</div>
       </div>
     </div>
   `;
@@ -2363,202 +2061,53 @@ function renderGochara() {
 // ── PDF EXPORT ──────────────────────────────────────────────
 async function exportToPDF() {
   const btn = document.getElementById('export-pdf-btn');
+  if (btn.disabled) return;
   const originalText = btn.innerHTML;
-  
-  // Check if results exist
-  if (!_results || !Object.keys(_results.predictions || {}).length) {
-    alert('Please generate a chart first by clicking "Read My Chart"');
-    return;
-  }
-  
-  // Check if html2pdf library loaded
-  if (typeof html2pdf === 'undefined') {
-    console.error('html2pdf.js library not loaded');
-    const usePrint = confirm('PDF library failed to load. Use browser print instead?\n\nThis will open the print dialog where you can "Save as PDF".');
-    if (usePrint) {
-      window.print();
-    }
-    return;
-  }
-  
-  // Show loading state
   btn.disabled = true;
-  btn.classList.add('spin');
-  btn.innerHTML = '<span></span> Generating PDF...';
-  
+  btn.innerHTML = `<span class="spin">↻</span> Generating...`;
+
+  const person = personPayload();
+  const req = {
+    name: person.name,
+    birth_datetime: person.birth_datetime,
+    latitude: person.birth_location.latitude,
+    longitude: person.birth_location.longitude,
+    timezone: person.birth_location.timezone
+  };
+
   try {
-    // Get birth details for filename
-    const name = document.getElementById('f-name').value || 'chart';
-    const dob = document.getElementById('f-dob').value || '';
-    const filename = `Vedic_Life_Predictor_${name.replace(/\s+/g, '_')}_${dob}.pdf`;
+    const res = await fetch(`${API}/report`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(req)
+    });
     
-    // Create a clean container for PDF content
-    const pdfContent = document.createElement('div');
-    pdfContent.style.cssText = `
-      background: #fff;
-      color: #0e0b07;
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      padding: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-    `;
-    
-    // Add header
-    const header = document.createElement('div');
-    header.innerHTML = `
-      <div style="text-align: center; padding: 30px 0; border-bottom: 2px solid #c8973a; margin-bottom: 30px;">
-        <div style="font-size: 2rem; color: #c8973a; margin-bottom: 10px;">☽ ☀ ♃</div>
-        <h1 style="font-size: 2.2rem; font-weight: 300; color: #1a4a4a; margin: 0;">Vedic <em style="font-style: italic; color: #c8973a;">Life Predictor</em></h1>
-        <p style="font-family: 'DM Mono', monospace; color: #6b5f4e; margin-top: 10px;">Complete Astrological Analysis Report</p>
-      </div>
-    `;
-    pdfContent.appendChild(header);
-    
-    // Add birth details
-    const birthInfo = document.createElement('div');
-    birthInfo.innerHTML = `
-      <div style="background: #faf7f2; border: 1px solid #ddd5c4; border-radius: 6px; padding: 20px; margin-bottom: 30px;">
-        <h2 style="color: #1a4a4a; font-size: 1.3rem; margin-bottom: 15px; border-bottom: 1px solid #ddd5c4; padding-bottom: 10px;">Birth Details</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; font-size: 0.95rem;">
-          <div><strong>Name:</strong> ${document.getElementById('f-name').value || '—'}</div>
-          <div><strong>Date:</strong> ${document.getElementById('f-dob').value || '—'}</div>
-          <div><strong>Time:</strong> ${document.getElementById('f-tob').value || '—'}</div>
-          <div><strong>Location:</strong> ${document.getElementById('f-city-search').value || '—'}</div>
-          <div><strong>Timezone:</strong> ${document.getElementById('f-tz').selectedOptions[0]?.text || '—'}</div>
-        </div>
-      </div>
-    `;
-    pdfContent.appendChild(birthInfo);
-    
-    // Add overall score
-    const overall = _results.overall;
-    if (overall) {
-      const scoreDiv = document.createElement('div');
-      scoreDiv.innerHTML = `
-        <div style="background: #faf7f2; border: 1px solid #ddd5c4; border-radius: 6px; padding: 20px; margin-bottom: 30px;">
-          <h2 style="color: #1a4a4a; font-size: 1.3rem; margin-bottom: 15px;">Period Quality Overview</h2>
-          <div style="font-size: 1.1rem; line-height: 1.6;">
-            <div><strong>Overall Quality:</strong> ${overall.overall_quality || '—'}</div>
-            <div><strong>Total Favourable Windows:</strong> ${overall.total_favourable_windows || 0}</div>
-            <div><strong>Longest Good Streak:</strong> ${overall.longest_good_streak || '—'}</div>
-            <div><strong>Best Day:</strong> ${overall.best_day ? new Date(overall.best_day).toLocaleDateString() : '—'}</div>
-          </div>
-        </div>
-      `;
-      pdfContent.appendChild(scoreDiv);
+    if (!res.ok) {
+      const errTxt = await res.text();
+      throw new Error(`Report generation failed: ${errTxt}`);
     }
+
+    // Get the blob from the response
+    const blob = await res.blob();
+    // Create a temporary link to download the PDF
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${req.name}_Astrology_Report.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
     
-    // Add predictions section with heatmap
-    const predSection = document.createElement('div');
-    predSection.innerHTML = `
-      <h2 style="color: #1a4a4a; font-size: 1.5rem; margin: 30px 0 20px; border-bottom: 2px solid #c8973a; padding-bottom: 10px;">
-        Life Aspect Predictions & Heatmap
-      </h2>
-    `;
-    
-    // Clone the heatmap for PDF
-    const heatmap = document.getElementById('pred-heatmap');
-    if (heatmap) {
-      const heatmapClone = heatmap.cloneNode(true);
-      heatmapClone.style.marginTop = '20px';
-      predSection.appendChild(heatmapClone);
-    }
-    pdfContent.appendChild(predSection);
-    
-    // Add natal chart section
-    const natalSection = document.createElement('div');
-    natalSection.innerHTML = `
-      <div style="page-break-before: always;"></div>
-      <h2 style="color: #1a4a4a; font-size: 1.5rem; margin: 30px 0 20px; border-bottom: 2px solid #c8973a; padding-bottom: 10px;">
-        Natal Chart Analysis
-      </h2>
-    `;
-    const natalBasics = document.getElementById('natal-basics');
-    const natalYogas = document.getElementById('natal-yogas');
-    if (natalBasics) natalSection.appendChild(natalBasics.cloneNode(true));
-    if (natalYogas) natalSection.appendChild(natalYogas.cloneNode(true));
-    pdfContent.appendChild(natalSection);
-    
-    // Add dashas section
-    const dashaSection = document.createElement('div');
-    dashaSection.innerHTML = `
-      <div style="page-break-before: always;"></div>
-      <h2 style="color: #1a4a4a; font-size: 1.5rem; margin: 30px 0 20px; border-bottom: 2px solid #c8973a; padding-bottom: 10px;">
-        Dasha Periods
-      </h2>
-    `;
-    const dashaPanel = document.getElementById('dasha-panel');
-    if (dashaPanel) dashaSection.appendChild(dashaPanel.cloneNode(true));
-    pdfContent.appendChild(dashaSection);
-    
-    // Add doshas section
-    const doshaSection = document.createElement('div');
-    doshaSection.innerHTML = `
-      <div style="page-break-before: always;"></div>
-      <h2 style="color: #1a4a4a; font-size: 1.5rem; margin: 30px 0 20px; border-bottom: 2px solid #c8973a; padding-bottom: 10px;">
-        Dosha Analysis
-      </h2>
-    `;
-    const doshaSummary = document.getElementById('dosha-summary');
-    const doshaDetails = document.getElementById('dosha-details');
-    if (doshaSummary) doshaSection.appendChild(doshaSummary.cloneNode(true));
-    if (doshaDetails) doshaSection.appendChild(doshaDetails.cloneNode(true));
-    pdfContent.appendChild(doshaSection);
-    
-    // Add footer
-    const footer = document.createElement('div');
-    footer.innerHTML = `
-      <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd5c4; text-align: center; font-family: 'DM Mono', monospace; font-size: 0.75rem; color: #6b5f4e;">
-        <p>Generated by Vedic Life Predictor · Jyotish · Dasha · Gochara · Yogas</p>
-        <p>Report generated on ${new Date().toLocaleString()}</p>
-      </div>
-    `;
-    pdfContent.appendChild(footer);
-    
-    // Temporarily add to body for html2pdf to work
-    pdfContent.style.position = 'absolute';
-    pdfContent.style.left = '-9999px';
-    document.body.appendChild(pdfContent);
-    
-    // Generate PDF
-    const opt = {
-      margin: [10, 10, 10, 10],
-      filename: filename,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { 
-        scale: 2, 
-        useCORS: true,
-        letterRendering: true,
-        scrollY: 0
-      },
-      jsPDF: { 
-        unit: 'mm', 
-        format: 'a4', 
-        orientation: 'portrait',
-        compress: true
-      }
-    };
-    
-    await html2pdf().set(opt).from(pdfContent).save();
-    
-    // Clean up
-    document.body.removeChild(pdfContent);
-    
-  } catch (err) {
-    console.error('PDF export failed:', err);
-    // Clean up on error
-    try {
-      if (pdfContent.parentNode) document.body.removeChild(pdfContent);
-    } catch(e) {}
-    
-    const usePrint = confirm('PDF generation failed. Use browser print instead?\n\nThis will open the print dialog where you can "Save as PDF".\n\nError: ' + (err.message || 'Unknown error'));
-    if (usePrint) {
-      window.print();
-    }
-  } finally {
-    // Reset button
+    btn.innerHTML = `<span>✓</span> Downloaded`;
+    setTimeout(() => {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }, 3000);
+  } catch (e) {
+    console.error(e);
+    alert(e.message);
     btn.disabled = false;
-    btn.classList.remove('spin');
     btn.innerHTML = originalText;
   }
 }
