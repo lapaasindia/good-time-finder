@@ -1364,22 +1364,52 @@ function getBucketKey(date, mode) {
   }
 }
 
-// Build time buckets: { 'KEY': { sum, count, windows } }
+function getBucketBounds(date, mode) {
+  if (mode === 'month') {
+    const start = new Date(date.getFullYear(), date.getMonth(), 1);
+    const end = new Date(date.getFullYear(), date.getMonth() + 1, 1);
+    return { start, end };
+  }
+  if (mode === 'day') {
+    const start = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const end = new Date(start);
+    end.setDate(end.getDate() + 1);
+    return { start, end };
+  }
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+  const start = new Date(d.getFullYear(), d.getMonth(), diff);
+  const end = new Date(start);
+  end.setDate(end.getDate() + 7);
+  return { start, end };
+}
+
+// Build duration-weighted buckets so a 1-hour window does not count the same as a 12-hour window.
 function windowsToBuckets(windows, mode) {
   const buckets = {};
   for (const w of windows) {
-    const s  = new Date(w.start);
-    const e  = new Date(w.end);
-    const cur = new Date(s.getFullYear(), s.getMonth(), s.getDate());
-    const endDay = new Date(e.getFullYear(), e.getMonth(), e.getDate());
-    
-    while (cur <= endDay) {
+    const s = new Date(w.start);
+    const e = new Date(w.end);
+    let cur = new Date(s);
+
+    while (cur < e) {
       const key = getBucketKey(cur, mode);
-      if (!buckets[key]) buckets[key] = {sum:0, count:0, windows:[]};
-      buckets[key].sum   += w.composite_score;
-      buckets[key].count += 1;
-      buckets[key].windows.push(w);
-      cur.setDate(cur.getDate() + 1);
+      const bounds = getBucketBounds(cur, mode);
+      const overlapStart = Math.max(s.getTime(), bounds.start.getTime());
+      const overlapEnd = Math.min(e.getTime(), bounds.end.getTime());
+      const overlapMinutes = Math.max(0, (overlapEnd - overlapStart) / 60000);
+      if (overlapMinutes > 0) {
+        if (!buckets[key]) {
+          buckets[key] = { weightedSum: 0, totalMinutes: 0, windows: [], bestScore: -Infinity, worstScore: Infinity };
+        }
+        buckets[key].weightedSum += w.composite_score * overlapMinutes;
+        buckets[key].totalMinutes += overlapMinutes;
+        buckets[key].windows.push(w);
+        buckets[key].bestScore = Math.max(buckets[key].bestScore, w.composite_score);
+        buckets[key].worstScore = Math.min(buckets[key].worstScore, w.composite_score);
+      }
+      cur = new Date(bounds.end);
     }
   }
   return buckets;
@@ -1472,13 +1502,12 @@ function renderHeatmap() {
         we.setDate(we.getDate() + 6);
         label = `${cur.getDate()} ${MONTH_ABBR[cur.getMonth()]} - ${we.getDate()} ${MONTH_ABBR[we.getMonth()]}`;
       }
+      const bounds = getBucketBounds(cur, timeGroup);
       
       cols.push({ 
         key, label, y, 
-        startTs: new Date(cur).getTime(), 
-        endTs: timeGroup === 'month' ? new Date(y, cur.getMonth() + 1, 0).getTime() 
-             : timeGroup === 'week'  ? new Date(cur.getTime() + 6*86400000).getTime() 
-             : cur.getTime() 
+        startTs: bounds.start.getTime(),
+        endTs: bounds.end.getTime() - 1
       });
     }
     cur.setDate(cur.getDate() + 1);
@@ -1533,10 +1562,11 @@ function renderHeatmap() {
     for (let i = 0; i < cols.length; i++) {
       const c = cols[i];
       const b   = buckets[c.key];
-      const avg = b ? b.sum / b.count : null;
+      const avg = b && b.totalMinutes ? b.weightedSum / b.totalMinutes : null;
       const bg  = avg !== null ? scoreToColor(avg, globalMin, globalMax) : 'rgba(220,210,195,.25)';
       const lbl = avg !== null ? scoreLabel(avg, globalMin, globalMax)   : 'No data';
       const wins = b ? b.windows.length : 0;
+      const coverageHours = b ? Math.round(b.totalMinutes / 60) : 0;
       const isLastOfYear = i === cols.length-1 || cols[i+1]?.y !== cols[i].y;
       
       let extraTip = '';
@@ -1562,6 +1592,8 @@ Dasha: ${dStr}`;
 
 Breakdown:`;
            extraTip += `
+Coverage: ${coverageHours}h`;
+           extraTip += `
 Dasha/Gochara: ${db.toFixed(1)} / ${gb.toFixed(1)}`;
            extraTip += `
 Yogas/Avasthas: ${yb.toFixed(1)} / ${ava.toFixed(1)}`;
@@ -1569,10 +1601,12 @@ Yogas/Avasthas: ${yb.toFixed(1)} / ${ava.toFixed(1)}`;
 True KP / KP Base: ${kpC.toFixed(1)} / ${kpB.toFixed(1)}`;
            extraTip += `
 Bhrigu / DoubleTransit: ${bhr.toFixed(1)} / ${dt.toFixed(1)}`;
+           extraTip += `
+Bucket range: ${b.bestScore.toFixed(2)} to ${b.worstScore.toFixed(2)}`;
         }
 
         const tip = encodeURIComponent(`${c.label} ${c.y} · ${cat}
-${lbl} · ${wins} window${wins!==1?'s':''}
+${lbl} · ${wins} window${wins!==1?'s':''} · ${coverageHours}h coverage
 Avg score: ${avg!==null?avg.toFixed(2):'—'}${extraTip}`);
       html += `<td class="hm-cell${isLastOfYear?' year-sep':''}" style="background:${bg}" `+
         `onmouseenter="hmTip(event,'${tip}')" onmouseleave="hmHide()" `+
@@ -1596,7 +1630,7 @@ Avg score: ${avg!==null?avg.toFixed(2):'—'}${extraTip}`);
     <span class="hm-swatch" style="background:rgba(190,65,45,.85)"></span>
     <span class="hm-swatch" style="background:rgba(140,25,20,.90)"></span><span class="hm-swatch-lbl">Difficult</span>
     <span class="hm-swatch" style="background:rgba(220,210,195,.3);margin-left:8px"></span><span class="hm-swatch-lbl">No data</span>
-    <span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--on-surface-variant)">Click any cell for details</span>
+    <span style="margin-left:auto;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--on-surface-variant)">Relative scale within current filter · click any cell for details</span>
   </div>`;
 
   // detail panel
@@ -1701,6 +1735,9 @@ function renderListView() {
       <small style="font-family:'DM Mono',monospace;font-size:.72rem;color:var(--on-surface-variant);margin-left:auto">
         Overall ${pred.overall_period_score.toFixed(2)} · ${pred.total_windows} windows
       </small></div>`;
+    html += `<div style="font-size:.86rem;line-height:1.55;margin:-2px 0 12px;padding:10px 12px;background:var(--surface-container-lowest);border:1px solid var(--outline-variant);border-radius:4px;color:var(--on-surface)">
+      ${pred.narrative || 'Narrative summary unavailable for this category.'}
+    </div>`;
       
     // Render the new advanced predictive features
     html += `<div style="font-size:0.8rem; margin-bottom: 12px; padding: 8px; background: transparent; border-radius: 4px; border: 1px solid var(--outline-variant);">

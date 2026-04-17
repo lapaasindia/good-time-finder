@@ -1,325 +1,617 @@
 """
-PDF Report Builder with Bilingual Support (Hindi + English).
-Generates a comprehensive astrological report.
+PDF report builder.
 """
 from __future__ import annotations
 
 import io
+from html import escape
 from pathlib import Path
-from reportlab.lib.pagesizes import letter
+
 from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.platypus import BaseDocTemplate, PageTemplate, Frame, Paragraph, Spacer, Table, TableStyle, PageBreak
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.lib.units import inch
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.platypus import (
+    BaseDocTemplate,
+    Frame,
+    PageBreak,
+    PageTemplate,
+    Paragraph,
+    Spacer,
+    Table,
+    TableStyle,
+)
 
-# Define path to the Hindi-supporting font
-FONT_PATH = Path(__file__).parent.parent / "fonts" / "NotoSansDevanagari-Regular.ttf"
 
-def register_fonts():
-    try:
-        pdfmetrics.registerFont(TTFont("NotoHindi", str(FONT_PATH)))
-    except Exception as e:
-        print(f"Failed to load font: {e}")
+FONT_CANDIDATES = [
+    Path(__file__).parent.parent / "fonts" / "NotoSansDevanagari-Regular.ttf",
+    Path("/System/Library/Fonts/Supplemental/Noto Sans Devanagari.ttf"),
+]
 
-# Register fonts globally when module loads
-register_fonts()
 
-def _draw_dark_bg(canvas, doc):
+def _register_optional_hindi_font() -> str | None:
+    for path in FONT_CANDIDATES:
+        if not path.exists():
+            continue
+        try:
+            pdfmetrics.registerFont(TTFont("NotoHindi", str(path)))
+            pdfmetrics.registerFontFamily("NotoHindi", normal="NotoHindi")
+            return "NotoHindi"
+        except Exception:
+            continue
+    return None
+
+
+HINDI_FONT = _register_optional_hindi_font()
+
+
+def _draw_page_chrome(canvas, doc) -> None:
     canvas.saveState()
-    canvas.setFillColor(colors.HexColor('#131313'))
-    canvas.rect(0, 0, doc.pagesize[0], doc.pagesize[1], fill=1, stroke=0)
+    canvas.setStrokeColor(colors.HexColor("#d8dee9"))
+    canvas.setLineWidth(1)
+    canvas.line(doc.leftMargin, doc.pagesize[1] - 36, doc.pagesize[0] - doc.rightMargin, doc.pagesize[1] - 36)
+    canvas.setFont("Helvetica", 9)
+    canvas.setFillColor(colors.HexColor("#6b7280"))
+    canvas.drawRightString(doc.pagesize[0] - doc.rightMargin, 24, f"Page {canvas.getPageNumber()}")
     canvas.restoreState()
 
-def build_pdf_report(report_data: dict) -> bytes:
-    """Builds a PDF file in memory from the report dictionary."""
-    buffer = io.BytesBytesIO() if hasattr(io, "BytesBytesIO") else io.BytesIO()
-    doc = BaseDocTemplate(
-        buffer, pagesize=letter,
-        rightMargin=48, leftMargin=48,
-        topMargin=48, bottomMargin=48
+
+def _safe(text: object) -> str:
+    if text is None:
+        return ""
+    return escape(str(text))
+
+
+def _chip(text: str, bg: str, fg: str = "#111827") -> Table:
+    cell = Paragraph(
+        f'<font color="{fg}"><b>{_safe(text)}</b></font>',
+        ParagraphStyle(
+            "ChipText",
+            fontName="Helvetica-Bold",
+            fontSize=8.5,
+            leading=10,
+            alignment=1,
+        ),
     )
-    
-    frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id='normal')
-    template = PageTemplate(id='background', frames=frame, onPage=_draw_dark_bg)
-    doc.addPageTemplates([template])
-    
+    table = Table([[cell]], colWidths=[1.35 * inch])
+    table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor(bg)),
+                ("BOX", (0, 0), (-1, -1), 0.6, colors.HexColor(bg)),
+                ("LEFTPADDING", (0, 0), (-1, -1), 6),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+                ("TOPPADDING", (0, 0), (-1, -1), 4),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+            ]
+        )
+    )
+    return table
+
+
+def _bullet_lines(items: list[str], style: ParagraphStyle) -> list[Paragraph]:
+    if not items:
+        return [Paragraph("None highlighted.", style)]
+    return [Paragraph(f"- {_safe(item)}", style) for item in items]
+
+
+def _stat_grid(stats: list[tuple[str, str]], label_style: ParagraphStyle, value_style: ParagraphStyle) -> Table:
+    cells = []
+    for label, value in stats:
+        cells.append(
+            Paragraph(
+                f'<font color="#6b7280">{_safe(label)}</font><br/><font color="#111827"><b>{_safe(value)}</b></font>',
+                value_style,
+            )
+        )
+    rows = [cells[i : i + 2] for i in range(0, len(cells), 2)]
+    if rows and len(rows[-1]) == 1:
+        rows[-1].append(Paragraph("", label_style))
+    table = Table(rows, colWidths=[3.0 * inch, 3.0 * inch], hAlign="LEFT")
+    table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#f8fafc")),
+                ("BOX", (0, 0), (-1, -1), 0.75, colors.HexColor("#e5e7eb")),
+                ("INNERGRID", (0, 0), (-1, -1), 0.75, colors.HexColor("#e5e7eb")),
+                ("LEFTPADDING", (0, 0), (-1, -1), 12),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 12),
+                ("TOPPADDING", (0, 0), (-1, -1), 10),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+            ]
+        )
+    )
+    return table
+
+
+def build_pdf_report(report_data: dict) -> bytes:
+    """Build a polished PDF report in memory."""
+    buffer = io.BytesIO()
+    doc = BaseDocTemplate(
+        buffer,
+        pagesize=letter,
+        leftMargin=42,
+        rightMargin=42,
+        topMargin=48,
+        bottomMargin=42,
+    )
+    frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id="main")
+    doc.addPageTemplates([PageTemplate(id="report", frames=[frame], onPage=_draw_page_chrome)])
+
     styles = getSampleStyleSheet()
-    
-    # Custom styles (Indies Education Design System)
     title_style = ParagraphStyle(
-        'MainTitle', parent=styles['Title'], fontName='Helvetica-Bold', fontSize=28, spaceAfter=8, textColor=colors.HexColor('#97d94f')
+        "Title",
+        parent=styles["Title"],
+        fontName="Helvetica-Bold",
+        fontSize=24,
+        leading=28,
+        textColor=colors.HexColor("#0f172a"),
+        spaceAfter=6,
     )
     subtitle_style = ParagraphStyle(
-        'SubTitle', parent=styles['Title'], fontName='Helvetica', fontSize=14, spaceAfter=40, textColor=colors.HexColor('#a3a3a3')
+        "Subtitle",
+        parent=styles["BodyText"],
+        fontName=HINDI_FONT or "Helvetica",
+        fontSize=12,
+        leading=16,
+        textColor=colors.HexColor("#334155"),
+        spaceAfter=12,
     )
-    h1_style = ParagraphStyle(
-        'Heading1', parent=styles['Heading1'], fontName='Helvetica-Bold', fontSize=20, spaceAfter=16, textColor=colors.HexColor('#e5e2e1')
+    section_style = ParagraphStyle(
+        "Section",
+        parent=styles["Heading1"],
+        fontName="Helvetica-Bold",
+        fontSize=15,
+        leading=18,
+        textColor=colors.HexColor("#0f172a"),
+        spaceAfter=10,
+        spaceBefore=8,
     )
-    h2_style = ParagraphStyle(
-        'Heading2', parent=styles['Heading2'], fontName='Helvetica-Bold', fontSize=15, spaceAfter=12, textColor=colors.HexColor('#97d94f')
+    card_title_style = ParagraphStyle(
+        "CardTitle",
+        parent=styles["Heading2"],
+        fontName="Helvetica-Bold",
+        fontSize=11,
+        leading=14,
+        textColor=colors.HexColor("#1d4ed8"),
+        spaceAfter=6,
     )
-    normal_en = ParagraphStyle(
-        'NormalEn', parent=styles['Normal'], fontName='Helvetica', fontSize=11, leading=16, spaceAfter=8, textColor=colors.HexColor('#e5e2e1')
+    body_style = ParagraphStyle(
+        "Body",
+        parent=styles["BodyText"],
+        fontName="Helvetica",
+        fontSize=10.2,
+        leading=14.5,
+        textColor=colors.HexColor("#1f2937"),
+        spaceAfter=6,
     )
-    normal_hi = ParagraphStyle(
-        'NormalHi', parent=styles['Normal'], fontName='NotoHindi', fontSize=13, leading=18, spaceAfter=8, textColor=colors.HexColor('#a3a3a3')
+    muted_style = ParagraphStyle(
+        "Muted",
+        parent=body_style,
+        fontSize=9.2,
+        leading=13,
+        textColor=colors.HexColor("#6b7280"),
     )
-    mixed_style = ParagraphStyle(
-        'Mixed', parent=styles['Normal'], fontName='NotoHindi', fontSize=12, leading=17, spaceAfter=8, textColor=colors.HexColor('#e5e2e1')
+    small_style = ParagraphStyle(
+        "Small",
+        parent=body_style,
+        fontSize=8.8,
+        leading=12,
+        textColor=colors.HexColor("#374151"),
+        spaceAfter=4,
+    )
+    value_style = ParagraphStyle(
+        "Value",
+        parent=body_style,
+        fontName="Helvetica",
+        fontSize=10,
+        leading=13,
+        textColor=colors.HexColor("#111827"),
     )
 
     story = []
+    personal = report_data.get("personal_info", {})
+    summary = report_data.get("executive_summary", {})
+    reader_guide = report_data.get("reader_guide", {})
+    chart_basics = report_data.get("chart_basics", {})
+    chart_signature = report_data.get("chart_signature", {})
+    timing = report_data.get("timing_overview", {})
+    current_dasha = report_data.get("current_dasha", {})
+    sade_sati = report_data.get("sade_sati", {})
+    action_plan = report_data.get("action_plan", {})
 
-    # ── Cover Page ──
     story.append(Paragraph("Comprehensive Astrology Report", title_style))
-    story.append(Paragraph("सम्पूर्ण ज्योतिषीय जीवन फल (Bilingual Edition)", mixed_style))
-    story.append(Spacer(1, 30))
-    
-    pi = report_data.get("personal_info", {})
-    story.append(Paragraph(f"<b>Name / नाम:</b> {pi.get('name')}", mixed_style))
-    story.append(Paragraph(f"<b>Birth Date / जन्म तिथि:</b> {pi.get('dob')}", mixed_style))
-    story.append(Paragraph(f"<b>Lagna / लग्न:</b> {pi.get('lagna')}", mixed_style))
-    story.append(Paragraph(f"<b>Moon Sign / चंद्र राशि:</b> {pi.get('moon_sign')}", mixed_style))
-    story.append(Paragraph(f"<b>Nakshatra / नक्षत्र:</b> {pi.get('nakshatra')}", mixed_style))
-    story.append(PageBreak())
+    if HINDI_FONT:
+        story.append(Paragraph("Samagra Jyotish Report", subtitle_style))
+    story.append(
+        Paragraph(
+            f'<font color="#6b7280">{_safe(personal.get("name", "Native"))}</font><br/>'
+            f'<font color="#111827"><b>{_safe(summary.get("headline", ""))}</b></font>',
+            body_style,
+        )
+    )
+    story.append(Spacer(1, 10))
 
-    # ── 1. Personality Profile ──
-    story.append(Paragraph("1. Personality Profile / व्यक्तित्व विश्लेषण", h1_style))
-    pers = report_data.get("personality", {}).get("lagna_based", {})
-    
-    story.append(Paragraph("<b>Nature / स्वभाव:</b>", normal_en))
-    story.append(Paragraph(pers.get("nature_en", ""), normal_en))
-    story.append(Paragraph(pers.get("nature_hi", ""), normal_hi))
-    
-    story.append(Paragraph("<b>Career / करियर:</b>", normal_en))
-    story.append(Paragraph(pers.get("career_en", ""), normal_en))
-    story.append(Paragraph(pers.get("career_hi", ""), normal_hi))
-    
-    story.append(Paragraph("<b>Health / स्वास्थ्य:</b>", normal_en))
-    story.append(Paragraph(pers.get("health_en", ""), normal_en))
-    story.append(Paragraph(pers.get("health_hi", ""), normal_hi))
-    
-    story.append(Paragraph("<b>Relationships / रिश्ते:</b>", normal_en))
-    story.append(Paragraph(pers.get("relationship_en", ""), normal_en))
-    story.append(Paragraph(pers.get("relationship_hi", ""), normal_hi))
-    story.append(Spacer(1, 20))
+    hero_stats = [
+        ("Birth Details", f'{personal.get("dob", "N/A")} | {personal.get("timezone", "N/A")}'),
+        ("Core Placements", f'{personal.get("lagna", "N/A")} Lagna | {personal.get("moon_sign", "N/A")} Moon'),
+        ("Nakshatra", personal.get("nakshatra", "N/A")),
+        ("Current Cycle", current_dasha.get("summary", timing.get("current_cycle", "N/A"))),
+        (
+            "Sade Sati",
+            sade_sati.get("summary", "N/A"),
+        ),
+        ("Coordinates", personal.get("place", "N/A")),
+    ]
+    story.append(_stat_grid(hero_stats, muted_style, value_style))
+    story.append(Spacer(1, 14))
 
-    # ── 2. Astrological Synthesis (The Jury) ──
-    story.append(PageBreak())
-    story.append(Paragraph("2. Astrological Synthesis / ज्योतिषीय निष्कर्ष", h1_style))
-    
-    for syn in report_data.get("synthesis", []):
-        story.append(Paragraph(f"<b>{syn['domain_en']} / {syn['domain_hi']}</b>", h2_style))
-        story.append(Paragraph(f"<b>Summary:</b> {syn['summary_en']}", normal_en))
-        story.append(Paragraph(f"<b>निष्कर्ष:</b> {syn['summary_hi']}", normal_hi))
-        story.append(Paragraph("<i>Key Astrological Factors:</i>", normal_en))
-        for f_en, f_hi in zip(syn.get("key_factors_en", []), syn.get("key_factors_hi", [])):
-            story.append(Paragraph(f"• {f_en}", normal_en))
-            story.append(Paragraph(f"  ({f_hi})", normal_hi))
-        story.append(Spacer(1, 15))
+    overview_box = Table(
+        [[Paragraph(_safe(summary.get("overview", "")), body_style)]],
+        colWidths=[doc.width],
+        hAlign="LEFT",
+    )
+    overview_box.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#eef6ff")),
+                ("BOX", (0, 0), (-1, -1), 0.75, colors.HexColor("#bfdbfe")),
+                ("LEFTPADDING", (0, 0), (-1, -1), 12),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 12),
+                ("TOPPADDING", (0, 0), (-1, -1), 12),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 12),
+            ]
+        )
+    )
+    story.append(overview_box)
+    story.append(Spacer(1, 18))
 
-    story.append(PageBreak())
-
-    # ── 3. Planetary Placements & Meanings ──
-    story.append(Paragraph("3. Planets & Their Meaning / ग्रहों की स्थिति और अर्थ", h1_style))
-    
-    for planet_data in report_data.get("planetary_positions", []):
-        story.append(Paragraph(f"<b>{planet_data['planet']} (in {planet_data['sign']}, House {planet_data['house']})</b>", h2_style))
-        story.append(Paragraph(f"Strength/बल: {planet_data['strength']}", normal_en))
-        
-        if planet_data.get("avastha_en"):
-            story.append(Paragraph(f"Avastha (Age State): {planet_data['avastha_en']} / {planet_data['avastha_hi']}", mixed_style))
-        
-        story.append(Paragraph(f"<i>Nature / प्रकृति:</i>", normal_en))
-        story.append(Paragraph(planet_data.get("nature_en", ""), normal_en))
-        story.append(Paragraph(planet_data.get("nature_hi", ""), normal_hi))
-        
-        story.append(Paragraph(f"<i>Significations / कारक:</i>", normal_en))
-        story.append(Paragraph(planet_data.get("significations_en", ""), normal_en))
-        story.append(Paragraph(planet_data.get("significations_hi", ""), normal_hi))
+    if reader_guide:
+        story.append(Paragraph("How To Read This Report", section_style))
+        story.append(Paragraph(_safe(reader_guide.get("overview", "")), body_style))
+        story.append(Paragraph("Quick guide", card_title_style))
+        story.extend(_bullet_lines(reader_guide.get("how_to_use", []), body_style))
+        terms = [
+            f"{item.get('term')}: {item.get('meaning')}"
+            for item in reader_guide.get("terms", [])
+        ]
+        if terms:
+            story.append(Paragraph("Plain-English glossary", card_title_style))
+            story.extend(_bullet_lines(terms[:6], small_style))
         story.append(Spacer(1, 10))
 
-    story.append(PageBreak())
+    if chart_basics:
+        story.append(Paragraph("Your Chart In Plain English", section_style))
+        story.append(Paragraph(_safe(chart_basics.get("plain_english", "")), body_style))
+        story.append(
+            Paragraph(
+                f"<b>Identity:</b> {_safe(chart_basics.get('identity', ''))}",
+                body_style,
+            )
+        )
+        story.append(
+            Paragraph(
+                f"<b>Work style:</b> {_safe(chart_basics.get('work_style', ''))}",
+                body_style,
+            )
+        )
+        story.append(
+            Paragraph(
+                f"<b>Relationships:</b> {_safe(chart_basics.get('relationships', ''))}",
+                body_style,
+            )
+        )
+        story.append(
+            Paragraph(
+                f"<b>Well-being:</b> {_safe(chart_basics.get('wellbeing', ''))}",
+                body_style,
+            )
+        )
+        story.append(Spacer(1, 10))
 
-    # ── 4. Houses Analysis ──
-    story.append(Paragraph("4. House Meanings / भाव विश्लेषण", h1_style))
-    
-    for house_data in report_data.get("houses_info", []):
-        name_en = house_data.get('name_en', '')
-        name_hi = house_data.get('name_hi', '')
-        story.append(Paragraph(f"<b>{name_en} / {name_hi}</b>", h2_style))
-        
-        occ = ", ".join(house_data.get("occupants", []))
-        if not occ:
-            occ = "None (Empty House)"
-            
-        story.append(Paragraph(f"Occupants/ग्रह: {occ}", normal_en))
-        
-        aspects = ", ".join(house_data.get("aspected_by", []))
-        if aspects:
-            story.append(Paragraph(f"Aspected By/दृष्टि: {aspects}", normal_en))
-            
-        story.append(Paragraph(house_data.get("domain_en", ""), normal_en))
-        story.append(Paragraph(house_data.get("domain_hi", ""), normal_hi))
+    story.append(Paragraph("Executive Summary", section_style))
+    story.append(Paragraph("Strengths", card_title_style))
+    story.extend(_bullet_lines(summary.get("strengths", []), body_style))
+    story.append(Paragraph("Cautions", card_title_style))
+    story.extend(_bullet_lines(summary.get("cautions", []), body_style))
+    story.append(Paragraph("Timing Highlights", card_title_style))
+    story.extend(_bullet_lines(summary.get("timing_highlights", []), body_style))
+    story.append(Spacer(1, 10))
+
+    dominant = chart_signature.get("dominant_planets", [])
+    sensitive = chart_signature.get("sensitive_planets", [])
+    if dominant or sensitive:
+        story.append(Paragraph("Chart Signature", section_style))
+        signature_rows = [["Dominant planets", "Sensitive planets"]]
+        signature_rows.append(
+            [
+                "<br/>".join(
+                    f"{_safe(item['planet'])} - {_safe(item['band'])} ({item['strength']:.2f})"
+                    for item in dominant
+                )
+                or "None highlighted.",
+                "<br/>".join(
+                    f"{_safe(item['planet'])} - {_safe(item['band'])} ({item['strength']:.2f})"
+                    for item in sensitive
+                )
+                or "None highlighted.",
+            ]
+        )
+        signature_table = Table(
+            [
+                [
+                    Paragraph("<b>Dominant planets</b>", body_style),
+                    Paragraph("<b>Sensitive planets</b>", body_style),
+                ],
+                [
+                    Paragraph(signature_rows[1][0], small_style),
+                    Paragraph(signature_rows[1][1], small_style),
+                ],
+            ],
+            colWidths=[3.0 * inch, 3.0 * inch],
+            hAlign="LEFT",
+        )
+        signature_table.setStyle(
+            TableStyle(
+                [
+                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#f8fafc")),
+                    ("BACKGROUND", (0, 1), (-1, -1), colors.white),
+                    ("BOX", (0, 0), (-1, -1), 0.75, colors.HexColor("#e5e7eb")),
+                    ("INNERGRID", (0, 0), (-1, -1), 0.75, colors.HexColor("#e5e7eb")),
+                    ("LEFTPADDING", (0, 0), (-1, -1), 10),
+                    ("RIGHTPADDING", (0, 0), (-1, -1), 10),
+                    ("TOPPADDING", (0, 0), (-1, -1), 8),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+                    ("VALIGN", (0, 0), (-1, -1), "TOP"),
+                ]
+            )
+        )
+        story.append(signature_table)
+        story.append(Spacer(1, 14))
+
+    story.append(Paragraph("Life Domain Synthesis", section_style))
+    for syn in report_data.get("synthesis", []):
+        badge_color = {
+            "Excellent": "#bbf7d0",
+            "Supportive": "#dbeafe",
+            "Mixed": "#fde68a",
+            "Needs care": "#fecaca",
+        }.get(syn.get("score_band"), "#e5e7eb")
+        domain_header = Table(
+            [
+                [
+                    Paragraph(f"<b>{_safe(syn.get('domain_en'))}</b>", body_style),
+                    _chip(f"{syn.get('score_band')} | {syn.get('score')}", badge_color),
+                ]
+            ],
+            colWidths=[4.6 * inch, 1.4 * inch],
+            hAlign="LEFT",
+        )
+        domain_header.setStyle(
+            TableStyle(
+                [
+                    ("BACKGROUND", (0, 0), (-1, -1), colors.HexColor("#ffffff")),
+                    ("BOX", (0, 0), (-1, -1), 0.75, colors.HexColor("#dbe3ef")),
+                    ("LEFTPADDING", (0, 0), (-1, -1), 10),
+                    ("RIGHTPADDING", (0, 0), (-1, -1), 10),
+                    ("TOPPADDING", (0, 0), (-1, -1), 8),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+                    ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+                ]
+            )
+        )
+        story.append(domain_header)
+        story.append(Paragraph(_safe(syn.get("summary_en", "")), body_style))
+        if syn.get("plain_english"):
+            story.append(Paragraph(_safe(syn.get("plain_english", "")), small_style))
+        focus_now = syn.get("focus_now", [])
+        info_line = []
+        if syn.get("confidence"):
+            info_line.append(f"Confidence: {syn.get('confidence')}")
+        if focus_now:
+            info_line.append(f"Focus now: {', '.join(focus_now[:2])}")
+        if info_line:
+            story.append(Paragraph(_safe(" | ".join(info_line)), muted_style))
+        story.extend(_bullet_lines(syn.get("key_factors_en", [])[:4], small_style))
         story.append(Spacer(1, 8))
 
     story.append(PageBreak())
-
-    # ── 5. Yogas & Doshas ──
-    story.append(Paragraph("5. Key Yogas & Special Conditions / योग एवं दोष", h1_style))
-    
-    story.append(Paragraph("<b>Natal Yogas / जन्मकालीन योग:</b>", h2_style))
-    for y in report_data.get("yogas", []):
-        story.append(Paragraph(f"• <b>{y['name']}</b> - {y['description']}", normal_en))
-    story.append(Spacer(1, 15))
-
-    story.append(Paragraph("<b>Special Conditions / विशेष स्थितियां:</b>", h2_style))
-    doshas = report_data.get("doshas", {})
-    if doshas.get("kaal_sarp_dosha"):
-        story.append(Paragraph(f"⚠ Kaal Sarp Dosha ({doshas.get('kaal_sarp_type')}) is active.", normal_en))
-    if doshas.get("mangal_dosha"):
-        story.append(Paragraph(f"⚠ Mangal Dosha is active.", normal_en))
-    
-    retro = [p for p, data in doshas.get("retrograde", {}).items() if data.get("retrograde")]
-    if retro:
-        story.append(Paragraph(f"Retrograde Planets (Vakri): {', '.join(retro)}", normal_en))
-    
-    combust = [p for p, data in doshas.get("combustion", {}).items() if data.get("combust")]
-    if combust:
-        story.append(Paragraph(f"Combust Planets (Asta): {', '.join(combust)}", normal_en))
-        
-    story.append(PageBreak())
-
-    # ── 6. Dasha Timeline & Sade Sati & Transits ──
-    story.append(Paragraph("6. Dasha, Sade Sati & Current Transits", h1_style))
-    dasha = report_data.get("current_dasha", {})
-    story.append(Paragraph(f"<b>Current Active Dasha:</b> {dasha.get('maha', 'N/A')} Mahadasha, {dasha.get('antar', 'N/A')} Antardasha", normal_en))
+    story.append(Paragraph("Planet Snapshot", section_style))
+    planet_rows = [["Planet", "Placement", "Strength", "Notes"]]
+    for planet in report_data.get("planetary_positions", []):
+        flags = ", ".join(planet.get("flags", [])) or "None"
+        placement = f"{planet.get('sign')} | House {planet.get('house')}"
+        strength = f"{planet.get('strength_band')} ({planet.get('strength')})"
+        note = f"Avastha: {planet.get('avastha_en') or 'N/A'} | Flags: {flags}"
+        planet_rows.append([planet.get("planet"), placement, strength, note])
+    planet_table = Table(
+        planet_rows,
+        colWidths=[0.9 * inch, 1.65 * inch, 1.25 * inch, 2.2 * inch],
+        repeatRows=1,
+        hAlign="LEFT",
+    )
+    planet_table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0f172a")),
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                ("BACKGROUND", (0, 1), (-1, -1), colors.white),
+                ("BOX", (0, 0), (-1, -1), 0.75, colors.HexColor("#d1d5db")),
+                ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#e5e7eb")),
+                ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                ("FONTSIZE", (0, 0), (-1, -1), 8.5),
+                ("LEADING", (0, 0), (-1, -1), 10),
+                ("LEFTPADDING", (0, 0), (-1, -1), 7),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 7),
+                ("TOPPADDING", (0, 0), (-1, -1), 6),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+            ]
+        )
+    )
+    story.append(planet_table)
     story.append(Spacer(1, 10))
+    for planet in report_data.get("planetary_positions", [])[:7]:
+        story.append(Paragraph(f"<b>{_safe(planet.get('planet'))}</b>", card_title_style))
+        story.append(Paragraph(_safe(planet.get("interpretation_en", "")), body_style))
 
-    story.append(Paragraph("<b>Upcoming Mahadashas (Life Chapters)</b>", h2_style))
-    d_data = [["Planet", "Start Date", "End Date"]]
-    for d in report_data.get("dasha_list", []):
-        d_data.append([d['planet'], d['start'], d['end']])
-        
-    t = Table(d_data, colWidths=[120, 120, 120])
-    t.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#2a2a2a')),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.HexColor('#e5e2e1')),
-        ('ALIGN', (0,0), (-1,-1), 'LEFT'),
-        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0,0), (-1,0), 8),
-        ('BACKGROUND', (0,1), (-1,-1), colors.HexColor('#131313')),
-        ('TEXTCOLOR', (0,1), (-1,-1), colors.HexColor('#a3a3a3')),
-        ('GRID', (0,0), (-1,-1), 1, colors.HexColor('#2a2a2a'))
-    ]))
-    story.append(t)
-    story.append(Spacer(1, 20))
+    story.append(Spacer(1, 12))
+    story.append(Paragraph("Houses At A Glance", section_style))
+    house_rows = [["House", "Occupants", "Interpretation"]]
+    for house in report_data.get("houses_info", []):
+        occupants = ", ".join(house.get("occupants", [])) or "None"
+        house_rows.append([f"{house.get('house')}", occupants, house.get("interpretation_en", "")])
+    house_table = Table(
+        house_rows,
+        colWidths=[0.5 * inch, 1.35 * inch, 4.15 * inch],
+        repeatRows=1,
+        hAlign="LEFT",
+    )
+    house_table.setStyle(
+        TableStyle(
+            [
+                ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#eff6ff")),
+                ("TEXTCOLOR", (0, 0), (-1, 0), colors.HexColor("#1e3a8a")),
+                ("BOX", (0, 0), (-1, -1), 0.75, colors.HexColor("#dbeafe")),
+                ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#e5e7eb")),
+                ("FONTSIZE", (0, 0), (-1, -1), 8),
+                ("LEADING", (0, 0), (-1, -1), 10),
+                ("LEFTPADDING", (0, 0), (-1, -1), 6),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+                ("TOPPADDING", (0, 0), (-1, -1), 5),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 5),
+                ("VALIGN", (0, 0), (-1, -1), "TOP"),
+            ]
+        )
+    )
+    story.append(house_table)
 
-    # Sade Sati
-    sade = report_data.get("sade_sati", {})
-    if hasattr(sade, "is_active"): # Handle object vs dict
-        is_active = sade.is_active
-        current_phase = getattr(sade, "current_phase", "Unknown")
-        next_occurrence = getattr(sade, "next_occurrence", "Unknown")
-    elif isinstance(sade, dict):
-        is_active = sade.get("is_active")
-        current_phase = sade.get("current_phase", "Unknown")
-        next_occurrence = sade.get("next_occurrence", "Unknown")
-    else:
-        is_active = False
-        current_phase = "Unknown"
-        next_occurrence = "Unknown"
-
-    story.append(Paragraph("<b>Sade Sati (Saturn Transit)</b>", h2_style))
-    if is_active:
-        story.append(Paragraph(f"⚠️ <b>Currently Active</b> (Phase: {current_phase})", normal_en))
-    else:
-        story.append(Paragraph(f"Not currently active. Next phase starts: {next_occurrence}", normal_en))
-    story.append(Spacer(1, 20))
-
-    # Gochara (Transits)
-    transits = report_data.get("transits", {})
-    story.append(Paragraph("<b>Current Transits (Gochara) from Moon</b>", h2_style))
-    tr_data = [["Planet", "House from Moon", "Score"]]
-    for p, v in transits.items():
-        tr_data.append([p, str(v['house_from_moon']), str(v['score'])])
-        
-    t2 = Table(tr_data, colWidths=[120, 120, 120])
-    t2.setStyle(TableStyle([
-        ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#2a2a2a')),
-        ('TEXTCOLOR', (0,0), (-1,0), colors.HexColor('#e5e2e1')),
-        ('ALIGN', (0,0), (-1,-1), 'LEFT'),
-        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0,0), (-1,0), 8),
-        ('BACKGROUND', (0,1), (-1,-1), colors.HexColor('#131313')),
-        ('TEXTCOLOR', (0,1), (-1,-1), colors.HexColor('#a3a3a3')),
-        ('GRID', (0,0), (-1,-1), 1, colors.HexColor('#2a2a2a'))
-    ]))
-    story.append(t2)
-    story.append(Spacer(1, 20))
-
-    # ── 7. Comprehensive Remedies ──
     story.append(PageBreak())
-    story.append(Paragraph("7. Comprehensive Remedies / सम्पूर्ण उपाय", h1_style))
-    
-    remedies = report_data.get("remedies", {})
+    story.append(Paragraph("Yogas And Conditions", section_style))
+    story.append(Paragraph("Strong yogas", card_title_style))
+    story.extend(
+        _bullet_lines(
+            [
+                f"{item.get('name')} ({item.get('score')}): {item.get('description')}"
+                for item in report_data.get("yogas", [])[:8]
+            ],
+            body_style,
+        )
+    )
+    story.append(Paragraph("Active chart pressures", card_title_style))
+    active_doshas = [
+        detail for detail in report_data.get("doshas", {}).get("dosha_details", []) if detail.get("present")
+    ]
+    story.extend(
+        _bullet_lines(
+            [f"{item.get('name')}: {item.get('description')}" for item in active_doshas[:6]],
+            body_style,
+        )
+    )
 
-    # Gemstones
-    story.append(Paragraph("<b>Gemstone Prescriptions / रत्न सुझाव</b>", h2_style))
-    gems = remedies.get("gemstones", {})
-    if not gems:
-        story.append(Paragraph("No gemstone recommended.", normal_en))
-    for p, gem_info in gems.items():
-        story.append(Paragraph(f"<b>{p}</b>: {gem_info['gem_en']} / {gem_info['gem_hi']}", mixed_style))
-        story.append(Paragraph(f"Status: {gem_info['status']} ({gem_info['status_hi']})", mixed_style))
-        story.append(Paragraph(f"Reason: {gem_info['reason']}", normal_en))
-        story.append(Spacer(1, 5))
-    story.append(Spacer(1, 10))
+    story.append(Spacer(1, 12))
+    story.append(Paragraph("Timing Outlook", section_style))
+    timing_band = timing.get("timing_band")
+    if timing_band:
+        timing_color = {
+            "Excellent": "#bbf7d0",
+            "Supportive": "#dbeafe",
+            "Mixed": "#fde68a",
+            "Needs care": "#fecaca",
+        }.get(timing_band, "#e5e7eb")
+        story.append(_chip(timing_band, timing_color))
+        story.append(Spacer(1, 6))
+    if timing.get("plain_english"):
+        story.append(Paragraph(_safe(timing.get("plain_english", "")), body_style))
+    story.append(Paragraph(_safe(timing.get("current_cycle", "")), body_style))
+    if timing.get("best_for_now"):
+        story.append(Paragraph("Best used for", card_title_style))
+        story.extend(_bullet_lines(timing.get("best_for_now", []), body_style))
+    if timing.get("caution_for_now"):
+        story.append(Paragraph("Use more care with", card_title_style))
+        story.extend(_bullet_lines(timing.get("caution_for_now", []), body_style))
 
-    # Rudraksha
-    story.append(Paragraph("<b>Rudraksha Recommendations / रुद्राक्ष सुझाव</b>", h2_style))
-    rudras = remedies.get("rudraksha", [])
-    if not rudras:
-        story.append(Paragraph("No specific Rudraksha required.", normal_en))
-    for r in rudras:
-        story.append(Paragraph(f"<b>{r['planet']}</b>: {r['rudraksha_en']} / {r['rudraksha_hi']}", mixed_style))
-        story.append(Paragraph(f"Benefit: {r['benefit_en']}", normal_en))
-        story.append(Paragraph(f"लाभ: {r['benefit_hi']}", normal_hi))
-        story.append(Spacer(1, 5))
-    story.append(Spacer(1, 10))
+    next_dashas = timing.get("next_dashas", [])
+    if next_dashas:
+        dasha_rows = [["Planet", "Start", "End"]]
+        for item in next_dashas:
+            dasha_rows.append([item.get("planet"), item.get("start"), item.get("end")])
+        dasha_table = Table(dasha_rows, colWidths=[1.2 * inch, 2.0 * inch, 2.0 * inch], hAlign="LEFT")
+        dasha_table.setStyle(
+            TableStyle(
+                [
+                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#f8fafc")),
+                    ("BOX", (0, 0), (-1, -1), 0.75, colors.HexColor("#e5e7eb")),
+                    ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#e5e7eb")),
+                    ("LEFTPADDING", (0, 0), (-1, -1), 8),
+                    ("RIGHTPADDING", (0, 0), (-1, -1), 8),
+                    ("TOPPADDING", (0, 0), (-1, -1), 6),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+                ]
+            )
+        )
+        story.append(dasha_table)
+        story.append(Spacer(1, 8))
 
-    # Vastu
-    story.append(Paragraph("<b>Astro-Vastu / वास्तु सुझाव</b>", h2_style))
-    vastu = remedies.get("vastu", {})
-    if vastu:
-        story.append(Paragraph(f"Strongest Planet: <b>{vastu.get('planet')}</b>", normal_en))
-        story.append(Paragraph(f"Lucky Direction: {vastu.get('direction_en')} / {vastu.get('direction_hi')}", mixed_style))
-        story.append(Paragraph(vastu.get('benefit_en', ''), normal_en))
-        story.append(Paragraph(vastu.get('benefit_hi', ''), normal_hi))
-    story.append(Spacer(1, 15))
-    
-    # Lal Kitab
+    transits = timing.get("supportive_transits", []) + timing.get("challenging_transits", [])
+    if transits:
+        transit_rows = [["Planet", "House From Moon", "Score", "Tone"]]
+        for item in timing.get("supportive_transits", []):
+            transit_rows.append([item["planet"], item["house_from_moon"], f'{item["score"]:.2f}', "Supportive"])
+        for item in timing.get("challenging_transits", []):
+            transit_rows.append([item["planet"], item["house_from_moon"], f'{item["score"]:.2f}', "Challenging"])
+        transit_table = Table(transit_rows, colWidths=[1.4 * inch, 1.6 * inch, 1.0 * inch, 1.4 * inch], hAlign="LEFT")
+        transit_table.setStyle(
+            TableStyle(
+                [
+                    ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#0f172a")),
+                    ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                    ("BOX", (0, 0), (-1, -1), 0.75, colors.HexColor("#d1d5db")),
+                    ("INNERGRID", (0, 0), (-1, -1), 0.5, colors.HexColor("#e5e7eb")),
+                    ("LEFTPADDING", (0, 0), (-1, -1), 7),
+                    ("RIGHTPADDING", (0, 0), (-1, -1), 7),
+                    ("TOPPADDING", (0, 0), (-1, -1), 6),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 6),
+                ]
+            )
+        )
+        story.append(transit_table)
+
     story.append(PageBreak())
-    story.append(Paragraph("<b>Lal Kitab Remedies & Donations / लाल किताब उपाय एवं दान</b>", h2_style))
-    
-    for lk in remedies.get("lal_kitab", []):
-        story.append(Paragraph(f"<b>{lk['planet']} in House {lk['house']}</b>", h2_style))
-        story.append(Paragraph(lk["effect_en"], normal_en))
-        story.append(Paragraph(lk["effect_hi"], normal_hi))
-        
-        story.append(Paragraph("<i>Remedies / उपाय:</i>", normal_hi))
-        story.append(Paragraph("EN: " + ", ".join(lk["remedies_en"]), normal_en))
-        story.append(Paragraph("HI: " + ", ".join(lk["remedies_hi"]), normal_hi))
-        
-        story.append(Paragraph("<i>Donations / दान:</i>", normal_hi))
-        story.append(Paragraph("EN: " + ", ".join(lk["donate_en"]), normal_en))
-        story.append(Paragraph("HI: " + ", ".join(lk["donate_hi"]), normal_hi))
-        
-        story.append(Paragraph("<i>Avoid / परहेज़:</i>", normal_hi))
-        story.append(Paragraph("EN: " + ", ".join(lk["avoid_en"]), normal_en))
-        story.append(Paragraph("HI: " + ", ".join(lk["avoid_hi"]), normal_hi))
-        story.append(Spacer(1, 15))
+    story.append(Paragraph("Remedies And Practical Focus", section_style))
+    if action_plan:
+        story.append(Paragraph("Action plan", card_title_style))
+        story.append(Paragraph("Lean into", card_title_style))
+        story.extend(_bullet_lines(action_plan.get("lean_into", []), body_style))
+        story.append(Paragraph("Watch for", card_title_style))
+        story.extend(_bullet_lines(action_plan.get("watch_for", []), body_style))
+        story.append(Paragraph("Next steps", card_title_style))
+        story.extend(_bullet_lines(action_plan.get("next_steps", []), body_style))
+        story.append(Spacer(1, 10))
+
+    remedy_focus = report_data.get("remedy_focus", {})
+    story.append(Paragraph("Priority actions", card_title_style))
+    story.extend(_bullet_lines(remedy_focus.get("priority_actions", []), body_style))
+    story.append(Paragraph("Supportive items", card_title_style))
+    story.extend(_bullet_lines(remedy_focus.get("supportive_items", []), body_style))
+    story.append(Paragraph("Avoidances", card_title_style))
+    story.extend(_bullet_lines(remedy_focus.get("avoidances", []), body_style))
+
+    story.append(Spacer(1, 10))
+    story.append(Paragraph("Lal Kitab quick remedies", card_title_style))
+    for item in report_data.get("remedies", {}).get("lal_kitab", [])[:4]:
+        story.append(
+            Paragraph(
+                f"<b>{_safe(item.get('planet'))} in house {_safe(item.get('house'))}</b>: "
+                f"{_safe(item.get('effect_en'))}",
+                body_style,
+            )
+        )
+        remedies_line = ", ".join(item.get("remedies_en", [])[:3]) or "No specific remedy listed."
+        story.append(Paragraph(f"Suggested: {_safe(remedies_line)}", small_style))
 
     doc.build(story)
     pdf_bytes = buffer.getvalue()

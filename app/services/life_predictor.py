@@ -621,6 +621,7 @@ class LifePredictorService:
             sade_sati=sade_sati,
             special=special,
             panchang=panchang,
+            windows=prediction_windows,
         )
 
         return LifePrediction(
@@ -664,68 +665,169 @@ def _build_narrative(
     sade_sati=None,
     special=None,
     panchang=None,
+    windows: list[PredictionWindow] | None = None,
 ) -> str:
-    parts = []
+    category_labels = {
+        "general": "overall life decisions",
+        "travel": "travel and movement",
+        "marriage": "marriage and partnership",
+        "career": "career and professional decisions",
+        "finance": "money and financial choices",
+        "health": "health and recovery",
+        "education": "study and skill-building",
+        "property": "property and home matters",
+        "children": "children and family planning",
+        "spirituality": "inner work and spiritual practice",
+        "legal": "legal and dispute-related matters",
+        "fame": "visibility and public recognition",
+        "business": "business and commercial decisions",
+        "relationships": "relationships and emotional connection",
+        "accidents": "risk management and physical caution",
+    }
+    category_actions = {
+        "general": "important conversations, planning, and steady decisions",
+        "travel": "bookings, logistics, applications, and movement plans",
+        "marriage": "important relationship talks, introductions, or commitment planning",
+        "career": "interviews, proposals, launches, presentations, and work conversations",
+        "finance": "budgeting, negotiations, purchases, and practical money planning",
+        "health": "check-ins, treatment planning, rest, and sustainable routines",
+        "education": "study, applications, writing, and exams",
+        "property": "home decisions, property paperwork, and long-term planning",
+        "children": "family conversations, planning, and nurturing routines",
+        "spirituality": "reflection, retreat, practice, and inner reset",
+        "legal": "documents, response strategy, and careful advice-taking",
+        "fame": "public visibility, branding, and speaking opportunities",
+        "business": "sales, partnerships, negotiations, and execution",
+        "relationships": "communication, repair, and expectation-setting",
+        "accidents": "slowing down, travel caution, and risk reduction",
+    }
+    planet_focus = {
+        "Sun": "confidence, visibility, leadership, and authority",
+        "Moon": "emotions, home life, habits, and mental steadiness",
+        "Mars": "drive, courage, conflict, and action",
+        "Mercury": "learning, writing, deals, analysis, and communication",
+        "Jupiter": "growth, learning, mentors, wisdom, and long-term opportunity",
+        "Venus": "relationships, comfort, design, pleasure, and agreement",
+        "Saturn": "discipline, delay, responsibility, and long-term structure",
+        "Rahu": "ambition, novelty, foreign links, and restless desire",
+        "Ketu": "detachment, specialization, and stepping back from noise",
+    }
 
-    if maha:
-        parts.append(f"{maha.planet} Mahadasha is active")
+    def _friendly_dt(dt: datetime) -> str:
+        return dt.strftime("%d %b %Y %I:%M %p")
+
+    def _overall_sentence() -> str:
+        label = category_labels.get(category, category)
+        if overall_score >= 1.5:
+            return f"{label.capitalize()} look especially strong in this range, so well-prepared action has a better than usual chance of landing well."
+        if overall_score >= 0.5:
+            return f"{label.capitalize()} look supportive overall in this range, especially if you stay steady and avoid unnecessary drama."
+        if overall_score >= -0.5:
+            return f"{label.capitalize()} look mixed in this range, so selectivity and timing matter more than speed."
+        if overall_score >= -1.5:
+            return f"{label.capitalize()} look somewhat demanding in this range, so it is better to move carefully than to force results."
+        return f"{label.capitalize()} look quite heavy in this range, so use the period more for protection, repair, and cleaner judgment than expansion."
+
+    def _timing_cycle_sentence() -> str:
+        if not maha:
+            return ""
+        maha_focus = planet_focus.get(maha.planet, "major life themes")
         if antar:
-            parts.append(f"with {antar.planet} Antardasha")
-        parts.append(".")
-
-    if sade_sati and sade_sati.currently_active:
-        phase = sade_sati.current_phase
-        parts.append(
-            f"⚠ Sade Sati is active ({phase.phase} phase, Saturn in {phase.saturn_sign}) — "
-            f"expect karmic challenges and restructuring."
+            antar_focus = planet_focus.get(antar.planet, "a shorter sub-theme")
+            return (
+                f"The main timing cycle is {maha.planet}, with {antar.planet} as the active sub-cycle. "
+                f"In plain English, {maha.planet} is turning up {maha_focus}, while {antar.planet} adds extra focus on {antar_focus}."
+            )
+        return (
+            f"The main timing cycle is {maha.planet}. "
+            f"This tends to make {maha_focus} more central than usual."
         )
-    elif sade_sati and sade_sati.dhaiya_active:
-        parts.append(f"Shani Dhaiya is active (Saturn in {sade_sati.dhaiya_sign}) — minor obstacles possible.")
 
-    if special:
+    def _transit_sentence() -> str:
+        if gochara_score >= 1.5:
+            return "Current transits are strongly supportive, so the environment around you is helping more than usual."
+        if gochara_score >= 0.5:
+            return "Current transits are mildly supportive, which helps progress if you stay practical."
+        if gochara_score >= -0.5:
+            return "Current transits are mixed, so external conditions may feel changeable even when the plan is sound."
+        if gochara_score >= -1.5:
+            return "Current transits are on the heavier side, so delays, mood swings, or mixed signals are more likely than usual."
+        return "Current transits are quite heavy, so leave extra margin and avoid decisions made only from pressure."
+
+    def _saturn_sentence() -> str:
+        if sade_sati and sade_sati.currently_active and sade_sati.current_phase:
+            phase = sade_sati.current_phase
+            return (
+                f"Sade Sati is active in its {phase.phase.lower()} phase, which usually feels like a Saturn season: "
+                "slower progress, stronger reality checks, and a bigger need for patience and structure."
+            )
+        if sade_sati and sade_sati.dhaiya_active:
+            return "Shani Dhaiya is active, so this is a better phase for disciplined pacing than impulsive expansion."
+        return ""
+
+    def _special_sentence() -> str:
+        if not special:
+            return ""
+        lines: list[str] = []
         if special.kaal_sarp_dosha:
-            parts.append(f"⚠ Kaal Sarp Dosha present ({special.kaal_sarp_type}) — amplified karmic intensity.")
+            lines.append("the chart can move through sharper highs and lows than average")
         if special.mangal_dosha:
-            parts.append("Mangal Dosha present — caution in relationships and partnerships.")
-        combust = [p for p, r in special.combustion.items() if r.combust]
+            lines.append("relationships and reactive decisions benefit from extra patience")
+        combust = [planet for planet, result in special.combustion.items() if result.combust]
         if combust:
-            parts.append(f"Planets combust (near Sun): {', '.join(combust)}.")
-        retro = [p for p, r in special.retrograde.items() if r.retrograde]
-        if retro:
-            parts.append(f"Retrograde planets (intensified/internalized): {', '.join(retro)}.")
+            lines.append(f"{', '.join(combust[:2])} may act less directly because they are too close to the Sun")
+        if not lines:
+            return ""
+        return "Birth-chart sensitivity is a bit higher here: " + "; ".join(lines) + "."
 
-    if panchang:
-        if panchang.yoga_nature == "good":
-            parts.append(f"Panchang Yoga '{panchang.yoga_name}' is auspicious.")
-        elif panchang.yoga_nature == "bad":
-            parts.append(f"Panchang Yoga '{panchang.yoga_name}' is inauspicious — avoid major decisions.")
-        if panchang.karana_name == "Vishti":
-            parts.append("Vishti Karana (Bhadra) is active — avoid new beginnings.")
+    def _panchang_sentence() -> str:
+        if not panchang:
+            return ""
+        if panchang.yoga_nature == "good" and panchang.karana_nature != "bad":
+            return f"The day-quality factors are supportive right now, so routine decisions may move more smoothly than expected."
+        if panchang.yoga_nature == "bad" or panchang.karana_name == "Vishti":
+            return f"The day-quality factors are a little rough right now, so double-check timing and leave buffer for friction."
+        return ""
 
-    if active_yogas:
-        yoga_names = ", ".join(y["name"] for y in active_yogas[:3])
-        parts.append(f"Active natal yogas: {yoga_names}.")
+    def _natal_support_sentence() -> str:
+        ordered = sorted(shadbala.items(), key=lambda item: item[1], reverse=True)
+        strongest = [planet for planet, _ in ordered[:2]]
+        strong_line = ""
+        if strongest:
+            strong_line = f"Stronger natal support comes from {', '.join(strongest)}, so those themes are easier to access under pressure."
+        if active_yogas:
+            yoga_names = ", ".join(y["name"] for y in active_yogas[:2])
+            if strong_line:
+                return strong_line + f" Helpful natal combinations in the background include {yoga_names}."
+            return f"Helpful natal combinations in the background include {yoga_names}."
+        return strong_line
 
-    if gochara_score >= 1.5:
-        parts.append("Planetary transits are strongly favourable.")
-    elif gochara_score >= 0.5:
-        parts.append("Planetary transits are mildly favourable.")
-    elif gochara_score >= -0.5:
-        parts.append("Planetary transits are mixed/neutral.")
-    elif gochara_score >= -1.5:
-        parts.append("Planetary transits are unfavourable — caution advised.")
-    else:
-        parts.append("Planetary transits are highly unfavourable.")
+    def _window_sentence() -> str:
+        if not windows:
+            return ""
+        best = max(windows, key=lambda item: item.composite_score)
+        worst = min(windows, key=lambda item: item.composite_score)
+        parts: list[str] = []
+        if best.composite_score > 0:
+            parts.append(
+                f"The best window in this range is {_friendly_dt(best.start)} to {_friendly_dt(best.end)}, "
+                f"which is better suited for {category_actions.get(category, 'important decisions')}."
+            )
+        if worst.composite_score < -0.8 and worst.start != best.start:
+            parts.append(
+                f"The touchier patch is {_friendly_dt(worst.start)} to {_friendly_dt(worst.end)}, "
+                "so use extra patience there and avoid forcing outcomes."
+            )
+        return " ".join(parts)
 
-    if overall_score >= 1.5:
-        parts.append(f"Overall outlook for {category} is excellent.")
-    elif overall_score >= 0.5:
-        parts.append(f"Overall outlook for {category} is positive.")
-    elif overall_score >= -0.5:
-        parts.append(f"Overall outlook for {category} is mixed/average.")
-    elif overall_score >= -1.5:
-        parts.append(f"This period may present some challenges for {category}.")
-    else:
-        parts.append(f"This period presents significant challenges for {category}.")
-
-    return " ".join(parts)
+    parts = [
+        _overall_sentence(),
+        _timing_cycle_sentence(),
+        _transit_sentence(),
+        _saturn_sentence(),
+        _special_sentence(),
+        _panchang_sentence(),
+        _natal_support_sentence(),
+        _window_sentence(),
+    ]
+    return " ".join(part.strip() for part in parts if part and part.strip())

@@ -31,6 +31,7 @@ except Exception as e:
     print(f"Failed to load RF model: {e}")
 
 USE_ML_MODEL = True  # Toggle this to use classical linear weights vs ML
+ML_CLASSICAL_BLEND = 0.08
 
 
 from app.core.enums import EventTag
@@ -82,6 +83,100 @@ def get_weights(category: str) -> CategoryWeights:
     return CATEGORY_WEIGHTS.get(category, CategoryWeights())
 
 
+def _feature_row(
+    rule_score: float,
+    shadbala_bonus: float = 0.0,
+    gochara_score: float = 0.0,
+    dasha_bonus: float = 0.0,
+    yoga_score: float = 0.0,
+    ashtakavarga_bonus: float = 0.0,
+    tara_score: float = 0.0,
+    chandra_bala_score: float = 0.0,
+    avastha_score: float = 0.0,
+    pushkara_bonus_score: float = 0.0,
+    sudarshana_score: float = 0.0,
+    jaimini_score: float = 0.0,
+    arudha_score: float = 0.0,
+    gulika_penalty: float = 0.0,
+    badhaka_penalty: float = 0.0,
+    bhrigu_bonus: float = 0.0,
+    kp_score: float = 0.0,
+    kp_cuspal_score: float = 0.0,
+    double_transit: float = 0.0,
+) -> list[float]:
+    return [
+        rule_score,
+        shadbala_bonus,
+        gochara_score,
+        dasha_bonus,
+        yoga_score,
+        ashtakavarga_bonus,
+        tara_score,
+        chandra_bala_score,
+        avastha_score,
+        pushkara_bonus_score,
+        sudarshana_score,
+        jaimini_score,
+        arudha_score,
+        gulika_penalty,
+        badhaka_penalty,
+        bhrigu_bonus,
+        kp_score,
+        kp_cuspal_score,
+        double_transit,
+    ]
+
+
+def _classical_score_from_row(category: str, row: list[float]) -> float:
+    w = get_weights(category)
+    (
+        rule_score,
+        shadbala_bonus,
+        gochara_score,
+        dasha_bonus,
+        yoga_score,
+        ashtakavarga_bonus,
+        tara_score,
+        chandra_bala_score,
+        avastha_score,
+        pushkara_bonus_score,
+        sudarshana_score,
+        jaimini_score,
+        arudha_score,
+        gulika_penalty,
+        badhaka_penalty,
+        bhrigu_bonus,
+        kp_score,
+        kp_cuspal_score,
+        double_transit,
+    ) = row
+    return (
+        rule_score * w.rule
+        + shadbala_bonus * w.shadbala
+        + gochara_score * w.gochara
+        + dasha_bonus * w.dasha
+        + yoga_score * w.yoga
+        + ashtakavarga_bonus * w.ashtakavarga
+        + tara_score * w.tara
+        + chandra_bala_score * w.chandra_bala
+        + avastha_score * w.avastha
+        + pushkara_bonus_score * w.pushkara
+        + sudarshana_score * w.sudarshana
+        + jaimini_score * w.jaimini
+        + arudha_score * w.arudha
+        + gulika_penalty * w.gulika
+        + badhaka_penalty * w.badhaka
+        + bhrigu_bonus * w.bhrigu
+        + kp_score * w.kp
+        + kp_cuspal_score * w.kp_cuspal
+        + double_transit * w.double_transit
+    )
+
+
+def _category_offset(category: str) -> float:
+    return 1.0 if category in ("general", "accidents") else 0.0
+
+
 def compute_composite_score(
     category: str,
     rule_score: float,
@@ -104,52 +199,46 @@ def compute_composite_score(
     kp_cuspal_score: float = 0.0,
     double_transit: float = 0.0,
 ) -> float:
+    row = _feature_row(
+        rule_score,
+        shadbala_bonus,
+        gochara_score,
+        dasha_bonus,
+        yoga_score,
+        ashtakavarga_bonus,
+        tara_score,
+        chandra_bala_score,
+        avastha_score,
+        pushkara_bonus_score,
+        sudarshana_score,
+        jaimini_score,
+        arudha_score,
+        gulika_penalty,
+        badhaka_penalty,
+        bhrigu_bonus,
+        kp_score,
+        kp_cuspal_score,
+        double_transit,
+    )
     if USE_ML_MODEL and _rf_model is not None:
-        features = np.array([[
-            rule_score, shadbala_bonus, gochara_score, dasha_bonus, yoga_score,
-            ashtakavarga_bonus, tara_score, chandra_bala_score, avastha_score,
-            pushkara_bonus_score, sudarshana_score, jaimini_score, arudha_score,
-            gulika_penalty, badhaka_penalty, bhrigu_bonus, kp_score,
-            kp_cuspal_score, double_transit
-        ]])
-        
+        features = np.array([row], dtype=np.float64)
         # predict_proba returns [P(Bad), P(Good)]
         probs = _rf_model.predict_proba(features)[0]
         # Map probability [0,1] to a score [-3.0, 3.0] roughly
         p_good = probs[1]
-        
-        # Combine ML probability with a bit of classical weighting for magnitude
+
+        classical_score = _classical_score_from_row(category, row)
         ml_score = (p_good - 0.5) * 6.0  # -3.0 to +3.0
-        
-        # We blend the ML score with the classical score to keep magnitudes rich
-        score = ml_score
+
+        # Blend a light classical component back in so the ML path keeps
+        # category weighting and signal magnitude context instead of collapsing
+        # to probability alone.
+        score = ml_score + classical_score * ML_CLASSICAL_BLEND
     else:
-        w = get_weights(category)
-        score = (
-            rule_score            * w.rule
-            + shadbala_bonus      * w.shadbala
-            + gochara_score       * w.gochara
-            + dasha_bonus         * w.dasha
-            + yoga_score          * w.yoga
-            + ashtakavarga_bonus  * w.ashtakavarga
-            + tara_score          * w.tara
-            + chandra_bala_score  * w.chandra_bala
-            + avastha_score       * w.avastha
-            + pushkara_bonus_score * w.pushkara
-            + sudarshana_score    * w.sudarshana
-            + jaimini_score       * w.jaimini
-            + arudha_score        * w.arudha
-            + gulika_penalty      * w.gulika
-            + badhaka_penalty     * w.badhaka
-            + bhrigu_bonus        * w.bhrigu
-            + kp_score            * w.kp
-            + kp_cuspal_score     * w.kp_cuspal
-            + double_transit      * w.double_transit
-        )
-        
+        score = _classical_score_from_row(category, row)
+
     # Offset adjustments for categories that skew too negative naturally
-    if category in ("general", "accidents"):
-        score += 1.0
+    score += _category_offset(category)
 
     return round(score, 3)
 
@@ -162,44 +251,22 @@ def batch_composite_scores(
     if not feature_rows:
         return []
 
-    offset = 1.0 if category in ("general", "accidents") else 0.0
+    offset = _category_offset(category)
 
     if USE_ML_MODEL and _rf_model is not None:
         X = np.array(feature_rows, dtype=np.float64)
         probs = _rf_model.predict_proba(X)[:, 1]  # P(Good)
-        scores = (probs - 0.5) * 6.0 + offset
+        classical_scores = np.array(
+            [_classical_score_from_row(category, row) for row in feature_rows],
+            dtype=np.float64,
+        )
+        scores = (probs - 0.5) * 6.0 + classical_scores * ML_CLASSICAL_BLEND + offset
         return [round(float(s), 3) for s in scores]
 
     # Classical fallback
-    w = get_weights(category)
     results: list[float] = []
     for row in feature_rows:
-        (rule_score, shadbala_bonus, gochara_score, dasha_bonus, yoga_score,
-         ashtakavarga_bonus, tara_score, chandra_bala_score, avastha_score,
-         pushkara_bonus_score, sudarshana_score, jaimini_score, arudha_score,
-         gulika_penalty, badhaka_penalty, bhrigu_bonus, kp_score,
-         kp_cuspal_score, double_transit) = row
-        score = (
-            rule_score            * w.rule
-            + shadbala_bonus      * w.shadbala
-            + gochara_score       * w.gochara
-            + dasha_bonus         * w.dasha
-            + yoga_score          * w.yoga
-            + ashtakavarga_bonus  * w.ashtakavarga
-            + tara_score          * w.tara
-            + chandra_bala_score  * w.chandra_bala
-            + avastha_score       * w.avastha
-            + pushkara_bonus_score * w.pushkara
-            + sudarshana_score    * w.sudarshana
-            + jaimini_score       * w.jaimini
-            + arudha_score        * w.arudha
-            + gulika_penalty      * w.gulika
-            + badhaka_penalty     * w.badhaka
-            + bhrigu_bonus        * w.bhrigu
-            + kp_score            * w.kp
-            + kp_cuspal_score     * w.kp_cuspal
-            + double_transit      * w.double_transit
-        ) + offset
+        score = _classical_score_from_row(category, row) + offset
         results.append(round(score, 3))
     return results
 
